@@ -5,7 +5,7 @@
 
 import unittest
 
-from wind import wind
+# from wind import wind
 
 
 class TestWind(unittest.TestCase):
