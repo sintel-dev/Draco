@@ -1,0 +1,15 @@
+wind package
+============
+
+.. automodule:: wind
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   wind.wind
+
