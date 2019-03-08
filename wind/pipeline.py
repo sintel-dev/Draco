@@ -10,55 +10,67 @@ from btb import HyperParameter
 from btb.tuning import GP
 from mlblocks import MLPipeline
 from sklearn.exceptions import NotFittedError
-from sklearn.metrics import accuracy_score, r2_score
+from sklearn.metrics import accuracy_score, mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import KFold, StratifiedKFold
 
 LOGGER = logging.getLogger(__name__)
+
+
+PIPELINES_DIR = os.path.join(os.path.dirname(__file__), 'pipelines')
+
+METRICS = {
+    'accuracy': (accuracy_score, False),
+    'r2': (r2_score, False),
+    'mse': (mean_squared_error, True),
+    'mae': (mean_absolute_error, True)
+}
 
 
 class WindPipeline(object):
 
     template = None
     fitted = False
-    score = None
 
+    score = None
     _cv_class = None
-    _score = None
-    _cost = None
+    _metric = None
+    _cost = False
     _tuner = None
     _pipeline = None
 
-    def _get_cv(self, cv_splits, random_state):
-        return self._cv_class(n_splits=cv_splits, shuffle=True, random_state=random_state)
+    def _get_cv(self, stratify, cv_splits, shuffle, random_state):
+        if stratify:
+            cv_class = StratifiedKFold
+        else:
+            cv_class = KFold
+
+        return cv_class(n_splits=cv_splits, shuffle=shuffle, random_state=random_state)
+
+    def _load_template(self, template):
+        if not os.path.isfile(template):
+            template = os.path.join(PIPELINES_DIR, template + '.json')
+
+        with open(template, 'r') as template_file:
+            return json.load(template_file)
 
     def _load_mlpipeline(self, template):
         if not isinstance(template, dict):
-            template_name = template
-            if os.path.isfile(template_name):
-                with open(template_name, 'r') as template_file:
-                    template = json.load(template_file)
+            template = self._load_template(template)
 
-            # elif self._db:
-            #     template = self._db.load_template(template_name)
-
-            if not template:
-                raise ValueError('Unknown template {}'.format(template_name))
-
-            self.template = template
+        self.template = template
 
         return MLPipeline.from_dict(template)
 
-    def __init__(self, template=None, hyperparameters=None,
-                 scorer=None, cost=False, cv=None, cv_splits=5, random_state=0):
+    def __init__(self, template, metric, cost=False, hyperparameters=None,
+                 stratify=True, cv_splits=5, shuffle=True, random_state=0):
 
-        self._cv = cv or self._get_cv(cv_splits, random_state)
+        self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)
 
-        if scorer:
-            self._score = scorer
+        if isinstance(metric, str):
+            metric, cost = METRICS[metric]
 
+        self._metric = metric
         self._cost = cost
-
-        # self._db = db
 
         self._pipeline = self._load_mlpipeline(template or self.template)
 
@@ -114,7 +126,7 @@ class WindPipeline(object):
             pipeline.fit(X_train, y_train, **tables)
 
             predictions = pipeline.predict(X_test, **tables)
-            score = self._score(y_test, predictions)
+            score = self._metric(y_test, predictions)
 
             LOGGER.debug('Fold fold %s score: %s', fold, score)
             scores.append(score)
@@ -166,16 +178,12 @@ class WindPipeline(object):
         if not self._tuner:
             LOGGER.info('Scoring the default pipeline')
             self.score = self._score_pipeline(self._pipeline, X, y, tables)
-            self._tuner = self._get_tuner()
+            LOGGER.info('Default Pipeline score: %s', self.score)
 
-        # dataset = data['dataset_name']
-        # table = data['target_entity']
-        # column = data['target_column']
+            self._tuner = self._get_tuner()
 
         for i in range(iterations):
             LOGGER.info('Scoring pipeline %s', i + 1)
-            params = '\n'.join('{}: {}'.format(k, v) for k, v in proposal.items())
-            LOGGER.info("Scoring pipeline %s: %s\n%s", i + 1, pipeline.id, params)
 
             params = self._tuner.propose(1)
             param_dicts = self._to_dicts(params)
@@ -199,9 +207,6 @@ class WindPipeline(object):
                 LOGGER.exception("Caught an exception scoring pipeline %s with params:\n%s",
                                  i + 1, failed)
 
-            # if self._db:
-            #     self._db.insert_pipeline(candidate, score, dataset, table, column)
-
     def fit(self, X, y, tables):
         tables.setdefault('entityset', None)
         self._pipeline.fit(X, y, **tables)
@@ -213,185 +218,3 @@ class WindPipeline(object):
 
         tables.setdefault('entityset', None)
         return self._pipeline.predict(X, **tables)
-
-
-class WindClassifier(WindPipeline):
-    _cv_class = StratifiedKFold
-    template = {
-        'primitives': [
-            'pandas.DataFrame.resample',
-            'pandas.DataFrame.unstack',
-            'featuretools.EntitySet.entity_from_dataframe',
-            'featuretools.EntitySet.entity_from_dataframe',
-            'featuretools.EntitySet.entity_from_dataframe',
-            'featuretools.EntitySet.add_relationship',
-            'featuretools.dfs',
-            'mlprimitives.custom.feature_extraction.CategoricalEncoder',
-            'sklearn.impute.SimpleImputer',
-            'sklearn.preprocessing.StandardScaler',
-            'xgboost.XGBClassifier',
-        ],
-        'init_params': {
-            'pandas.DataFrame.resample#1': {
-                'rule': '1D',
-                'time_index': 'timestamp',
-                'groupby': ['turbine_id', 'signal_id'],
-                'aggregation': 'mean'
-            },
-            'pandas.DataFrame.unstack#1': {
-                'level': 'signal_id',
-                'reset_index': True
-            },
-            'featuretools.EntitySet.entity_from_dataframe#1': {
-                'entity_id': 'readings',
-                'index': 'index',
-                'make_index': True,
-                'time_index': 'timestamp'
-            },
-            'featuretools.EntitySet.entity_from_dataframe#2': {
-                'entity_id': 'turbines',
-                'index': 'turbine_id',
-            },
-            'featuretools.EntitySet.entity_from_dataframe#3': {
-                'entity_id': 'signals',
-                'index': 'signal_id',
-            },
-            'featuretools.EntitySet.add_relationship#1': {
-                'parent': 'turbines',
-                'parent_column': 'turbine_id',
-                'child': 'readings',
-                'child_column': 'turbine_id',
-            },
-            'featuretools.EntitySet.add_relationship#2': {
-                'parent': 'signals',
-                'parent_column': 'signal_id',
-                'child': 'readings',
-                'child_column': 'signal_id',
-            },
-            'featuretools.dfs#1': {
-                'target_entity': 'turbines',
-                'index': 'turbine_id',
-                'time_index': 'timestamp',
-                'encode': False
-            },
-        },
-        'input_names': {
-            'pandas.DataFrame.resample#1': {
-                'X': 'readings'
-            },
-            'pandas.DataFrame.unstack#1': {
-                'X': 'readings'
-            },
-            'featuretools.EntitySet.entity_from_dataframe#1': {
-                'dataframe': 'readings',
-            },
-            'featuretools.EntitySet.entity_from_dataframe#2': {
-                'dataframe': 'turbines',
-            },
-            'featuretools.EntitySet.entity_from_dataframe#3': {
-                'dataframe': 'signals',
-            },
-        },
-        'output_names': {
-            'pandas.DataFrame.resample#1': {
-                'X': 'readings'
-            },
-            'pandas.DataFrame.unstack#1': {
-                'X': 'readings'
-            },
-        }
-    }
-
-    def _score(self, y_true, y_pred):
-        return accuracy_score(y_true, y_pred)
-
-
-class WindRegressor(WindPipeline):
-    _cv_class = KFold
-    template = {
-        'primitives': [
-            'pandas.DataFrame.resample',
-            'pandas.DataFrame.unstack',
-            'featuretools.EntitySet.entity_from_dataframe',
-            'featuretools.EntitySet.entity_from_dataframe',
-            'featuretools.EntitySet.entity_from_dataframe',
-            'featuretools.EntitySet.add_relationship',
-            'featuretools.dfs',
-            'mlprimitives.custom.feature_extraction.CategoricalEncoder',
-            'sklearn.impute.SimpleImputer',
-            'sklearn.preprocessing.StandardScaler',
-            'xgboost.XGBRegressor',
-        ],
-        'init_params': {
-            'pandas.DataFrame.resample#1': {
-                'rule': '1D',
-                'time_index': 'timestamp',
-                'groupby': ['turbine_id', 'signal_id'],
-                'aggregation': 'mean'
-            },
-            'pandas.DataFrame.unstack#1': {
-                'level': 'signal_id',
-                'reset_index': True
-            },
-            'featuretools.EntitySet.entity_from_dataframe#1': {
-                'entity_id': 'readings',
-                'index': 'index',
-                'make_index': True,
-                'time_index': 'timestamp'
-            },
-            'featuretools.EntitySet.entity_from_dataframe#2': {
-                'entity_id': 'turbines',
-                'index': 'turbine_id',
-            },
-            'featuretools.EntitySet.entity_from_dataframe#3': {
-                'entity_id': 'signals',
-                'index': 'signal_id',
-            },
-            'featuretools.EntitySet.add_relationship#1': {
-                'parent': 'turbines',
-                'parent_column': 'turbine_id',
-                'child': 'readings',
-                'child_column': 'turbine_id',
-            },
-            'featuretools.EntitySet.add_relationship#2': {
-                'parent': 'signals',
-                'parent_column': 'signal_id',
-                'child': 'readings',
-                'child_column': 'signal_id',
-            },
-            'featuretools.dfs#1': {
-                'target_entity': 'turbines',
-                'index': 'turbine_id',
-                'time_index': 'timestamp',
-                'encode': False
-            },
-        },
-        'input_names': {
-            'pandas.DataFrame.resample#1': {
-                'X': 'readings'
-            },
-            'pandas.DataFrame.unstack#1': {
-                'X': 'readings'
-            },
-            'featuretools.EntitySet.entity_from_dataframe#1': {
-                'dataframe': 'readings',
-            },
-            'featuretools.EntitySet.entity_from_dataframe#2': {
-                'dataframe': 'turbines',
-            },
-            'featuretools.EntitySet.entity_from_dataframe#3': {
-                'dataframe': 'signals',
-            },
-        },
-        'output_names': {
-            'pandas.DataFrame.resample#1': {
-                'X': 'readings'
-            },
-            'pandas.DataFrame.unstack#1': {
-                'X': 'readings'
-            },
-        }
-    }
-
-    def _score(self, y_true, y_pred):
-        return r2_score(y_true, y_pred)
