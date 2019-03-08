@@ -4,18 +4,6 @@
 
 # Wind
 
-<p align="center">
-<i>Machine learning for internet of things related to wind systems.  </I>
-</p>
-
-
-
-
-<p align="center">
-<i>A collaborative open source project between Data to AI Lab at MIT and Xylem Inc. </I>
-</p>
-
-
 - Free software: MIT license
 - Documentation: https://D3-AI.github.io/wind
 - Homepage: https://github.com/D3-AI/wind
