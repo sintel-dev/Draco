@@ -2,13 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """Tests for `wind.pipeline` module."""
-from datetime import datetime
 from unittest import TestCase
 from unittest.mock import Mock, patch
-
-import pandas as pd
-from sklearn.metrics import f1_score
-from sklearn.model_selection import StratifiedKFold
 
 from wind.pipeline import WindPipeline
 
