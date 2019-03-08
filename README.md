@@ -154,7 +154,7 @@ We first create a loader instance passing:
 ```python
 from wind.loader import WindLoader
 
-loader = WindLoader('../datasets/wind/', 'labels', 'label')
+loader = WindLoader('examples/datasets/wind/', 'labels', 'label')
 ```
 
 Then we call the `loader.load` method, which will return three elements:
