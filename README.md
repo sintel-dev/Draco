@@ -74,9 +74,6 @@ This class is the one in charge of learning from the data and making predictions
 [MLBlocks](https://hdi-project.github.io/MLBlocks) and later on tuning them using
 [BTB](https://hdi-project.github.io/BTB/)
 
-This class comes in two flavours in the form of subclasses, the **WindClassifier** and the
-**WindRegressor**, to be used in the corresponding problem types.
-
 ### WindLoader
 
 A class responsible for loading the time series data from CSV files, and return it in the

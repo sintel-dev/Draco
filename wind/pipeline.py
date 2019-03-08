@@ -30,8 +30,8 @@ class WindPipeline(object):
 
     template = None
     fitted = False
-
     score = None
+
     _cv_class = None
     _metric = None
     _cost = False
@@ -72,7 +72,7 @@ class WindPipeline(object):
         self._metric = metric
         self._cost = cost
 
-        self._pipeline = self._load_mlpipeline(template or self.template)
+        self._pipeline = self._load_mlpipeline(template)
 
         if hyperparameters:
             self._pipeline.set_hyperparameters(hyperparameters)
