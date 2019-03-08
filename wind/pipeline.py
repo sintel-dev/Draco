@@ -174,6 +174,8 @@ class WindPipeline(object):
 
         for i in range(iterations):
             LOGGER.info('Scoring pipeline %s', i + 1)
+            params = '\n'.join('{}: {}'.format(k, v) for k, v in proposal.items())
+            LOGGER.info("Scoring pipeline %s: %s\n%s", i + 1, pipeline.id, params)
 
             params = self._tuner.propose(1)
             param_dicts = self._to_dicts(params)
@@ -181,17 +183,24 @@ class WindPipeline(object):
             candidate = self._clone_pipeline(self._pipeline)
             candidate.set_hyperparameters(param_dicts)
 
-            score = self._score_pipeline(candidate, X, y, tables)
-            LOGGER.info('Pipeline %s score: %s', i + 1, score)
+            try:
+                score = self._score_pipeline(candidate, X, y, tables)
 
-            self._tuner.add(params, score)
+                LOGGER.info('Pipeline %s score: %s', i + 1, score)
+
+                if self._is_better(score):
+                    self.score = score
+                    self.set_hyperparameters(param_dicts)
+
+                self._tuner.add(params, score)
+
+            except Exception:
+                failed = '\n'.join('{}: {}'.format(k, v) for k, v in params.items())
+                LOGGER.exception("Caught an exception scoring pipeline %s with params:\n%s",
+                                 i + 1, failed)
 
             # if self._db:
             #     self._db.insert_pipeline(candidate, score, dataset, table, column)
-
-            if self._is_better(score):
-                self.score = score
-                self.set_hyperparameters(param_dicts)
 
     def fit(self, X, y, tables):
         tables.setdefault('entityset', None)
@@ -217,6 +226,7 @@ class WindClassifier(WindPipeline):
             'featuretools.EntitySet.entity_from_dataframe',
             'featuretools.EntitySet.add_relationship',
             'featuretools.dfs',
+            'mlprimitives.custom.feature_extraction.CategoricalEncoder',
             'sklearn.impute.SimpleImputer',
             'sklearn.preprocessing.StandardScaler',
             'xgboost.XGBClassifier',
@@ -307,6 +317,7 @@ class WindRegressor(WindPipeline):
             'featuretools.EntitySet.entity_from_dataframe',
             'featuretools.EntitySet.add_relationship',
             'featuretools.dfs',
+            'mlprimitives.custom.feature_extraction.CategoricalEncoder',
             'sklearn.impute.SimpleImputer',
             'sklearn.preprocessing.StandardScaler',
             'xgboost.XGBRegressor',

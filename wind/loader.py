@@ -21,8 +21,12 @@ class WindLoader(object):
         if timestamp:
             timestamp = ['timestamp']
 
-        path = os.path.join(self._dataset_path, table + '.csv')
-        return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
+        try:
+            path = os.path.join(self._dataset_path, table + '.csv')
+            return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
+        except FileNotFoundError:
+            path += '.gz'
+            return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
 
     def load(self, target=True):
         tables = {
