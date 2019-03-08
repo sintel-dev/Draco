@@ -1,7 +1,0 @@
-wind.wind module
-================
-
-.. automodule:: wind.wind
-    :members:
-    :undoc-members:
-    :show-inheritance:

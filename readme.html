@@ -13,38 +13,42 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Installation" href="installation.html" />
     <link rel="prev" title="Wind" href="index.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -76,7 +80,33 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Wind</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#primitive">Primitive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template">Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline">Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#windpipeline">WindPipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windloader">WindLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wind-dataset">Wind Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuning">Tuning</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-example">Usage Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-and-explore-the-data">Load and explore the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#split-the-data">Split the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finding-the-best-pipeline">Finding the best Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#from-source">From source</a></li>
@@ -88,7 +118,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/wind.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/wind.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/wind.wind.html">wind.wind module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.db.html">wind.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.loader.html">wind.loader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.pipeline.html">wind.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.utils.html">wind.utils module</a></li>
 </ul>
 </li>
 </ul>
@@ -173,7 +206,7 @@
         
             
             
-              <a href="https://github.com/D3-AI/wind/blob/master/docs/readme.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/Wind/blob/master/docs/readme.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -191,12 +224,557 @@
 <a class="reference external image-reference" href="https://travis-ci.org/D3-AI/wind"><img alt="Travis CI Shield" src="https://travis-ci.org/D3-AI/wind.svg?branch=master" /></a>
 <div class="section" id="wind">
 <h1>Wind<a class="headerlink" href="#wind" title="Permalink to this headline">¶</a></h1>
-<p>Wind Project</p>
 <ul class="simple">
 <li>Free software: MIT license</li>
 <li>Documentation: <a class="reference external" href="https://D3-AI.github.io/wind">https://D3-AI.github.io/wind</a></li>
 <li>Homepage: <a class="reference external" href="https://github.com/D3-AI/wind">https://github.com/D3-AI/wind</a></li>
 </ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>The Wind project is a collection of end-to-end solutions for machine learning tasks commonly
+found in monitoring wind energy production systems. Most tasks utilize sensor data
+emanating from monitoring systems. We utilize the foundational innovations developed for
+automation of machine Learning at Data to AI Lab at MIT. This project is developed in close
+collaboration with Iberdrola, S.A.</p>
+<p>The salient aspects of this customized project are:</p>
+<ul class="simple">
+<li>A set of ready to use, well tested pipelines for different machine learning tasks. These are
+vetted through testing across multiple publicly available datasets for the same task.</li>
+<li>An easy interface to specify the task, pipeline, and generate results and summarize them.</li>
+<li>A production ready, deployable pipeline.</li>
+<li>An easy interface to <code class="docutils literal notranslate"><span class="pre">tune</span></code> pipelines using Bayesian Tuning and Bandits library.</li>
+<li>A community oriented infrastructure to incorporate new pipelines.</li>
+<li>A robust continuous integration and testing infrastructure.</li>
+<li>A <code class="docutils literal notranslate"><span class="pre">learning</span> <span class="pre">database</span></code> recording all past outcomes –&gt; tasks, pipelines, outcomes.</li>
+</ul>
+<div class="section" id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
+<p>Before diving into the software usage, we briefly explain some concepts and terminology.</p>
+<div class="section" id="primitive">
+<h3>Primitive<a class="headerlink" href="#primitive" title="Permalink to this headline">¶</a></h3>
+<p>We call the smallest computational blocks used in a Machine Learning process
+<strong>primitives</strong>, which:</p>
+<ul class="simple">
+<li>Can be either classes or functions.</li>
+<li>Have some initialization arguments, which MLBlocks calls <code class="docutils literal notranslate"><span class="pre">init_params</span></code>.</li>
+<li>Have some tunable hyperparameters, which have types and a list or range of valid values.</li>
+</ul>
+</div>
+<div class="section" id="template">
+<h3>Template<a class="headerlink" href="#template" title="Permalink to this headline">¶</a></h3>
+<p>Primitives can be combined to form what we call <strong>Templates</strong>, which:</p>
+<ul class="simple">
+<li>Have a list of primitives.</li>
+<li>Have some initialization arguments, which correspond to the initialization arguments
+of their primitives.</li>
+<li>Have some tunable hyperparameters, which correspond to the tunable hyperparameters
+of their primitives.</li>
+</ul>
+</div>
+<div class="section" id="pipeline">
+<h3>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h3>
+<p>Templates can be used to build <strong>Pipelines</strong> by taking and fixing a set of valid
+hyperparameters for a Template. Hence, Pipelines:</p>
+<ul class="simple">
+<li>Have a list of primitives, which corresponds to the list of primitives of their template.</li>
+<li>Have some initialization arguments, which correspond to the initialization arguments
+of their template.</li>
+<li>Have some hyperparameter values, which fall within the ranges of valid tunable
+hyperparameters of their template.</li>
+</ul>
+<p>A pipeline can be fitted and evaluated using the MLPipeline API in MLBlocks.</p>
+</div>
+</div>
+<div class="section" id="current-tasks-and-pipelines">
+<h2>Current tasks and pipelines<a class="headerlink" href="#current-tasks-and-pipelines" title="Permalink to this headline">¶</a></h2>
+<p>In our current phase, we are addressing two tasks - time series classification and time series
+regression. To provide solutions for these two tasks we have two components.</p>
+<div class="section" id="windpipeline">
+<h3>WindPipeline<a class="headerlink" href="#windpipeline" title="Permalink to this headline">¶</a></h3>
+<p>This class is the one in charge of learning from the data and making predictions by building
+<a class="reference external" href="https://hdi-project.github.io/MLBlocks">MLBlocks</a> and later on tuning them using
+<a class="reference external" href="https://hdi-project.github.io/BTB/">BTB</a></p>
+</div>
+<div class="section" id="windloader">
+<h3>WindLoader<a class="headerlink" href="#windloader" title="Permalink to this headline">¶</a></h3>
+<p>A class responsible for loading the time series data from CSV files, and return it in the
+format ready to be used by the <strong>WindPipeline</strong>.</p>
+</div>
+<div class="section" id="wind-dataset">
+<h3>Wind Dataset<a class="headerlink" href="#wind-dataset" title="Permalink to this headline">¶</a></h3>
+<p>A dataset is a folder that contains time series data and information about
+a Machine Learning problem in the form of CSV and JSON files.</p>
+<p>The expected contents of the <code class="docutils literal notranslate"><span class="pre">dataset</span></code> folder are 4 CSV files:</p>
+<ul class="simple">
+<li>A <strong>Turbines</strong> table that contains:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: column with the unique id of each turbine.</li>
+<li>A number of additional columns with information about each turbine.</li>
+</ul>
+</li>
+<li>A <strong>Signals</strong> table that contains:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">signal_id</span></code>: column with the unique id of each signal.</li>
+<li>A number of additional columns with information about each signal.</li>
+</ul>
+</li>
+<li>A <strong>Readings</strong> table that contains:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">reading_id</span></code>: Unique identifier of this reading.</li>
+<li><code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: Unique identifier of the turbine which this reading comes from.</li>
+<li><code class="docutils literal notranslate"><span class="pre">signal_id</span></code>: Unique identifier of the signal which this reading comes from.</li>
+<li><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: Time where the reading took place, as an ISO formatted datetime.</li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Numeric value of this reading.</li>
+</ul>
+</li>
+<li>A <strong>Targets</strong> table that contains:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">target_id</span></code>: Unique identifier of the turbine which this label corresponds to.</li>
+<li><code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: Unique identifier of the turbine which this label corresponds to.</li>
+<li><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: Time associated with this target</li>
+<li><code class="docutils literal notranslate"><span class="pre">target</span></code>: The value that we want to predict. This can either be a numerical value or a categorical label.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="tuning">
+<h3>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h3>
+<p>We call tuning the process of, given a dataset and a template, find the pipeline derived from the
+given template that gets the best possible score on the given dataset.</p>
+<p>This process usually involves fitting and evaluating multiple pipelines with different hyperparameter
+values on the same data while using optimization algorithms to deduce which hyperparameters are more
+likely to get the best results in the next iterations.</p>
+<p>We call each one of these tries a <strong>tuning iteration</strong>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The simplest and recommended way to install <strong>Wind</strong> is using pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install wind
+</pre></div>
+</div>
+<p>For development, you can also clone the repository and install it from sources</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:D3-AI/wind.git
+<span class="nb">cd</span> wind
+make install-develop
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Permalink to this headline">¶</a></h2>
+<p>In this example we will load some demo data using the <strong>WindLoader</strong> and fetch it to the
+<strong>WindPipeline</strong> for it to find the best possible pipeline, fit it using the given data
+and then make predictions from it.</p>
+<div class="section" id="load-and-explore-the-data">
+<h3>Load and explore the data<a class="headerlink" href="#load-and-explore-the-data" title="Permalink to this headline">¶</a></h3>
+<p>We first create a loader instance passing:</p>
+<ul class="simple">
+<li>The path to the dataset folder</li>
+<li>The name of the target table</li>
+<li>The name of the target column</li>
+<li>Optionally, the names of the readings, turbines and signals tables, in case they are different from the default ones.</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wind.loader</span> <span class="kn">import</span> <span class="n">WindLoader</span>
+
+<span class="n">loader</span> <span class="o">=</span> <span class="n">WindLoader</span><span class="p">(</span><span class="s1">&#39;../datasets/wind/&#39;</span><span class="p">,</span> <span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we call the <code class="docutils literal notranslate"><span class="pre">loader.load</span></code> method, which will return three elements:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">X</span></code>: The contents of the target table, where the training examples can be found, without the target column.</li>
+<li><code class="docutils literal notranslate"><span class="pre">y</span></code>: The target column, as exctracted from the the target table.</li>
+<li><code class="docutils literal notranslate"><span class="pre">tables</span></code>: A dictionary containing the additional tables that the Pipeline will need to run, <code class="docutils literal notranslate"><span class="pre">readings</span></code>, <code class="docutils literal notranslate"><span class="pre">turbines</span></code> and <code class="docutils literal notranslate"><span class="pre">signals</span></code>.</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>label_id</th>
+      <th>turbine_id</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>2013-01-01</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+      <td>2013-01-02</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0</td>
+      <td>2013-01-03</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0</td>
+      <td>2013-01-04</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0</td>
+      <td>2013-01-05</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0    0.0
+1    0.0
+2    0.0
+3    0.0
+4    0.0
+Name: label, dtype: float64
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;readings&#39;, &#39;signals&#39;, &#39;turbines&#39;])
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;turbines&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>turbine_id</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>Turbine 0</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;signals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>signal_id</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>WTG01_Grid Production PossiblePower Avg. (1)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>WTG02_Grid Production PossiblePower Avg. (2)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>WTG03_Grid Production PossiblePower Avg. (3)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>WTG04_Grid Production PossiblePower Avg. (4)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>WTG05_Grid Production PossiblePower Avg. (5)</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;readings&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>reading_id</th>
+      <th>turbine_id</th>
+      <th>signal_id</th>
+      <th>timestamp</th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2013-01-01</td>
+      <td>817.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2013-01-01</td>
+      <td>805.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2013-01-01</td>
+      <td>786.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2013-01-01</td>
+      <td>809.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2013-01-01</td>
+      <td>755.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+<div class="section" id="split-the-data">
+<h3>Split the data<a class="headerlink" href="#split-the-data" title="Permalink to this headline">¶</a></h3>
+<p>If we want to split the data in train and test subsets, we can do so by splitting the <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> variables.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="finding-the-best-pipeline">
+<h3>Finding the best Pipeline<a class="headerlink" href="#finding-the-best-pipeline" title="Permalink to this headline">¶</a></h3>
+<p>Once we have loaded the data, we create a <strong>WindPipeline</strong> instance by passing:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">template</span> <span class="pre">(string)</span></code>: the name of a template or the path to a template json file.</li>
+<li><code class="docutils literal notranslate"><span class="pre">metric</span> <span class="pre">(string</span> <span class="pre">or</span> <span class="pre">function)</span></code>: The name of the metric to use or a metric function to use.</li>
+<li><code class="docutils literal notranslate"><span class="pre">cost</span> <span class="pre">(bool)</span></code>: Whether the metric is a cost function to be minimized or a score to be maximized.</li>
+</ul>
+<p>Optionally, we can also pass defails about the cross validation configuration:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">stratify</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">cv_splits</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">shuffle</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">random_state</span></code></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wind.pipeline</span> <span class="kn">import</span> <span class="n">WindPipeline</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">WindPipeline</span><span class="p">(</span><span class="s1">&#39;wind_classification&#39;</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>Using TensorFlow backend.
+</pre></div>
+</div>
+<p>Once we have created the pipeline, we can call its <code class="docutils literal notranslate"><span class="pre">tune</span></code> method to find the best possible
+hyperparameters for our data, passing the <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">tables</span></code> variables returned by the loader,
+as well as an indication of the number of tuning iterations that we want to perform.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After the tuning process has finished, the hyperparameters have been already set in the classifier.</p>
+<p>We can see the found hyperparameters by calling the <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>{
+    &quot;pandas.DataFrame.resample#1&quot;: {
+        &quot;rule&quot;: &quot;1D&quot;,
+        &quot;time_index&quot;: &quot;timestamp&quot;,
+        &quot;groupby&quot;: [
+            &quot;turbine_id&quot;,
+            &quot;signal_id&quot;
+        ],
+        &quot;aggregation&quot;: &quot;mean&quot;
+    },
+    &quot;pandas.DataFrame.unstack#1&quot;: {
+        &quot;level&quot;: &quot;signal_id&quot;,
+        &quot;reset_index&quot;: true
+    },
+    &quot;featuretools.EntitySet.entity_from_dataframe#1&quot;: {
+        &quot;entityset_id&quot;: &quot;entityset&quot;,
+        &quot;entity_id&quot;: &quot;readings&quot;,
+        &quot;index&quot;: &quot;index&quot;,
+        &quot;variable_types&quot;: null,
+        &quot;make_index&quot;: true,
+        &quot;time_index&quot;: &quot;timestamp&quot;,
+        &quot;secondary_time_index&quot;: null,
+        &quot;already_sorted&quot;: false
+    },
+    &quot;featuretools.EntitySet.entity_from_dataframe#2&quot;: {
+        &quot;entityset_id&quot;: &quot;entityset&quot;,
+        &quot;entity_id&quot;: &quot;turbines&quot;,
+        &quot;index&quot;: &quot;turbine_id&quot;,
+        &quot;variable_types&quot;: null,
+        &quot;make_index&quot;: false,
+        &quot;time_index&quot;: null,
+        &quot;secondary_time_index&quot;: null,
+        &quot;already_sorted&quot;: false
+    },
+    &quot;featuretools.EntitySet.entity_from_dataframe#3&quot;: {
+        &quot;entityset_id&quot;: &quot;entityset&quot;,
+        &quot;entity_id&quot;: &quot;signals&quot;,
+        &quot;index&quot;: &quot;signal_id&quot;,
+        &quot;variable_types&quot;: null,
+        &quot;make_index&quot;: false,
+        &quot;time_index&quot;: null,
+        &quot;secondary_time_index&quot;: null,
+        &quot;already_sorted&quot;: false
+    },
+    &quot;featuretools.EntitySet.add_relationship#1&quot;: {
+        &quot;parent&quot;: &quot;turbines&quot;,
+        &quot;parent_column&quot;: &quot;turbine_id&quot;,
+        &quot;child&quot;: &quot;readings&quot;,
+        &quot;child_column&quot;: &quot;turbine_id&quot;
+    },
+    &quot;featuretools.dfs#1&quot;: {
+        &quot;target_entity&quot;: &quot;turbines&quot;,
+        &quot;index&quot;: &quot;turbine_id&quot;,
+        &quot;time_index&quot;: &quot;timestamp&quot;,
+        &quot;agg_primitives&quot;: null,
+        &quot;trans_primitives&quot;: null,
+        &quot;copy&quot;: false,
+        &quot;encode&quot;: false,
+        &quot;max_depth&quot;: 1,
+        &quot;remove_low_information&quot;: true
+    },
+    &quot;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&quot;: {
+        &quot;copy&quot;: true,
+        &quot;features&quot;: &quot;auto&quot;,
+        &quot;max_labels&quot;: 0
+    },
+    &quot;sklearn.impute.SimpleImputer#1&quot;: {
+        &quot;missing_values&quot;: NaN,
+        &quot;fill_value&quot;: null,
+        &quot;verbose&quot;: false,
+        &quot;copy&quot;: true,
+        &quot;strategy&quot;: &quot;mean&quot;
+    },
+    &quot;sklearn.preprocessing.StandardScaler#1&quot;: {
+        &quot;with_mean&quot;: true,
+        &quot;with_std&quot;: true
+    },
+    &quot;xgboost.XGBClassifier#1&quot;: {
+        &quot;n_jobs&quot;: -1,
+        &quot;n_estimators&quot;: 100,
+        &quot;max_depth&quot;: 3,
+        &quot;learning_rate&quot;: 0.1,
+        &quot;gamma&quot;: 0,
+        &quot;min_child_weight&quot;: 1
+    }
+}
+</pre></div>
+</div>
+<p>as well as the obtained cross validation score by looking at the <code class="docutils literal notranslate"><span class="pre">score</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">tsc</span></code> object</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">score</span>
+</pre></div>
+</div>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0.6592421640188922
+</pre></div>
+</div>
+<p>Once we are satisfied with the obtained cross validation score, we can proceed to call
+the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing again the same data elements.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After this, we are ready to make predictions on new data</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
+<span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>array([0., 0., 0., 0., 0.])
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -210,7 +788,7 @@
         <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Wind" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Wind" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -236,25 +814,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

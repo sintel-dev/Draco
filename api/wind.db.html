@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>wind package &mdash; Wind 0.1.0-dev documentation</title>
+  <title>wind.db module &mdash; Wind 0.1.0-dev documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="wind.db module" href="wind.db.html" />
-    <link rel="prev" title="Usage" href="../usage.html" /> 
+    <link rel="next" title="wind.loader module" href="wind.loader.html" />
+    <link rel="prev" title="wind package" href="wind.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -116,9 +116,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="wind.db.html">wind.db module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="wind.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="wind.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">wind.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wind.loader.html">wind.loader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wind.pipeline.html">wind.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="wind.utils.html">wind.utils module</a></li>
@@ -199,14 +199,16 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>wind package</li>
+          <li><a href="wind.html">wind package</a> &raquo;</li>
+        
+      <li>wind.db module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/HDI-Project/Wind/blob/master/docs/api/wind.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/Wind/blob/master/docs/api/wind.db.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -220,20 +222,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-wind">
-<span id="wind-package"></span><h1>wind package<a class="headerlink" href="#module-wind" title="Permalink to this headline">¶</a></h1>
-<p>Top-level package for Wind.</p>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="wind.db.html">wind.db module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wind.loader.html">wind.loader module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wind.pipeline.html">wind.pipeline module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wind.utils.html">wind.utils module</a></li>
-</ul>
-</div>
-</div>
+  <div class="section" id="module-wind.db">
+<span id="wind-db-module"></span><h1>wind.db module<a class="headerlink" href="#module-wind.db" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="wind.db.MongoDB">
+<em class="property">class </em><code class="descclassname">wind.db.</code><code class="descname">MongoDB</code><span class="sig-paren">(</span><em>database=None</em>, <em>config=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wind/db.html#MongoDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wind.db.MongoDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="wind.db.MongoDB.insert_pipeline">
+<code class="descname">insert_pipeline</code><span class="sig-paren">(</span><em>candidate</em>, <em>score</em>, <em>dataset</em>, <em>table</em>, <em>column</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wind/db.html#MongoDB.insert_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wind.db.MongoDB.insert_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="wind.db.MongoDB.insert_template">
+<code class="descname">insert_template</code><span class="sig-paren">(</span><em>template</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wind/db.html#MongoDB.insert_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wind.db.MongoDB.insert_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="wind.db.MongoDB.load_template">
+<code class="descname">load_template</code><span class="sig-paren">(</span><em>template_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/wind/db.html#MongoDB.load_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wind.db.MongoDB.load_template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -244,10 +255,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="wind.db.html" class="btn btn-neutral float-right" title="wind.db module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="wind.loader.html" class="btn btn-neutral float-right" title="wind.loader module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="wind.html" class="btn btn-neutral float-left" title="wind package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -14,36 +14,40 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -75,7 +79,33 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="readme.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Wind</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#overview">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#concepts">Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#primitive">Primitive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#template">Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#pipeline">Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#windpipeline">WindPipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#windloader">WindLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#wind-dataset">Wind Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#tuning">Tuning</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#usage-example">Usage Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#load-and-explore-the-data">Load and explore the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#split-the-data">Split the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#finding-the-best-pipeline">Finding the best Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#from-source">From source</a></li>
@@ -87,7 +117,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/wind.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/wind.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/wind.wind.html">wind.wind module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.db.html">wind.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.loader.html">wind.loader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.pipeline.html">wind.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/wind.utils.html">wind.utils module</a></li>
 </ul>
 </li>
 </ul>
@@ -172,7 +205,7 @@
         
             
             
-              <a href="https://github.com/D3-AI/wind/blob/master/docs/genindex" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/Wind/blob/master/docs/genindex" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -190,17 +223,147 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#W"><strong>W</strong></a>
+ <a href="#C"><strong>C</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
-<h2 id="W">W</h2>
+<h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/wind.html#module-wind">wind (module)</a>
+      <li><a href="api/wind.utils.html#wind.utils.clone_pipeline">clone_pipeline() (in module wind.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.fit">fit() (wind.pipeline.WindPipeline method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/wind.wind.html#module-wind.wind">wind.wind (module)</a>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.fitted">fitted (wind.pipeline.WindPipeline attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.get_hyperparameters">get_hyperparameters() (wind.pipeline.WindPipeline method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.db.html#wind.db.MongoDB.insert_pipeline">insert_pipeline() (wind.db.MongoDB method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.db.html#wind.db.MongoDB.insert_template">insert_template() (wind.db.MongoDB method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.loader.html#wind.loader.WindLoader.load">load() (wind.loader.WindLoader method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.db.html#wind.db.MongoDB.load_template">load_template() (wind.db.MongoDB method)</a>
+</li>
+      <li><a href="api/wind.utils.html#wind.utils.logging_setup">logging_setup() (in module wind.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.db.html#wind.db.MongoDB">MongoDB (class in wind.db)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.predict">predict() (wind.pipeline.WindPipeline method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.loader.html#wind.loader.WindLoader.read_csv">read_csv() (wind.loader.WindLoader method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.utils.html#wind.utils.remove_dots">remove_dots() (in module wind.utils)</a>
+</li>
+      <li><a href="api/wind.utils.html#wind.utils.restore_dots">restore_dots() (in module wind.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.score">score (wind.pipeline.WindPipeline attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.set_hyperparameters">set_hyperparameters() (wind.pipeline.WindPipeline method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.template">template (wind.pipeline.WindPipeline attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline.tune">tune() (wind.pipeline.WindPipeline method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.utils.html#wind.utils.walk">walk() (in module wind.utils)</a>
+</li>
+      <li><a href="api/wind.html#module-wind">wind (module)</a>
+</li>
+      <li><a href="api/wind.db.html#module-wind.db">wind.db (module)</a>
+</li>
+      <li><a href="api/wind.loader.html#module-wind.loader">wind.loader (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/wind.pipeline.html#module-wind.pipeline">wind.pipeline (module)</a>
+</li>
+      <li><a href="api/wind.utils.html#module-wind.utils">wind.utils (module)</a>
+</li>
+      <li><a href="api/wind.loader.html#wind.loader.WindLoader">WindLoader (class in wind.loader)</a>
+</li>
+      <li><a href="api/wind.pipeline.html#wind.pipeline.WindPipeline">WindPipeline (class in wind.pipeline)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -234,25 +397,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

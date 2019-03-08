@@ -1,0 +1,7 @@
+wind.pipeline module
+====================
+
+.. automodule:: wind.pipeline
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -11,5 +11,8 @@ Submodules
 
 .. toctree::
 
-   wind.wind
+   wind.db
+   wind.loader
+   wind.pipeline
+   wind.utils
 

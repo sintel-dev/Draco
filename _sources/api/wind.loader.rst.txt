@@ -1,0 +1,7 @@
+wind.loader module
+==================
+
+.. automodule:: wind.loader
+    :members:
+    :undoc-members:
+    :show-inheritance:
