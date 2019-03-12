@@ -12,8 +12,7 @@
 The Wind project is a collection of end-to-end solutions for machine learning tasks commonly
 found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
-automation of machine Learning at Data to AI Lab at MIT. This project is developed in close
-collaboration with Iberdrola, S.A.
+automation of machine Learning at Data to AI Lab at MIT. 
 
 The salient aspects of this customized project are:
 * A set of ready to use, well tested pipelines for different machine learning tasks. These are
