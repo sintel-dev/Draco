@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for `wind.pipeline` module."""
+"""Tests for `greenguard.pipeline` module."""
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from wind.pipeline import WindPipeline
+from greenguard.pipeline import GreenGuardPipeline
 
 
-class TestWindPipeline(TestCase):
+class TestGreenGuardPipeline(TestCase):
     """Tests for `TimeSeriesClassifier`."""
 
-    @patch('wind.pipeline.MLPipeline.from_dict')
+    @patch('greenguard.pipeline.MLPipeline.from_dict')
     def test_fit(self, from_dict_mock):
         """fit prepare the pipeline to make predictions based on the given data."""
 
@@ -20,7 +20,7 @@ class TestWindPipeline(TestCase):
         from_dict_mock.return_value = pipeline_mock
 
         # Run
-        instance = WindPipeline(dict(), 'accuracy')
+        instance = GreenGuardPipeline(dict(), 'accuracy')
         instance.fit('an_X', 'a_y', {'some': 'tables'})
 
         # Asserts
@@ -31,7 +31,7 @@ class TestWindPipeline(TestCase):
 
         assert instance.fitted
 
-    @patch('wind.pipeline.MLPipeline.from_dict')
+    @patch('greenguard.pipeline.MLPipeline.from_dict')
     def test_predict(self, from_dict_mock):
         """predict produces results using the pipeline."""
         # Setup
@@ -39,7 +39,7 @@ class TestWindPipeline(TestCase):
         from_dict_mock.return_value = pipeline_mock
 
         # Run
-        instance = WindPipeline(dict(), 'accuracy')
+        instance = GreenGuardPipeline(dict(), 'accuracy')
         instance.fitted = True
         instance.predict('an_X', {'some': 'tables'})
 
