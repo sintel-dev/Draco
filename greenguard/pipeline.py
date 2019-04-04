@@ -5,6 +5,7 @@ import logging
 import os
 from collections import defaultdict
 
+import cloudpickle
 import numpy as np
 from btb import HyperParameter
 from btb.tuning import GP
@@ -218,3 +219,12 @@ class GreenGuardPipeline(object):
 
         tables.setdefault('entityset', None)
         return self._pipeline.predict(X, **tables)
+
+    def save(self, path):
+        with open(path, 'wb') as pickle_file:
+            cloudpickle.dump(self, pickle_file)
+
+    @classmethod
+    def load(cls, path):
+        with open(path, 'rb') as pickle_file:
+            return cloudpickle.load(pickle_file)

@@ -63,7 +63,9 @@ The salient aspects of this customized project are:
   * `target_id`: Unique identifier of the turbine which this label corresponds to.
   * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
   * `timestamp`: Time associated with this target
-  * `target`: The value that we want to predict. This can either be a numerical value or a categorical label.
+  * `target - optional`: The value that we want to predict. This can either be a numerical
+     value or a categorical label. This column can also be skipped when preparing data that
+     will be used only to make predictions and not to fit any pipeline.
 
 #### Demo Dataset
 
@@ -72,24 +74,15 @@ signals associated with one wind energy production turbine.
 
 This data, which has been already formatted as expected by the GreenGuard Pipelines, can be
 browsed and downloaded directly from the
-[d3-ai-green-guard AWS S3 Bucket](https://d3-ai-green-guard.s3.amazonaws.com/index.html).
+[d3-ai-greenguard AWS S3 Bucket](https://d3-ai-greenguard.s3.amazonaws.com/index.html).
 
 This dataset is adapted from the one used in the project by Cohen, Elliot J.,
 "Wind Analysis." Joint Initiative of the ECOWAS Centre for Renewable Energy and Energy Efficiency (ECREEE), The United Nations Industrial Development Organization (UNIDO) and the Sustainable Engineering Lab (SEL). Columbia University, 22 Aug. 2014.
 [Available online here](https://github.com/Ecohen4/ECREEE)
 
 The complete list of manipulations performed on the original dataset to convert it into the
-demo one that we are using here is exhaustively shown and explained in the corresponding
-[example notebook](link to the notebook), but here is a summary of the steps performed on it:
-
-1. For each column, compute the differences between one value and the next one.
-2. Fix the gaps in the Grid KWH Production column.
-3. Generate Zero Production labels indicating whether the Grid KWH Production was 0 at any point during the day.
-4. Generate a labels table with labels and cutoff times by shifting the Zero Production labels by one day.
-5. Generate a signals table associating each signal column name with a unique `signal_id`.
-6. Generate a turbines table with a single row and `turbine_id`.
-7. Generate a readings table by stacking all the signals as only two columns, timestamp and value,
-   properly identified by `signal_id` and `turbine_id`.
+demo one that we are using here is exhaustively shown and explained in the
+[Green Guard Demo Data notebook](notebooks/Green Guard Demo Data.ipynb).
 
 ## Concepts
 
@@ -158,6 +151,16 @@ We call each one of these tries a **tuning iteration**.
 
 # Getting Started
 
+## Requirements
+
+### Python
+
+**GreenGuard** has been developed and runs on Python 3.5, 3.6 and 3.7.
+
+Also, although it is not strictly required, the usage of a [virtualenv](https://virtualenv.pypa.io/en/latest/)
+is highly recommended in order to avoid interfering with other software installed in the system
+where you are trying to run **GreenGuard**.
+
 ## Installation
 
 The simplest and recommended way to install **GreenGuard** is using pip:
@@ -174,276 +177,104 @@ cd GreenGuard
 make install-develop
 ```
 
-## Usage Example
+## Quickstart
 
 In this example we will load some demo data using the **GreenGuardLoader** and fetch it to the
 **GreenGuardPipeline** for it to find the best possible pipeline, fit it using the given data
 and then make predictions from it.
 
-### Load and explore the data
+**NOTE**: All the examples of this tutorial are run in an [IPython Shell](https://ipython.org/),
+which you can install by running the following commands inside your *virtualenv*:
 
-We first create a loader instance passing:
-
-* The path to the dataset folder
-* The name of the target table
-* The name of the target column
-* Optionally, the names of the readings, turbines and signals tables, in case they are different from the default ones.
-
-
-```python
-from greenguard.loader import GreenGuardLoader
-
-loader = GreenGuardLoader('examples/datasets/greenguard/', 'labels', 'label')
+```
+pip install ipython
+ipython
 ```
 
-Then we call the `loader.load` method, which will return three elements:
+### 1. Load and explore the data
 
-* `X`: The contents of the target table, where the training examples can be found, without the target column.
-* `y`: The target column, as exctracted from the the target table.
-* `tables`: A dictionary containing the additional tables that the Pipeline will need to run, `readings`, `turbines` and `signals`.
+The first step is to load the demo data.
 
-
-```python
-X, y, tables = loader.load()
-X.head(5)
-```
-
-
-
-
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>label_id</th>
-      <th>turbine_id</th>
-      <th>timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>2013-01-01</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>2013-01-02</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>0</td>
-      <td>2013-01-03</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>0</td>
-      <td>2013-01-04</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>0</td>
-      <td>2013-01-05</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
+For this, we will import and call the `orion.loader.load_demo` function without any arguments:
 
 ```python
-y.head(5)
+In [1]: from greenguard.loader import load_demo
+
+In [2]: X, y, tables = load_demo()
 ```
 
+The returned objects are:
 
-
-
-    0    0.0
-    1    0.0
-    2    0.0
-    3    0.0
-    4    0.0
-    Name: label, dtype: float64
-
-
-
+`X`: A `pandas.DataFrame` with the `targets` table data without the `target` column.
 
 ```python
-tables.keys()
+In [3]: X.head()
+Out[3]:
+   target_id  turbine_id  timestamp
+0          1           1 2013-01-01
+1          2           1 2013-01-02
+2          3           1 2013-01-03
+3          4           1 2013-01-04
+4          5           1 2013-01-05
 ```
 
-
-
-
-    dict_keys(['readings', 'signals', 'turbines'])
-
-
-
+`y`: A `pandas.Series` with the `target` column from the `targets` table.
 
 ```python
-tables['turbines'].head()
+In [4]: y.head()
+Out[4]:
+0    0.0
+1    0.0
+2    0.0
+3    0.0
+4    0.0
+Name: target, dtype: float64
 ```
 
-
-
-
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>turbine_id</th>
-      <th>name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>Turbine 0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
+`tables`: A dictionary containing the `readings`, `turbines` and `signals` tables.
 
 ```python
-tables['signals'].head()
+In [5]: tables.keys()
+Out[5]: dict_keys(['readings', 'signals', 'turbines'])
+
+In [6]: tables['turbines']
+Out[6]:
+   turbine_id       name
+0           1  Turbine 1
+
+In [7]: tables['signals'].head()
+Out[7]:
+   signal_id                                          name
+0          1  WTG01_Grid Production PossiblePower Avg. (1)
+1          2  WTG02_Grid Production PossiblePower Avg. (2)
+2          3  WTG03_Grid Production PossiblePower Avg. (3)
+3          4  WTG04_Grid Production PossiblePower Avg. (4)
+4          5  WTG05_Grid Production PossiblePower Avg. (5)
+
+In [8]: tables['readings'].head()
+Out[8]:
+   reading_id  turbine_id  signal_id  timestamp  value
+0           1           1          1 2013-01-01  817.0
+1           2           1          2 2013-01-01  805.0
+2           3           1          3 2013-01-01  786.0
+3           4           1          4 2013-01-01  809.0
+4           5           1          5 2013-01-01  755.0
 ```
 
+### 2. Split the data
 
+If we want to split the data in train and test subsets, we can do so by splitting the
+`X` and `y` variables with any suitable tool.
 
-
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>signal_id</th>
-      <th>name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>WTG01_Grid Production PossiblePower Avg. (1)</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>WTG02_Grid Production PossiblePower Avg. (2)</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>WTG03_Grid Production PossiblePower Avg. (3)</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>WTG04_Grid Production PossiblePower Avg. (4)</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>WTG05_Grid Production PossiblePower Avg. (5)</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
+In this case, we will do it using the [train_test_split function from scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html).
 
 ```python
-tables['readings'].head()
+In [9]: from sklearn.model_selection import train_test_split
+
+In [10]: X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
 ```
 
-
-
-
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>reading_id</th>
-      <th>turbine_id</th>
-      <th>signal_id</th>
-      <th>timestamp</th>
-      <th>value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2013-01-01</td>
-      <td>817.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>2013-01-01</td>
-      <td>805.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>0</td>
-      <td>2</td>
-      <td>2013-01-01</td>
-      <td>786.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>0</td>
-      <td>3</td>
-      <td>2013-01-01</td>
-      <td>809.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>0</td>
-      <td>4</td>
-      <td>2013-01-01</td>
-      <td>755.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-### Split the data
-
-If we want to split the data in train and test subsets, we can do so by splitting the `X` and `y` variables.
-
-
-```python
-from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
-```
-
-### Finding the best Pipeline
+### 3. Finding the best Pipeline
 
 Once we have loaded the data, we create a **GreenGuardPipeline** instance by passing:
 
@@ -452,162 +283,183 @@ Once we have loaded the data, we create a **GreenGuardPipeline** instance by pas
 * `cost (bool)`: Whether the metric is a cost function to be minimized or a score to be maximized.
 
 Optionally, we can also pass defails about the cross validation configuration:
+
 * `stratify`
 * `cv_splits`
 * `shuffle`
 * `random_state`
 
+In this case, we will be loading the `greenguard_classification` pipeline, using
+the `accuracy` metric, and using only 2 cross validation splits:
 
 ```python
-from greenguard.pipeline import GreenGuardPipeline
+In [11]: from greenguard.pipeline import GreenGuardPipeline
 
-pipeline = GreenGuardPipeline('greenguard_classification', 'accuracy', cv_splits=2)
+In [12]: pipeline = GreenGuardPipeline('greenguard_classification', 'accuracy', cv_splits=2)
+Using TensorFlow backend.
 ```
-
-    Using TensorFlow backend.
-
 
 Once we have created the pipeline, we can call its `tune` method to find the best possible
 hyperparameters for our data, passing the `X`, `y`, and `tables` variables returned by the loader,
 as well as an indication of the number of tuning iterations that we want to perform.
 
-
 ```python
-pipeline.tune(X_train, y_train, tables, iterations=0)
+In [13]: pipeline.tune(X_train, y_train, tables, iterations=10)
 ```
 
 After the tuning process has finished, the hyperparameters have been already set in the classifier.
 
 We can see the found hyperparameters by calling the `get_hyperparameters` method.
 
-
 ```python
-import json
+In [14]: import json
 
-print(json.dumps(pipeline.get_hyperparameters(), indent=4))
+In [15]: print(json.dumps(pipeline.get_hyperparameters(), indent=4))
+{
+    "pandas.DataFrame.resample#1": {
+        "rule": "1D",
+        "time_index": "timestamp",
+        "groupby": [
+            "turbine_id",
+            "signal_id"
+        ],
+        "aggregation": "mean"
+    },
+    "pandas.DataFrame.unstack#1": {
+        "level": "signal_id",
+        "reset_index": true
+    },
+    ...
 ```
 
-    {
-        "pandas.DataFrame.resample#1": {
-            "rule": "1D",
-            "time_index": "timestamp",
-            "groupby": [
-                "turbine_id",
-                "signal_id"
-            ],
-            "aggregation": "mean"
-        },
-        "pandas.DataFrame.unstack#1": {
-            "level": "signal_id",
-            "reset_index": true
-        },
-        "featuretools.EntitySet.entity_from_dataframe#1": {
-            "entityset_id": "entityset",
-            "entity_id": "readings",
-            "index": "index",
-            "variable_types": null,
-            "make_index": true,
-            "time_index": "timestamp",
-            "secondary_time_index": null,
-            "already_sorted": false
-        },
-        "featuretools.EntitySet.entity_from_dataframe#2": {
-            "entityset_id": "entityset",
-            "entity_id": "turbines",
-            "index": "turbine_id",
-            "variable_types": null,
-            "make_index": false,
-            "time_index": null,
-            "secondary_time_index": null,
-            "already_sorted": false
-        },
-        "featuretools.EntitySet.entity_from_dataframe#3": {
-            "entityset_id": "entityset",
-            "entity_id": "signals",
-            "index": "signal_id",
-            "variable_types": null,
-            "make_index": false,
-            "time_index": null,
-            "secondary_time_index": null,
-            "already_sorted": false
-        },
-        "featuretools.EntitySet.add_relationship#1": {
-            "parent": "turbines",
-            "parent_column": "turbine_id",
-            "child": "readings",
-            "child_column": "turbine_id"
-        },
-        "featuretools.dfs#1": {
-            "target_entity": "turbines",
-            "index": "turbine_id",
-            "time_index": "timestamp",
-            "agg_primitives": null,
-            "trans_primitives": null,
-            "copy": false,
-            "encode": false,
-            "max_depth": 1,
-            "remove_low_information": true
-        },
-        "mlprimitives.custom.feature_extraction.CategoricalEncoder#1": {
-            "copy": true,
-            "features": "auto",
-            "max_labels": 0
-        },
-        "sklearn.impute.SimpleImputer#1": {
-            "missing_values": NaN,
-            "fill_value": null,
-            "verbose": false,
-            "copy": true,
-            "strategy": "mean"
-        },
-        "sklearn.preprocessing.StandardScaler#1": {
-            "with_mean": true,
-            "with_std": true
-        },
-        "xgboost.XGBClassifier#1": {
-            "n_jobs": -1,
-            "n_estimators": 100,
-            "max_depth": 3,
-            "learning_rate": 0.1,
-            "gamma": 0,
-            "min_child_weight": 1
-        }
-    }
-
-
-as well as the obtained cross validation score by looking at the `score` attribute of the `tsc` object
+as well as the obtained cross validation score by looking at the `score` attribute of the
+`pipeline` object:
 
 
 ```python
-pipeline.score
+In [16]: pipeline.score
+Out[16]: 0.6447509660798626
 ```
 
+**NOTE**: If the score is not good enough, we can call the `tune` method again as many times
+as needed and the pipeline will continue its tuning process every time based on the previous
+results!
 
-
-
-    0.6592421640188922
-
-
+### 4. Fitting the pipeline
 
 Once we are satisfied with the obtained cross validation score, we can proceed to call
 the `fit` method passing again the same data elements.
 
+This will fit the pipeline with all the training data available using the best hyperparameters
+found during the tuning process:
 
 ```python
-pipeline.fit(X_train, y_train, tables)
+In [17]: pipeline.fit(X_train, y_train, tables)
 ```
 
-After this, we are ready to make predictions on new data
+### 5. Use the fitted pipeline
 
+After fitting the pipeline, we are ready to make predictions on new data:
 
 ```python
-predictions = pipeline.predict(X_test, tables)
-predictions[0:5]
+In [18]: predictions = pipeline.predict(X_test, tables)
+
+In [19]: predictions[0:5]
+Out[19]: array([1., 0., 0., 0., 0.])
+```
+
+And evaluate its prediction performance:
+
+```python
+In [20]: from sklearn.metrics import accuracy_score
+
+In [21]: f1_score(y_test, predictions)
+Out[21]: 0.6413043478260869
+```
+
+### 6. Save and load the pipeline
+
+Since the tuning and fitting process takes time to execute and requires a lot of data, you
+will probably want to save a fitted instance and load it later to analyze new signals
+instead of fitting pipelines over and over again.
+
+This can be done by using the `save` and `load` methods from the `GreenGuardPipeline`.
+
+In order to save an instance, call its `save` method passing it the path and filename
+where the model should be saved.
+
+```
+In [22]: path = 'my_pipeline.pkl'
+
+In [22]: pipeline.save(path)
+```
+
+Once the pipeline is saved, it can be loaded back as a new `GreenGuardPipeline` by using the
+`GreenGuardPipeline.load` method:
+
+```
+In [23]: new_pipeline = GreenGuardPipeline.load(path)
+```
+
+Once loaded, it can be directly used to make predictions on new data.
+
+```
+In [24]: new_pipeline.predict(X_test, tables)
+Out[24]: array([1., 0., 0., 0., 0.])
 ```
 
 
+## Use your own Dataset
 
+Once you are familiar with the **GreenGuardPipeline** usage, you will probably want to run it
+on your own dataset.
 
-    array([0., 0., 0., 0., 0.])
+Here are the necessary steps:
 
+### 1. Prepare the data
 
+Firt of all, you will need to prepare your data as 4 CSV files like the ones described in the
+[data format](#data-format) section above.
+
+### 2. Create a GreenGuardLoader
+
+Once you have the CSV files ready, you will need to import the `orion.loader.GreenGuardLoader`
+class and create an instance passing:
+
+* `path - str`: The path to the folder where the 4 CSV files are
+* `target - str, optional`: The name of the target table. Defaults to `targets`.
+* `target_column - str, optional`: The name of the target column. Defaults to `target`.
+* `readings - str, optional`: The name of the readings table. Defaults to `readings`.
+* `turbines - str, optional`: The name of the turbines table. Defaults to `turbines`.
+* `signals - str, optional`: The name of the signals table. Defaults to `signals`.
+* `readings - str, optional`: The name of the readings table. Defaults to `readings`.
+* `gzip - bool, optional`: Set to True if the CSV files are gzipped. Defaults to False.
+
+For example, here we will be loading a custom dataset which has been sorted in gzip format
+inside the `my_dataset` folder, and for which the target table has a different name:
+
+```python
+In [25]: import os
+
+In [26]: os.listdir('my_dataset')
+Out[26]: ['readings.csv.gz', 'turbines.csv.gz', 'signals.csv.gz', 'labels.csv.gz']
+
+In [27]: from greenguard.loader import GreenGuardLoader
+
+In [28]: loader = GreenGuardLoader('my_dataset', target='labels', gzip=True)
+```
+
+### 3. Call the loader.load method.
+
+Once the `loader` instance has been created, we can call its `load` method:
+
+```python
+In [29]: X, y, tables = loader.load()
+```
+
+Optionally, if the dataset contains only data to make predictions and the `target` column
+does not exist, we can pass it the argument `False` to skip it:
+
+```python
+In [29]: X, tables = loader.load(target=False)
+```

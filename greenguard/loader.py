@@ -2,6 +2,7 @@
 
 import logging
 import os
+import shutil
 
 import pandas as pd
 
@@ -11,7 +12,7 @@ DATA_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     'data'
 )
-BUCKET = 'd3-ai-green-guard'
+BUCKET = 'd3-ai-greenguard'
 S3_URL = 'https://{}.s3.amazonaws.com/{}.csv'
 
 
@@ -52,8 +53,8 @@ def download(name):
 
 class GreenGuardLoader(object):
 
-    def __init__(self, dataset_path, target, target_column,
-                 readings='readings', turbines='turbines', signals='signals'):
+    def __init__(self, dataset_path, target='targets', target_column='target',
+                 readings='readings', turbines='turbines', signals='signals', gzip=False):
 
         self._dataset_path = dataset_path
         self._target = target
@@ -61,17 +62,17 @@ class GreenGuardLoader(object):
         self._readings = readings
         self._turbines = turbines
         self._signals = signals
+        self._gzip = gzip
 
     def read_csv(self, table, timestamp=False):
         if timestamp:
             timestamp = ['timestamp']
 
-        try:
-            path = os.path.join(self._dataset_path, table + '.csv')
-            return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
-        except FileNotFoundError:
+        path = os.path.join(self._dataset_path, table + '.csv')
+        if self._gzip:
             path += '.gz'
-            return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
+
+        return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
 
     def load(self, target=True):
         tables = {
@@ -90,6 +91,22 @@ class GreenGuardLoader(object):
 
 
 def load_demo():
-    loader = GreenGuardLoader('https://d3-ai-green-guard.s3.amazonaws.com/', 'labels', 'label')
+    demo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'demo')
+    if os.path.exists(demo_path):
+        loader = GreenGuardLoader(demo_path, gzip=True)
+        return loader.load()
 
-    return loader.load()
+    else:
+        os.mkdir(demo_path)
+        try:
+            loader = GreenGuardLoader('https://d3-ai-greenguard.s3.amazonaws.com/', gzip=True)
+            X, tables = loader.load(target=False)
+            X.to_csv(os.path.join(demo_path, 'targets.csv.gz'), index=False)
+            for name, table in tables.items():
+                table.to_csv(os.path.join(demo_path, name + '.csv.gz'), index=False)
+
+            y = X.pop('target')
+            return X, y, tables
+        except Exception:
+            shutil.rmtree(demo_path)
+            raise
