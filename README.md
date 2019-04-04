@@ -82,7 +82,7 @@ This dataset is adapted from the one used in the project by Cohen, Elliot J.,
 
 The complete list of manipulations performed on the original dataset to convert it into the
 demo one that we are using here is exhaustively shown and explained in the
-[Green Guard Demo Data notebook](notebooks/Green Guard Demo Data.ipynb).
+[Green Guard Demo Data notebook](notebooks/Green%20Guard%20Demo%20Data.ipynb).
 
 ## Concepts
 
@@ -197,7 +197,7 @@ The first step is to load the demo data.
 
 For this, we will import and call the `orion.loader.load_demo` function without any arguments:
 
-```python
+```
 In [1]: from greenguard.loader import load_demo
 
 In [2]: X, y, tables = load_demo()
@@ -207,7 +207,7 @@ The returned objects are:
 
 `X`: A `pandas.DataFrame` with the `targets` table data without the `target` column.
 
-```python
+```
 In [3]: X.head()
 Out[3]:
    target_id  turbine_id  timestamp
@@ -220,7 +220,7 @@ Out[3]:
 
 `y`: A `pandas.Series` with the `target` column from the `targets` table.
 
-```python
+```
 In [4]: y.head()
 Out[4]:
 0    0.0
@@ -233,7 +233,7 @@ Name: target, dtype: float64
 
 `tables`: A dictionary containing the `readings`, `turbines` and `signals` tables.
 
-```python
+```
 In [5]: tables.keys()
 Out[5]: dict_keys(['readings', 'signals', 'turbines'])
 
@@ -268,7 +268,7 @@ If we want to split the data in train and test subsets, we can do so by splittin
 
 In this case, we will do it using the [train_test_split function from scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html).
 
-```python
+```
 In [9]: from sklearn.model_selection import train_test_split
 
 In [10]: X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
@@ -292,7 +292,7 @@ Optionally, we can also pass defails about the cross validation configuration:
 In this case, we will be loading the `greenguard_classification` pipeline, using
 the `accuracy` metric, and using only 2 cross validation splits:
 
-```python
+```
 In [11]: from greenguard.pipeline import GreenGuardPipeline
 
 In [12]: pipeline = GreenGuardPipeline('greenguard_classification', 'accuracy', cv_splits=2)
@@ -303,7 +303,7 @@ Once we have created the pipeline, we can call its `tune` method to find the bes
 hyperparameters for our data, passing the `X`, `y`, and `tables` variables returned by the loader,
 as well as an indication of the number of tuning iterations that we want to perform.
 
-```python
+```
 In [13]: pipeline.tune(X_train, y_train, tables, iterations=10)
 ```
 
@@ -311,7 +311,7 @@ After the tuning process has finished, the hyperparameters have been already set
 
 We can see the found hyperparameters by calling the `get_hyperparameters` method.
 
-```python
+```
 In [14]: import json
 
 In [15]: print(json.dumps(pipeline.get_hyperparameters(), indent=4))
@@ -336,7 +336,7 @@ as well as the obtained cross validation score by looking at the `score` attribu
 `pipeline` object:
 
 
-```python
+```
 In [16]: pipeline.score
 Out[16]: 0.6447509660798626
 ```
@@ -353,7 +353,7 @@ the `fit` method passing again the same data elements.
 This will fit the pipeline with all the training data available using the best hyperparameters
 found during the tuning process:
 
-```python
+```
 In [17]: pipeline.fit(X_train, y_train, tables)
 ```
 
@@ -361,7 +361,7 @@ In [17]: pipeline.fit(X_train, y_train, tables)
 
 After fitting the pipeline, we are ready to make predictions on new data:
 
-```python
+```
 In [18]: predictions = pipeline.predict(X_test, tables)
 
 In [19]: predictions[0:5]
@@ -370,7 +370,7 @@ Out[19]: array([1., 0., 0., 0., 0.])
 
 And evaluate its prediction performance:
 
-```python
+```
 In [20]: from sklearn.metrics import accuracy_score
 
 In [21]: f1_score(y_test, predictions)
@@ -438,7 +438,7 @@ class and create an instance passing:
 For example, here we will be loading a custom dataset which has been sorted in gzip format
 inside the `my_dataset` folder, and for which the target table has a different name:
 
-```python
+```
 In [25]: import os
 
 In [26]: os.listdir('my_dataset')
@@ -453,13 +453,13 @@ In [28]: loader = GreenGuardLoader('my_dataset', target='labels', gzip=True)
 
 Once the `loader` instance has been created, we can call its `load` method:
 
-```python
+```
 In [29]: X, y, tables = loader.load()
 ```
 
 Optionally, if the dataset contains only data to make predictions and the `target` column
 does not exist, we can pass it the argument `False` to skip it:
 
-```python
+```
 In [29]: X, tables = loader.load(target=False)
 ```
