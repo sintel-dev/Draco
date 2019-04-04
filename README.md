@@ -1,18 +1,30 @@
+<p align="center">
+<img width=30% src="https://dai.lids.mit.edu/wp-content/uploads/2018/08/orion.png" alt=“GreenGuard” />
+</p>
 
-[![PyPI Shield](https://img.shields.io/pypi/v/wind.svg)](https://pypi.python.org/pypi/wind)
-[![Travis CI Shield](https://travis-ci.org/D3-AI/wind.svg?branch=master)](https://travis-ci.org/D3-AI/wind)
+<p align="center">
+<i>The GreenGuard project is a collection of end-to-end solutions for machine learning tasks commonly
+found in monitoring wind energy production systems.</I>
+</p>
+
+<p align="center">
+<i>A project from Data to AI Lab at MIT.</I>
+</p>
+
+[![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
+[![Travis CI Shield](https://travis-ci.org/D3-AI/GreenGuard.svg?branch=master)](https://travis-ci.org/D3-AI/GreenGuard)
 
 # GreenGuard
 
-- Documentation: https://D3-AI.github.io/wind
-- Homepage: https://github.com/D3-AI/wind
+- Documentation: https://D3-AI.github.io/GreenGuard
+- Homepage: https://github.com/D3-AI/GreenGuard
 
 # Overview
 
-The Wind project is a collection of end-to-end solutions for machine learning tasks commonly
+The GreenGuard project is a collection of end-to-end solutions for machine learning tasks commonly
 found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
-automation of machine Learning at Data to AI Lab at MIT. 
+automation of machine Learning at Data to AI Lab at MIT.
 
 The salient aspects of this customized project are:
 * A set of ready to use, well tested pipelines for different machine learning tasks. These are
@@ -23,6 +35,52 @@ The salient aspects of this customized project are:
 * A community oriented infrastructure to incorporate new pipelines.
 * A robust continuous integration and testing infrastructure.
 * A ``learning database`` recording all past outcomes --> tasks, pipelines, outcomes.
+
+## Data Format
+
+**GreenGuard Pipelines** work on time Series formatted as follows:
+
+* A **Turbines** table that contains:
+  * `turbine_id`: column with the unique id of each turbine.
+  * A number of additional columns with information about each turbine.
+* A **Signals** table that contains:
+  * `signal_id`: column with the unique id of each signal.
+  * A number of additional columns with information about each signal.
+* A **Readings** table that contains:
+  * `reading_id`: Unique identifier of this reading.
+  * `turbine_id`: Unique identifier of the turbine which this reading comes from.
+  * `signal_id`: Unique identifier of the signal which this reading comes from.
+  * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
+  * `value`: Numeric value of this reading.
+* A **Targets** table that contains:
+  * `target_id`: Unique identifier of the turbine which this label corresponds to.
+  * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
+  * `timestamp`: Time associated with this target
+  * `target`: The value that we want to predict. This can either be a numerical value or a categorical label.
+
+#### Demo Dataset
+
+For development and demonstration purposes, we include a dataset which includes data from several telemetry
+signals associated with one turbine already formatted as expected by the GreenGuard Pipelines.
+
+This formatted dataset can be browsed and downloaded directly from the
+[d3-ai-green-guard AWS S3 Bucket](https://d3-ai-green-guard.s3.amazonaws.com/index.html).
+
+This dataset is adapted from the one used in the project by Cohen, Elliot J.,
+"Wind Analysis." Joint Initiative of the ECOWAS Centre for Renewable Energy and Energy Efficiency (ECREEE), The United Nations Industrial Development Organization (UNIDO) and the Sustainable Engineering Lab (SEL). Columbia University, 22 Aug. 2014.
+[Available online here](https://github.com/Ecohen4/ECREEE)
+
+The complete list of manipulations performed on the original dataset to convert it into the
+demo one that we are using here is exhaustively shown and explained in the corresponding
+[example notebook](link to the notebook), but here is a summary of the steps performed:
+
+* For each column, compute the differences between one value and the next one
+* Fix some gaps in the Grid KWH Production column
+* Generate Zero Production labels indicating whether the Grid KWH Production was 0 at any point during the day.
+* Generate a labels table with labels and cutoff times by shifting the Zero Production labels by one day.
+* Generate a signals table associating each signal column name with a signal_id.
+* Generate a turbines table with a single row and turbine_id
+* Generate a readings table by stacking all the signals as only two columns, timestamp and value, properly identified by signal_id and turbine_id.
 
 ## Concepts
 
@@ -66,42 +124,16 @@ A pipeline can be fitted and evaluated using the MLPipeline API in MLBlocks.
 In our current phase, we are addressing two tasks - time series classification and time series
 regression. To provide solutions for these two tasks we have two components.
 
-### WindPipeline
+### GreenGuardPipeline
 
 This class is the one in charge of learning from the data and making predictions by building
 [MLBlocks](https://hdi-project.github.io/MLBlocks) and later on tuning them using
 [BTB](https://hdi-project.github.io/BTB/)
 
-### WindLoader
+### GreenGuardLoader
 
 A class responsible for loading the time series data from CSV files, and return it in the
-format ready to be used by the **WindPipeline**.
-
-
-### Wind Dataset
-
-A dataset is a folder that contains time series data and information about
-a Machine Learning problem in the form of CSV and JSON files.
-
-The expected contents of the `dataset` folder are 4 CSV files:
-
-* A **Turbines** table that contains:
-  * `turbine_id`: column with the unique id of each turbine.
-  * A number of additional columns with information about each turbine.
-* A **Signals** table that contains:
-  * `signal_id`: column with the unique id of each signal.
-  * A number of additional columns with information about each signal.
-* A **Readings** table that contains:
-  * `reading_id`: Unique identifier of this reading.
-  * `turbine_id`: Unique identifier of the turbine which this reading comes from.
-  * `signal_id`: Unique identifier of the signal which this reading comes from.
-  * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
-  * `value`: Numeric value of this reading.
-* A **Targets** table that contains:
-  * `target_id`: Unique identifier of the turbine which this label corresponds to.
-  * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
-  * `timestamp`: Time associated with this target
-  * `target`: The value that we want to predict. This can either be a numerical value or a categorical label.
+format ready to be used by the **GreenGuardPipeline**.
 
 ### Tuning
 
@@ -119,24 +151,24 @@ We call each one of these tries a **tuning iteration**.
 
 ## Installation
 
-The simplest and recommended way to install **Wind** is using pip:
+The simplest and recommended way to install **GreenGuard** is using pip:
 
 ```bash
-pip install wind
+pip install greenguard
 ```
 
 For development, you can also clone the repository and install it from sources
 
 ```bash
-git clone git@github.com:D3-AI/wind.git
-cd wind
+git clone git@github.com:D3-AI/GreenGuard.git
+cd GreenGuard
 make install-develop
 ```
 
 ## Usage Example
 
-In this example we will load some demo data using the **WindLoader** and fetch it to the
-**WindPipeline** for it to find the best possible pipeline, fit it using the given data
+In this example we will load some demo data using the **GreenGuardLoader** and fetch it to the
+**GreenGuardPipeline** for it to find the best possible pipeline, fit it using the given data
 and then make predictions from it.
 
 ### Load and explore the data
@@ -150,9 +182,9 @@ We first create a loader instance passing:
 
 
 ```python
-from wind.loader import WindLoader
+from greenguard.loader import GreenGuardLoader
 
-loader = WindLoader('examples/datasets/wind/', 'labels', 'label')
+loader = GreenGuardLoader('examples/datasets/greenguard/', 'labels', 'label')
 ```
 
 Then we call the `loader.load` method, which will return three elements:
@@ -404,7 +436,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 
 ### Finding the best Pipeline
 
-Once we have loaded the data, we create a **WindPipeline** instance by passing:
+Once we have loaded the data, we create a **GreenGuardPipeline** instance by passing:
 
 * `template (string)`: the name of a template or the path to a template json file.
 * `metric (string or function)`: The name of the metric to use or a metric function to use.
@@ -418,9 +450,9 @@ Optionally, we can also pass defails about the cross validation configuration:
 
 
 ```python
-from wind.pipeline import WindPipeline
+from greenguard.pipeline import GreenGuardPipeline
 
-pipeline = WindPipeline('wind_classification', 'accuracy', cv_splits=2)
+pipeline = GreenGuardPipeline('greenguard_classification', 'accuracy', cv_splits=2)
 ```
 
     Using TensorFlow backend.

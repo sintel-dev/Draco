@@ -26,7 +26,7 @@ METRICS = {
 }
 
 
-class WindPipeline(object):
+class GreenGuardPipeline(object):
 
     template = None
     fitted = False
