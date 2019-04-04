@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>wind package &mdash; Wind 0.1.0-dev documentation</title>
+  <title>greenguard.loader module &mdash; GreenGuard 0.1.0-dev documentation</title>
   
 
   
@@ -36,9 +36,7 @@
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="wind.db module" href="wind.db.html" />
-    <link rel="prev" title="Usage" href="../usage.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -52,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Wind
+            <a href="../index.html" class="icon icon-home"> GreenGuard
           
 
           
@@ -82,29 +80,19 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#concepts">Concepts</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#primitive">Primitive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#template">Template</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#pipeline">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#demo-dataset">Demo Dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#windpipeline">WindPipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#windloader">WindLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#wind-dataset">Wind Dataset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#tuning">Tuning</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#concepts">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#usage-example">Usage Example</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#load-and-explore-the-data">Load and explore the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#split-the-data">Split the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">Finding the best Pipeline</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#use-your-own-dataset">Use your own Dataset</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
@@ -113,19 +101,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="wind.db.html">wind.db module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wind.loader.html">wind.loader module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wind.pipeline.html">wind.pipeline module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wind.utils.html">wind.utils module</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 <p class="caption"><span class="caption-text">Development Notes</span></p>
 <ul>
@@ -168,7 +143,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Wind</a>
+          <a href="../index.html">GreenGuard</a>
         
       </nav>
 
@@ -199,14 +174,14 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>wind package</li>
+      <li>greenguard.loader module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/HDI-Project/Wind/blob/master/docs/api/wind.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/GreenGuard/blob/master/docs/api/greenguard.loader.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -220,20 +195,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-wind">
-<span id="wind-package"></span><h1>wind package<a class="headerlink" href="#module-wind" title="Permalink to this headline">¶</a></h1>
-<p>Top-level package for Wind.</p>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="wind.db.html">wind.db module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wind.loader.html">wind.loader module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wind.pipeline.html">wind.pipeline module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wind.utils.html">wind.utils module</a></li>
-</ul>
-</div>
-</div>
+  <div class="section" id="module-greenguard.loader">
+<span id="greenguard-loader-module"></span><h1>greenguard.loader module<a class="headerlink" href="#module-greenguard.loader" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="greenguard.loader.GreenGuardLoader">
+<em class="property">class </em><code class="descclassname">greenguard.loader.</code><code class="descname">GreenGuardLoader</code><span class="sig-paren">(</span><em>dataset_path</em>, <em>target='targets'</em>, <em>target_column='target'</em>, <em>readings='readings'</em>, <em>turbines='turbines'</em>, <em>signals='signals'</em>, <em>gzip=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardLoader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="greenguard.loader.GreenGuardLoader.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>target=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardLoader.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="greenguard.loader.GreenGuardLoader.read_csv">
+<code class="descname">read_csv</code><span class="sig-paren">(</span><em>table</em>, <em>timestamp=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardLoader.read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardLoader.read_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="greenguard.loader.download">
+<code class="descclassname">greenguard.loader.</code><code class="descname">download</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the CSV with the given name from S3.</p>
+<p>If the CSV has never been loaded before, it will be downloaded
+from the [d3-ai-orion bucket](<a class="reference external" href="https://d3-ai-orion.s3.amazonaws.com">https://d3-ai-orion.s3.amazonaws.com</a>)
+and then cached inside the <cite>data</cite> folder, within the <cite>orion</cite> package
+directory, and then returned.</p>
+<p>Otherwise, if it has been downloaded and cached before, it will be directly
+loaded from the <cite>orion/data</cite> folder without contacting S3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the CSV to load.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If no test_size is given, a single pandas.DataFrame is returned containing all
+the data. If test_size is given, a tuple containing one pandas.DataFrame for
+the train split and another one for the test split is returned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="greenguard.loader.load_demo">
+<code class="descclassname">greenguard.loader.</code><code class="descname">load_demo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#load_demo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.load_demo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 
@@ -241,15 +247,6 @@
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="wind.db.html" class="btn btn-neutral float-right" title="wind.db module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>

@@ -1,7 +1,0 @@
-wind.db module
-==============
-
-.. automodule:: wind.db
-    :members:
-    :undoc-members:
-    :show-inheritance:

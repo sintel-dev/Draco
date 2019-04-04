@@ -1,0 +1,19 @@
+greenguard package
+==================
+
+.. automodule:: greenguard
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   greenguard.data
+   greenguard.db
+   greenguard.loader
+   greenguard.pipeline
+   greenguard.utils
+

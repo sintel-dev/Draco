@@ -1,7 +1,7 @@
-wind.pipeline module
+greenguard.db module
 ====================
 
-.. automodule:: wind.pipeline
+.. automodule:: greenguard.db
     :members:
     :undoc-members:
     :show-inheritance:

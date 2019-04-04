@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GreenGuard &mdash; Wind 0.1.0-dev documentation</title>
+  <title>GreenGuard &mdash; GreenGuard 0.1.0-dev documentation</title>
   
 
   
@@ -51,7 +51,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> Wind
+            <a href="#" class="icon icon-home"> GreenGuard
           
 
           
@@ -81,29 +81,19 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">GreenGuard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#overview">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#concepts">Concepts</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#primitive">Primitive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#template">Template</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#pipeline">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#demo-dataset">Demo Dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#windpipeline">WindPipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#windloader">WindLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#wind-dataset">Wind Dataset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#tuning">Tuning</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#concepts">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#usage-example">Usage Example</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#load-and-explore-the-data">Load and explore the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#split-the-data">Split the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#finding-the-best-pipeline">Finding the best Pipeline</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#use-your-own-dataset">Use your own Dataset</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
@@ -112,19 +102,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api/wind.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/wind.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/wind.db.html">wind.db module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/wind.loader.html">wind.loader module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/wind.pipeline.html">wind.pipeline module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/wind.utils.html">wind.utils module</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 <p class="caption"><span class="caption-text">Development Notes</span></p>
 <ul>
@@ -167,7 +144,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Wind</a>
+          <a href="#">GreenGuard</a>
         
       </nav>
 
@@ -205,7 +182,7 @@
         
             
             
-              <a href="https://github.com/HDI-Project/Wind/blob/master/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/GreenGuard/blob/master/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -220,27 +197,27 @@
            <div itemprop="articleBody">
             
   <p align="center">
-<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt=“DAI” />
+<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="DAI" />
 </p><p align="center">
-<i>A project from Data to AI Lab at MIT.</I>
+<i>A project from Data to AI Lab at MIT.</i>
 </p><p align="center">
-<i> ------------------------------------</I>
+<i> ------------------------------------</i>
 </p><p align="center">
-<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt=“GreenGuard” />
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt="GreenGuard" />
 </p><p align="center">
-<i>GreenGuard is a machine learning library built for data generated by wind turbines and solar panel installations.</I>
-</p><a class="reference external image-reference" href="https://pypi.python.org/pypi/wind"><img alt="PyPI Shield" src="https://img.shields.io/pypi/v/wind.svg" /></a>
-<a class="reference external image-reference" href="https://travis-ci.org/D3-AI/wind"><img alt="Travis CI Shield" src="https://travis-ci.org/D3-AI/wind.svg?branch=master" /></a>
+<i>GreenGuard is a machine learning library built for data generated by wind turbines and solar panel installations.</i>
+</p><a class="reference external image-reference" href="https://pypi.python.org/pypi/greenguard"><img alt="PyPI Shield" src="https://img.shields.io/pypi/v/greenguard.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.org/D3-AI/GreenGuard"><img alt="Travis CI Shield" src="https://travis-ci.org/D3-AI/GreenGuard.svg?branch=master" /></a>
 <div class="section" id="greenguard">
 <h1>GreenGuard<a class="headerlink" href="#greenguard" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>Documentation: <a class="reference external" href="https://D3-AI.github.io/wind">https://D3-AI.github.io/wind</a></p></li>
-<li><p>Homepage: <a class="reference external" href="https://github.com/D3-AI/wind">https://github.com/D3-AI/wind</a></p></li>
+<li><p>Documentation: <a class="reference external" href="https://D3-AI.github.io/GreenGuard">https://D3-AI.github.io/GreenGuard</a></p></li>
+<li><p>Homepage: <a class="reference external" href="https://github.com/D3-AI/GreenGuard">https://github.com/D3-AI/GreenGuard</a></p></li>
 </ul>
 </div>
 <div class="section" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
-<p>The Wind project is a collection of end-to-end solutions for machine learning tasks commonly
+<p>The GreenGuard project is a collection of end-to-end solutions for machine learning tasks commonly
 found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
 automation of machine Learning at Data to AI Lab at MIT.</p>
@@ -255,64 +232,9 @@ vetted through testing across multiple publicly available datasets for the same 
 <li><p>A robust continuous integration and testing infrastructure.</p></li>
 <li><p>A <code class="docutils literal notranslate"><span class="pre">learning</span> <span class="pre">database</span></code> recording all past outcomes –&gt; tasks, pipelines, outcomes.</p></li>
 </ul>
-<div class="section" id="concepts">
-<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
-<p>Before diving into the software usage, we briefly explain some concepts and terminology.</p>
-<div class="section" id="primitive">
-<h3>Primitive<a class="headerlink" href="#primitive" title="Permalink to this headline">¶</a></h3>
-<p>We call the smallest computational blocks used in a Machine Learning process
-<strong>primitives</strong>, which:</p>
-<ul class="simple">
-<li><p>Can be either classes or functions.</p></li>
-<li><p>Have some initialization arguments, which MLBlocks calls <code class="docutils literal notranslate"><span class="pre">init_params</span></code>.</p></li>
-<li><p>Have some tunable hyperparameters, which have types and a list or range of valid values.</p></li>
-</ul>
-</div>
-<div class="section" id="template">
-<h3>Template<a class="headerlink" href="#template" title="Permalink to this headline">¶</a></h3>
-<p>Primitives can be combined to form what we call <strong>Templates</strong>, which:</p>
-<ul class="simple">
-<li><p>Have a list of primitives.</p></li>
-<li><p>Have some initialization arguments, which correspond to the initialization arguments
-of their primitives.</p></li>
-<li><p>Have some tunable hyperparameters, which correspond to the tunable hyperparameters
-of their primitives.</p></li>
-</ul>
-</div>
-<div class="section" id="pipeline">
-<h3>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h3>
-<p>Templates can be used to build <strong>Pipelines</strong> by taking and fixing a set of valid
-hyperparameters for a Template. Hence, Pipelines:</p>
-<ul class="simple">
-<li><p>Have a list of primitives, which corresponds to the list of primitives of their template.</p></li>
-<li><p>Have some initialization arguments, which correspond to the initialization arguments
-of their template.</p></li>
-<li><p>Have some hyperparameter values, which fall within the ranges of valid tunable
-hyperparameters of their template.</p></li>
-</ul>
-<p>A pipeline can be fitted and evaluated using the MLPipeline API in MLBlocks.</p>
-</div>
-</div>
-<div class="section" id="current-tasks-and-pipelines">
-<h2>Current tasks and pipelines<a class="headerlink" href="#current-tasks-and-pipelines" title="Permalink to this headline">¶</a></h2>
-<p>In our current phase, we are addressing two tasks - time series classification and time series
-regression. To provide solutions for these two tasks we have two components.</p>
-<div class="section" id="windpipeline">
-<h3>WindPipeline<a class="headerlink" href="#windpipeline" title="Permalink to this headline">¶</a></h3>
-<p>This class is the one in charge of learning from the data and making predictions by building
-<a class="reference external" href="https://hdi-project.github.io/MLBlocks">MLBlocks</a> and later on tuning them using
-<a class="reference external" href="https://hdi-project.github.io/BTB/">BTB</a></p>
-</div>
-<div class="section" id="windloader">
-<h3>WindLoader<a class="headerlink" href="#windloader" title="Permalink to this headline">¶</a></h3>
-<p>A class responsible for loading the time series data from CSV files, and return it in the
-format ready to be used by the <strong>WindPipeline</strong>.</p>
-</div>
-<div class="section" id="wind-dataset">
-<h3>Wind Dataset<a class="headerlink" href="#wind-dataset" title="Permalink to this headline">¶</a></h3>
-<p>A dataset is a folder that contains time series data and information about
-a Machine Learning problem in the form of CSV and JSON files.</p>
-<p>The expected contents of the <code class="docutils literal notranslate"><span class="pre">dataset</span></code> folder are 4 CSV files:</p>
+<div class="section" id="data-format">
+<h2>Data Format<a class="headerlink" href="#data-format" title="Permalink to this headline">¶</a></h2>
+<p><strong>GreenGuard Pipelines</strong> work on time Series formatted as follows:</p>
 <ul class="simple">
 <li><p>A <strong>Turbines</strong> table that contains:</p>
 <ul>
@@ -340,13 +262,68 @@ a Machine Learning problem in the form of CSV and JSON files.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">target_id</span></code>: Unique identifier of the turbine which this label corresponds to.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: Unique identifier of the turbine which this label corresponds to.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: Time associated with this target</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">target</span></code>: The value that we want to predict. This can either be a numerical value or a categorical label.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-</span> <span class="pre">optional</span></code>\<span class="classifier">The value that we want to predict. This can either be a numerical</span></dt><dd><p>value or a categorical label. This column can also be skipped when preparing data that
+will be used only to make predictions and not to fit any pipeline.</p>
+</dd>
+</dl>
+</li>
 </ul>
 </li>
 </ul>
+<div class="section" id="demo-dataset">
+<h3>Demo Dataset<a class="headerlink" href="#demo-dataset" title="Permalink to this headline">¶</a></h3>
+<p>For development and demonstration purposes, we include a dataset with data from several telemetry
+signals associated with one wind energy production turbine.</p>
+<p>This data, which has been already formatted as expected by the GreenGuard Pipelines, can be
+browsed and downloaded directly from the
+<a class="reference external" href="https://d3-ai-greenguard.s3.amazonaws.com/index.html">d3-ai-greenguard AWS S3 Bucket</a>.</p>
+<p>This dataset is adapted from the one used in the project by Cohen, Elliot J.,
+“Wind Analysis.” Joint Initiative of the ECOWAS Centre for Renewable Energy and Energy Efficiency (ECREEE), The United Nations Industrial Development Organization (UNIDO) and the Sustainable Engineering Lab (SEL). Columbia University, 22 Aug. 2014.
+<a class="reference external" href="https://github.com/Ecohen4/ECREEE">Available online here</a></p>
+<p>The complete list of manipulations performed on the original dataset to convert it into the
+demo one that we are using here is exhaustively shown and explained in the
+<a class="reference external" href="notebooks/Green%20Guard%20Demo%20Data.ipynb">Green Guard Demo Data notebook</a>.</p>
 </div>
-<div class="section" id="tuning">
-<h3>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
+<p>Before diving into the software usage, we briefly explain some concepts and terminology.</p>
+<p>We call the smallest computational blocks used in a Machine Learning process
+<strong>primitives</strong>, which:</p>
+<ul class="simple">
+<li><p>Can be either classes or functions.</p></li>
+<li><p>Have some initialization arguments, which MLBlocks calls <code class="docutils literal notranslate"><span class="pre">init_params</span></code>.</p></li>
+<li><p>Have some tunable hyperparameters, which have types and a list or range of valid values.</p></li>
+</ul>
+<p>Primitives can be combined to form what we call <strong>Templates</strong>, which:</p>
+<ul class="simple">
+<li><p>Have a list of primitives.</p></li>
+<li><p>Have some initialization arguments, which correspond to the initialization arguments
+of their primitives.</p></li>
+<li><p>Have some tunable hyperparameters, which correspond to the tunable hyperparameters
+of their primitives.</p></li>
+</ul>
+<p>Templates can be used to build <strong>Pipelines</strong> by taking and fixing a set of valid
+hyperparameters for a Template. Hence, Pipelines:</p>
+<ul class="simple">
+<li><p>Have a list of primitives, which corresponds to the list of primitives of their template.</p></li>
+<li><p>Have some initialization arguments, which correspond to the initialization arguments
+of their template.</p></li>
+<li><p>Have some hyperparameter values, which fall within the ranges of valid tunable
+hyperparameters of their template.</p></li>
+</ul>
+<p>A pipeline can be fitted and evaluated using the MLPipeline API in MLBlocks.</p>
+</div>
+<div class="section" id="current-tasks-and-pipelines">
+<h2>Current tasks and pipelines<a class="headerlink" href="#current-tasks-and-pipelines" title="Permalink to this headline">¶</a></h2>
+<p>In our current phase, we are addressing two tasks - time series classification and time series
+regression. To provide solutions for these two tasks we have two components.</p>
+<p>This class is the one in charge of learning from the data and making predictions by building
+<a class="reference external" href="https://hdi-project.github.io/MLBlocks">MLBlocks</a> and later on tuning them using
+<a class="reference external" href="https://hdi-project.github.io/BTB/">BTB</a></p>
+<p>A class responsible for loading the time series data from CSV files, and return it in the
+format ready to be used by the <strong>GreenGuardPipeline</strong>.</p>
 <p>We call tuning the process of, given a dataset and a template, find the pipeline derived from the
 given template that gets the best possible score on the given dataset.</p>
 <p>This process usually involves fitting and evaluating multiple pipelines with different hyperparameter
@@ -355,242 +332,106 @@ likely to get the best results in the next iterations.</p>
 <p>We call each one of these tries a <strong>tuning iteration</strong>.</p>
 </div>
 </div>
-</div>
 <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p><strong>GreenGuard</strong> has been developed and runs on Python 3.5, 3.6 and 3.7.</p>
+<p>Also, although it is not strictly required, the usage of a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>
+is highly recommended in order to avoid interfering with other software installed in the system
+where you are trying to run <strong>GreenGuard</strong>.</p>
+</div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>The simplest and recommended way to install <strong>Wind</strong> is using pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install wind
+<p>The simplest and recommended way to install <strong>GreenGuard</strong> is using pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install greenguard
 </pre></div>
 </div>
 <p>For development, you can also clone the repository and install it from sources</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:D3-AI/wind.git
-<span class="nb">cd</span> wind
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:D3-AI/GreenGuard.git
+<span class="nb">cd</span> GreenGuard
 make install-develop
 </pre></div>
 </div>
 </div>
-<div class="section" id="usage-example">
-<h2>Usage Example<a class="headerlink" href="#usage-example" title="Permalink to this headline">¶</a></h2>
-<p>In this example we will load some demo data using the <strong>WindLoader</strong> and fetch it to the
-<strong>WindPipeline</strong> for it to find the best possible pipeline, fit it using the given data
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>In this example we will load some demo data using the <strong>GreenGuardLoader</strong> and fetch it to the
+<strong>GreenGuardPipeline</strong> for it to find the best possible pipeline, fit it using the given data
 and then make predictions from it.</p>
-<div class="section" id="load-and-explore-the-data">
-<h3>Load and explore the data<a class="headerlink" href="#load-and-explore-the-data" title="Permalink to this headline">¶</a></h3>
-<p>We first create a loader instance passing:</p>
-<ul class="simple">
-<li><p>The path to the dataset folder</p></li>
-<li><p>The name of the target table</p></li>
-<li><p>The name of the target column</p></li>
-<li><p>Optionally, the names of the readings, turbines and signals tables, in case they are different from the default ones.</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wind.loader</span> <span class="kn">import</span> <span class="n">WindLoader</span>
+<p><strong>NOTE</strong>: All the examples of this tutorial are run in an <a class="reference external" href="https://ipython.org/">IPython Shell</a>,
+which you can install by running the following commands inside your <em>virtualenv</em>:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install ipython
+ipython
+</pre></div>
+</div>
+<p>The first step is to load the demo data.</p>
+<p>For this, we will import and call the <code class="docutils literal notranslate"><span class="pre">greenguard.loader.load_demo</span></code> function without any arguments:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">load_demo</span>
 
-<span class="n">loader</span> <span class="o">=</span> <span class="n">WindLoader</span><span class="p">(</span><span class="s1">&#39;examples/datasets/wind/&#39;</span><span class="p">,</span> <span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">load_demo</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Then we call the <code class="docutils literal notranslate"><span class="pre">loader.load</span></code> method, which will return three elements:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code>: The contents of the target table, where the training examples can be found, without the target column.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code>: The target column, as exctracted from the the target table.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tables</span></code>: A dictionary containing the additional tables that the Pipeline will need to run, <code class="docutils literal notranslate"><span class="pre">readings</span></code>, <code class="docutils literal notranslate"><span class="pre">turbines</span></code> and <code class="docutils literal notranslate"><span class="pre">signals</span></code>.</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-<span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<p>The returned objects are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">X</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table data without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [3]: X.head()
+Out[3]:
+   target_id  turbine_id  timestamp
+0          1           1 2013-01-01
+1          2           1 2013-01-02
+2          3           1 2013-01-03
+3          4           1 2013-01-04
+4          5           1 2013-01-05
 </pre></div>
 </div>
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>label_id</th>
-      <th>turbine_id</th>
-      <th>timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>2013-01-01</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>2013-01-02</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>0</td>
-      <td>2013-01-03</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>0</td>
-      <td>2013-01-04</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>0</td>
-      <td>2013-01-05</td>
-    </tr>
-  </tbody>
-</table>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0    0.0
+<p><code class="docutils literal notranslate"><span class="pre">y</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.Series</span></code> with the <code class="docutils literal notranslate"><span class="pre">target</span></code> column from the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table.</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [4]: y.head()
+Out[4]:
+0    0.0
 1    0.0
 2    0.0
 3    0.0
 4    0.0
-Name: label, dtype: float64
+Name: target, dtype: float64
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;readings&#39;, &#39;signals&#39;, &#39;turbines&#39;])
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;turbines&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>turbine_id</th>
-      <th>name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>Turbine 0</td>
-    </tr>
-  </tbody>
-</table>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;signals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>signal_id</th>
-      <th>name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>WTG01_Grid Production PossiblePower Avg. (1)</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>WTG02_Grid Production PossiblePower Avg. (2)</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>WTG03_Grid Production PossiblePower Avg. (3)</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>WTG04_Grid Production PossiblePower Avg. (4)</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>WTG05_Grid Production PossiblePower Avg. (5)</td>
-    </tr>
-  </tbody>
-</table>
-</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;readings&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-<div>
-<table class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>reading_id</th>
-      <th>turbine_id</th>
-      <th>signal_id</th>
-      <th>timestamp</th>
-      <th>value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2013-01-01</td>
-      <td>817.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>2013-01-01</td>
-      <td>805.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>0</td>
-      <td>2</td>
-      <td>2013-01-01</td>
-      <td>786.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>0</td>
-      <td>3</td>
-      <td>2013-01-01</td>
-      <td>809.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>0</td>
-      <td>4</td>
-      <td>2013-01-01</td>
-      <td>755.0</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-<div class="section" id="split-the-data">
-<h3>Split the data<a class="headerlink" href="#split-the-data" title="Permalink to this headline">¶</a></h3>
-<p>If we want to split the data in train and test subsets, we can do so by splitting the <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> variables.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<p><code class="docutils literal notranslate"><span class="pre">tables</span></code>: A dictionary containing the <code class="docutils literal notranslate"><span class="pre">readings</span></code>, <code class="docutils literal notranslate"><span class="pre">turbines</span></code> and <code class="docutils literal notranslate"><span class="pre">signals</span></code> tables.</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [5]: tables.keys()
+Out[5]: dict_keys([&#39;readings&#39;, &#39;signals&#39;, &#39;turbines&#39;])
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+In [6]: tables[&#39;turbines&#39;]
+Out[6]:
+   turbine_id       name
+0           1  Turbine 1
+
+In [7]: tables[&#39;signals&#39;].head()
+Out[7]:
+   signal_id                                          name
+0          1  WTG01_Grid Production PossiblePower Avg. (1)
+1          2  WTG02_Grid Production PossiblePower Avg. (2)
+2          3  WTG03_Grid Production PossiblePower Avg. (3)
+3          4  WTG04_Grid Production PossiblePower Avg. (4)
+4          5  WTG05_Grid Production PossiblePower Avg. (5)
+
+In [8]: tables[&#39;readings&#39;].head()
+Out[8]:
+   reading_id  turbine_id  signal_id  timestamp  value
+0           1           1          1 2013-01-01  817.0
+1           2           1          2 2013-01-01  805.0
+2           3           1          3 2013-01-01  786.0
+3           4           1          4 2013-01-01  809.0
+4           5           1          5 2013-01-01  755.0
 </pre></div>
 </div>
+<p>If we want to split the data in train and test subsets, we can do so by splitting the
+<code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> variables with any suitable tool.</p>
+<p>In this case, we will do it using the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">train_test_split function from scikit-learn</a>.</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="finding-the-best-pipeline">
-<h3>Finding the best Pipeline<a class="headerlink" href="#finding-the-best-pipeline" title="Permalink to this headline">¶</a></h3>
-<p>Once we have loaded the data, we create a <strong>WindPipeline</strong> instance by passing:</p>
+<p>Once we have loaded the data, we create a <strong>GreenGuardPipeline</strong> instance by passing:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">template</span> <span class="pre">(string)</span></code>: the name of a template or the path to a template json file.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">metric</span> <span class="pre">(string</span> <span class="pre">or</span> <span class="pre">function)</span></code>: The name of the metric to use or a metric function to use.</p></li>
@@ -603,133 +444,132 @@ Name: label, dtype: float64
 <li><p><code class="docutils literal notranslate"><span class="pre">shuffle</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">random_state</span></code></p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wind.pipeline</span> <span class="kn">import</span> <span class="n">WindPipeline</span>
+<p>In this case, we will be loading the <code class="docutils literal notranslate"><span class="pre">greenguard_classification</span></code> pipeline, using
+the <code class="docutils literal notranslate"><span class="pre">accuracy</span></code> metric, and using only 2 cross validation splits:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span>
 
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">WindPipeline</span><span class="p">(</span><span class="s1">&#39;wind_classification&#39;</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>Using TensorFlow backend.
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">GreenGuardPipeline</span><span class="p">(</span><span class="s1">&#39;greenguard_classification&#39;</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">Using</span> <span class="n">TensorFlow</span> <span class="n">backend</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>Once we have created the pipeline, we can call its <code class="docutils literal notranslate"><span class="pre">tune</span></code> method to find the best possible
 hyperparameters for our data, passing the <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">tables</span></code> variables returned by the loader,
 as well as an indication of the number of tuning iterations that we want to perform.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [13]: pipeline.tune(X_train, y_train, tables, iterations=10)
 </pre></div>
 </div>
 <p>After the tuning process has finished, the hyperparameters have been already set in the classifier.</p>
 <p>We can see the found hyperparameters by calling the <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="s2">&quot;pandas.DataFrame.resample#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;1D&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;time_index&quot;</span><span class="p">:</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;groupby&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;turbine_id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;signal_id&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;aggregation&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;pandas.DataFrame.unstack#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;signal_id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reset_index&quot;</span><span class="p">:</span> <span class="n">true</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
 </pre></div>
 </div>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>{
-    &quot;pandas.DataFrame.resample#1&quot;: {
-        &quot;rule&quot;: &quot;1D&quot;,
-        &quot;time_index&quot;: &quot;timestamp&quot;,
-        &quot;groupby&quot;: [
-            &quot;turbine_id&quot;,
-            &quot;signal_id&quot;
-        ],
-        &quot;aggregation&quot;: &quot;mean&quot;
-    },
-    &quot;pandas.DataFrame.unstack#1&quot;: {
-        &quot;level&quot;: &quot;signal_id&quot;,
-        &quot;reset_index&quot;: true
-    },
-    &quot;featuretools.EntitySet.entity_from_dataframe#1&quot;: {
-        &quot;entityset_id&quot;: &quot;entityset&quot;,
-        &quot;entity_id&quot;: &quot;readings&quot;,
-        &quot;index&quot;: &quot;index&quot;,
-        &quot;variable_types&quot;: null,
-        &quot;make_index&quot;: true,
-        &quot;time_index&quot;: &quot;timestamp&quot;,
-        &quot;secondary_time_index&quot;: null,
-        &quot;already_sorted&quot;: false
-    },
-    &quot;featuretools.EntitySet.entity_from_dataframe#2&quot;: {
-        &quot;entityset_id&quot;: &quot;entityset&quot;,
-        &quot;entity_id&quot;: &quot;turbines&quot;,
-        &quot;index&quot;: &quot;turbine_id&quot;,
-        &quot;variable_types&quot;: null,
-        &quot;make_index&quot;: false,
-        &quot;time_index&quot;: null,
-        &quot;secondary_time_index&quot;: null,
-        &quot;already_sorted&quot;: false
-    },
-    &quot;featuretools.EntitySet.entity_from_dataframe#3&quot;: {
-        &quot;entityset_id&quot;: &quot;entityset&quot;,
-        &quot;entity_id&quot;: &quot;signals&quot;,
-        &quot;index&quot;: &quot;signal_id&quot;,
-        &quot;variable_types&quot;: null,
-        &quot;make_index&quot;: false,
-        &quot;time_index&quot;: null,
-        &quot;secondary_time_index&quot;: null,
-        &quot;already_sorted&quot;: false
-    },
-    &quot;featuretools.EntitySet.add_relationship#1&quot;: {
-        &quot;parent&quot;: &quot;turbines&quot;,
-        &quot;parent_column&quot;: &quot;turbine_id&quot;,
-        &quot;child&quot;: &quot;readings&quot;,
-        &quot;child_column&quot;: &quot;turbine_id&quot;
-    },
-    &quot;featuretools.dfs#1&quot;: {
-        &quot;target_entity&quot;: &quot;turbines&quot;,
-        &quot;index&quot;: &quot;turbine_id&quot;,
-        &quot;time_index&quot;: &quot;timestamp&quot;,
-        &quot;agg_primitives&quot;: null,
-        &quot;trans_primitives&quot;: null,
-        &quot;copy&quot;: false,
-        &quot;encode&quot;: false,
-        &quot;max_depth&quot;: 1,
-        &quot;remove_low_information&quot;: true
-    },
-    &quot;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&quot;: {
-        &quot;copy&quot;: true,
-        &quot;features&quot;: &quot;auto&quot;,
-        &quot;max_labels&quot;: 0
-    },
-    &quot;sklearn.impute.SimpleImputer#1&quot;: {
-        &quot;missing_values&quot;: NaN,
-        &quot;fill_value&quot;: null,
-        &quot;verbose&quot;: false,
-        &quot;copy&quot;: true,
-        &quot;strategy&quot;: &quot;mean&quot;
-    },
-    &quot;sklearn.preprocessing.StandardScaler#1&quot;: {
-        &quot;with_mean&quot;: true,
-        &quot;with_std&quot;: true
-    },
-    &quot;xgboost.XGBClassifier#1&quot;: {
-        &quot;n_jobs&quot;: -1,
-        &quot;n_estimators&quot;: 100,
-        &quot;max_depth&quot;: 3,
-        &quot;learning_rate&quot;: 0.1,
-        &quot;gamma&quot;: 0,
-        &quot;min_child_weight&quot;: 1
-    }
-}
+<p>as well as the obtained cross validation score by looking at the <code class="docutils literal notranslate"><span class="pre">score</span></code> attribute of the
+<code class="docutils literal notranslate"><span class="pre">pipeline</span></code> object:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [16]: pipeline.score
+Out[16]: 0.6447509660798626
 </pre></div>
 </div>
-<p>as well as the obtained cross validation score by looking at the <code class="docutils literal notranslate"><span class="pre">score</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">tsc</span></code> object</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">score</span>
-</pre></div>
-</div>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0.6592421640188922
-</pre></div>
-</div>
+<p><strong>NOTE</strong>: If the score is not good enough, we can call the <code class="docutils literal notranslate"><span class="pre">tune</span></code> method again as many times
+as needed and the pipeline will continue its tuning process every time based on the previous
+results!</p>
 <p>Once we are satisfied with the obtained cross validation score, we can proceed to call
 the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing again the same data elements.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
+<p>This will fit the pipeline with all the training data available using the best hyperparameters
+found during the tuning process:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [17]: pipeline.fit(X_train, y_train, tables)
 </pre></div>
 </div>
-<p>After this, we are ready to make predictions on new data</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
-<span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<p>After fitting the pipeline, we are ready to make predictions on new data:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [18]: predictions = pipeline.predict(X_test, tables)
+
+In [19]: predictions[0:5]
+Out[19]: array([1., 0., 0., 0., 0.])
 </pre></div>
 </div>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>array([0., 0., 0., 0., 0.])
+<p>And evaluate its prediction performance:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="mf">0.6413043478260869</span>
+</pre></div>
+</div>
+<p>Since the tuning and fitting process takes time to execute and requires a lot of data, you
+will probably want to save a fitted instance and load it later to analyze new signals
+instead of fitting pipelines over and over again.</p>
+<p>This can be done by using the <code class="docutils literal notranslate"><span class="pre">save</span></code> and <code class="docutils literal notranslate"><span class="pre">load</span></code> methods from the <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code>.</p>
+<p>In order to save an instance, call its <code class="docutils literal notranslate"><span class="pre">save</span></code> method passing it the path and filename
+where the model should be saved.</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [22]: path = &#39;my_pipeline.pkl&#39;
+
+In [22]: pipeline.save(path)
+</pre></div>
+</div>
+<p>Once the pipeline is saved, it can be loaded back as a new <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> by using the
+<code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline.load</span></code> method:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [23]: new_pipeline = GreenGuardPipeline.load(path)
+</pre></div>
+</div>
+<p>Once loaded, it can be directly used to make predictions on new data.</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [24]: new_pipeline.predict(X_test, tables)
+Out[24]: array([1., 0., 0., 0., 0.])
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-your-own-dataset">
+<h2>Use your own Dataset<a class="headerlink" href="#use-your-own-dataset" title="Permalink to this headline">¶</a></h2>
+<p>Once you are familiar with the <strong>GreenGuardPipeline</strong> usage, you will probably want to run it
+on your own dataset.</p>
+<p>Here are the necessary steps:</p>
+<p>Firt of all, you will need to prepare your data as 4 CSV files like the ones described in the
+<a class="reference external" href="#data-format">data format</a> section above.</p>
+<p>Once you have the CSV files ready, you will need to import the <code class="docutils literal notranslate"><span class="pre">greenguard.loader.GreenGuardLoader</span></code>
+class and create an instance passing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span> <span class="pre">-</span> <span class="pre">str</span></code>: The path to the folder where the 4 CSV files are</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the target table. Defaults to <code class="docutils literal notranslate"><span class="pre">targets</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_column</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the target column. Defaults to <code class="docutils literal notranslate"><span class="pre">target</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">readings</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the readings table. Defaults to <code class="docutils literal notranslate"><span class="pre">readings</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">turbines</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the turbines table. Defaults to <code class="docutils literal notranslate"><span class="pre">turbines</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">signals</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the signals table. Defaults to <code class="docutils literal notranslate"><span class="pre">signals</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">readings</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the readings table. Defaults to <code class="docutils literal notranslate"><span class="pre">readings</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gzip</span> <span class="pre">-</span> <span class="pre">bool,</span> <span class="pre">optional</span></code>: Set to True if the CSV files are gzipped. Defaults to False.</p></li>
+</ul>
+<p>For example, here we will be loading a custom dataset which has been sorted in gzip format
+inside the <code class="docutils literal notranslate"><span class="pre">my_dataset</span></code> folder, and for which the target table has a different name:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">25</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">26</span><span class="p">]:</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">26</span><span class="p">]:</span> <span class="p">[</span><span class="s1">&#39;readings.csv.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;turbines.csv.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;signals.csv.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;labels.csv.gz&#39;</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">27</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">GreenGuardLoader</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">28</span><span class="p">]:</span> <span class="n">loader</span> <span class="o">=</span> <span class="n">GreenGuardLoader</span><span class="p">(</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">loader</span></code> instance has been created, we can call its <code class="docutils literal notranslate"><span class="pre">load</span></code> method:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [29]: X, y, tables = loader.load()
+</pre></div>
+</div>
+<p>Optionally, if the dataset contains only data to make predictions and the <code class="docutils literal notranslate"><span class="pre">target</span></code> column
+does not exist, we can pass it the argument <code class="docutils literal notranslate"><span class="pre">False</span></code> to skip it:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [29]: X, tables = loader.load(target=False)
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
@@ -737,7 +577,6 @@ the <code class="docutils literal notranslate"><span class="pre">fit</span></cod
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
-</div>
 </div>
 </div>
 </div>
