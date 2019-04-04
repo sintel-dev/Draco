@@ -67,10 +67,11 @@ The salient aspects of this customized project are:
 
 #### Demo Dataset
 
-For development and demonstration purposes, we include a dataset which includes data from several telemetry
-signals associated with one turbine already formatted as expected by the GreenGuard Pipelines.
+For development and demonstration purposes, we include a dataset with data from several telemetry
+signals associated with one wind energy production turbine.
 
-This formatted dataset can be browsed and downloaded directly from the
+This data, which has been already formatted as expected by the GreenGuard Pipelines, can be
+browsed and downloaded directly from the
 [d3-ai-green-guard AWS S3 Bucket](https://d3-ai-green-guard.s3.amazonaws.com/index.html).
 
 This dataset is adapted from the one used in the project by Cohen, Elliot J.,
@@ -79,15 +80,16 @@ This dataset is adapted from the one used in the project by Cohen, Elliot J.,
 
 The complete list of manipulations performed on the original dataset to convert it into the
 demo one that we are using here is exhaustively shown and explained in the corresponding
-[example notebook](link to the notebook), but here is a summary of the steps performed:
+[example notebook](link to the notebook), but here is a summary of the steps performed on it:
 
-* For each column, compute the differences between one value and the next one
-* Fix some gaps in the Grid KWH Production column
-* Generate Zero Production labels indicating whether the Grid KWH Production was 0 at any point during the day.
-* Generate a labels table with labels and cutoff times by shifting the Zero Production labels by one day.
-* Generate a signals table associating each signal column name with a signal_id.
-* Generate a turbines table with a single row and turbine_id
-* Generate a readings table by stacking all the signals as only two columns, timestamp and value, properly identified by signal_id and turbine_id.
+1. For each column, compute the differences between one value and the next one.
+2. Fix the gaps in the Grid KWH Production column.
+3. Generate Zero Production labels indicating whether the Grid KWH Production was 0 at any point during the day.
+4. Generate a labels table with labels and cutoff times by shifting the Zero Production labels by one day.
+5. Generate a signals table associating each signal column name with a unique `signal_id`.
+6. Generate a turbines table with a single row and `turbine_id`.
+7. Generate a readings table by stacking all the signals as only two columns, timestamp and value,
+   properly identified by `signal_id` and `turbine_id`.
 
 ## Concepts
 
