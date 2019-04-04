@@ -195,7 +195,7 @@ ipython
 
 The first step is to load the demo data.
 
-For this, we will import and call the `orion.loader.load_demo` function without any arguments:
+For this, we will import and call the `greenguard.loader.load_demo` function without any arguments:
 
 ```
 In [1]: from greenguard.loader import load_demo
@@ -423,7 +423,7 @@ Firt of all, you will need to prepare your data as 4 CSV files like the ones des
 
 ### 2. Create a GreenGuardLoader
 
-Once you have the CSV files ready, you will need to import the `orion.loader.GreenGuardLoader`
+Once you have the CSV files ready, you will need to import the `greenguard.loader.GreenGuardLoader`
 class and create an instance passing:
 
 * `path - str`: The path to the folder where the 4 CSV files are
