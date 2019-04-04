@@ -71,8 +71,10 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="The GreenGuard project is a collection of end-to-end solutions for machine learning tasks commonly
-found in monitoring wind energy production systems.",
+    description=(
+        "The GreenGuard project is a collection of end-to-end solutions for machine"
+        " learning tasks commonly found in monitoring wind energy production systems."
+    ),
     extras_require={
         'test': tests_require,
         'dev': development_requires + tests_require,
