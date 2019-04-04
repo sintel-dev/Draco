@@ -94,6 +94,16 @@
 <li class="toctree-l2"><a class="reference internal" href="readme.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#quickstart">Quickstart</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#use-your-own-dataset">Use your own Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#docker-usage">Docker Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#distributing-as-a-file">Distributing as a file</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="readme.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
@@ -572,11 +582,90 @@ does not exist, we can pass it the argument <code class="docutils literal notran
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [29]: X, tables = loader.load(target=False)
 </pre></div>
 </div>
+</div>
+<div class="section" id="docker-usage">
+<h2>Docker Usage<a class="headerlink" href="#docker-usage" title="Permalink to this headline">¶</a></h2>
+<p><strong>GreenGuard</strong> comes configured and ready to be distributed and run as a docker image which starts
+a jupyter notebook already configured to use greenguard, with all the required dependencies already
+installed.</p>
+<p>The only requirement in order to run the GreenGuard Docker image is to have Docker installed and
+that the user has enough permissions to run it.</p>
+<p>Installation instructions for any possible system compatible can be found <a class="reference external" href="https://docs.docker.com/install/">here</a></p>
+<p>Additionally, the system that builds the GreenGuard Docker image will also need to have a working
+internet connection that allows downloading the base image and the additional python depenedencies.</p>
+<p>After having cloned the <strong>GreenGuard</strong> repository, all you have to do in order to build the GreenGuard Docker
+Image is running this command:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-build
+</pre></div>
+</div>
+<p>After a few minutes, the new image, called <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code>, will have been built into the system
+and will be ready to be used or distributed.</p>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image is built, it can be distributed in several ways.</p>
+<div class="section" id="distributing-using-a-docker-registry">
+<h3>Distributing using a Docker registry<a class="headerlink" href="#distributing-using-a-docker-registry" title="Permalink to this headline">¶</a></h3>
+<p>The simplest way to distribute the recently created image is <a class="reference external" href="https://docs.docker.com/registry/">using a registry</a>.</p>
+<p>In order to do so, we will need to have write access to a public or private registry (remember to
+<a class="reference external" href="https://docs.docker.com/engine/reference/commandline/login/">login</a>!) and execute these commands:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker tag greenguard-jupyter:latest your-registry-name:some-tag
+docker push your-registry-name:some-tag
+</pre></div>
+</div>
+<p>Afterwards, in the receiving machine:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker pull your-registry-name:some-tag
+docker tag your-registry-name:some-tag greenguard-jupyter:latest
+</pre></div>
+</div>
+</div>
+<div class="section" id="distributing-as-a-file">
+<h3>Distributing as a file<a class="headerlink" href="#distributing-as-a-file" title="Permalink to this headline">¶</a></h3>
+<p>If the distribution of the image has to be done offline for any reason, it can be achieved
+using the following command.</p>
+<p>In the system that already has the image:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker save --output greenguard-jupyter.tar greenguard-jupyter
+</pre></div>
+</div>
+<p>Then copy over the file <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter.tar</span></code> to the new system and there, run:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker load --input greenguard-jupyter.tar
+</pre></div>
+</div>
+<p>After these commands, the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image should be available and ready to be used in the
+new system.</p>
+<div class="section" id="running-the-greenguard-jupyter-image">
+<h4>Running the greenguard-jupyter image<a class="headerlink" href="#running-the-greenguard-jupyter-image" title="Permalink to this headline">¶</a></h4>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image has been built, pulled or loaded, it is ready to be run.</p>
+<p>This can be done in two ways:</p>
+</div>
+</div>
+<div class="section" id="running-greenguard-jupyter-with-the-code">
+<h3>Running greenguard-jupyter with the code<a class="headerlink" href="#running-greenguard-jupyter-with-the-code" title="Permalink to this headline">¶</a></h3>
+<p>If the GreenGuard source code is available in the system, running the image is as simple as running
+this command from within the root of the project:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-run
+</pre></div>
+</div>
+<p>This will start a jupyter notebook using the docker image, which you can access by pointing your
+browser at <a class="reference external" href="http://127.0.0.1:8888">http://127.0.0.1:8888</a></p>
+<p>In this case, the local version of the project will also mounted within the Docker container,
+which means that any changes that you do in your local code will immediately be available
+within your notebooks, and that any notebook that you create within jupyter will also show
+up in your <code class="docutils literal notranslate"><span class="pre">notebooks</span></code> folder!</p>
+</div>
+<div class="section" id="running-greenguard-jupyter-without-the-greenguard-code">
+<h3>Running greenguard-jupyter without the greenguard code<a class="headerlink" href="#running-greenguard-jupyter-without-the-greenguard-code" title="Permalink to this headline">¶</a></h3>
+<p>If the GreenGuard source code is not available in the system and only the Docker Image is, you can
+still run the image by using this command:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker run -ti -p8888:8888 greenguard-jupyter
+</pre></div>
+</div>
+<p>In this case, the code changes and the notebooks that you create within jupyter will stay
+inside the container and you will only be able to access and download them through the
+jupyter interface.</p>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 </div>
