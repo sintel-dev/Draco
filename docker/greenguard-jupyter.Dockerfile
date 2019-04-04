@@ -6,7 +6,7 @@ RUN mkdir /app
 COPY setup.py /app
 RUN pip install -e /app && pip install jupyter
 
-COPY orion /app/orion
+COPY greenguard /app/greenguard
 COPY notebooks /app/notebooks
 
 RUN adduser jupyter --uid 1000 --disabled-password --system
