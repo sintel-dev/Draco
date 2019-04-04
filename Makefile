@@ -194,3 +194,34 @@ release-minor: check-release bumpversion-minor release
 
 .PHONY: release-major
 release-major: check-release bumpversion-major release
+
+
+# DOCKER TARGETS
+
+.PHONY: docker-jupyter-clean
+docker-jupyter-clean: ## Remove the greenguard-jupyter docker image
+	docker rmi -f greenguard-jupyter
+
+.PHONY: docker-jupyter-build
+docker-jupyter-build: docker-jupyter-clean ## Build the greenguard-jupyter docker image using repo2docker
+	docker build -f docker/greenguard-jupyter.Dockerfile -t greenguard-jupyter .
+
+.PHONY: docker-jupyter-save
+docker-jupyter-save: docker-jupyter-build  ## Build the greenguard-jupyter image and save it as greenguard-jupyter.tar
+	docker save --output greenguard-jupyter.tar greenguard-jupyter
+
+.PHONY: docker-jupyter-load
+docker-jupyter-load: ## Load the greenguard-jupyter image from greenguard-jupyter.tar
+	docker load --input greenguard-jupyter.tar
+
+.PHONY: docker-jupyter-run
+docker-jupyter-run: ## Run the greenguard-jupyter image in editable mode
+	docker run --rm -v $(shell pwd):/app -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+
+.PHONY: docker-jupyter-start
+docker-jupyter-start: ## Start the greenguard-jupyter image as a daemon
+	docker run --rm -d -v $(shell pwd):/app -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+
+.PHONY: docker-jupyter-stop
+docker-jupyter-stop: ## Stop the greenguard-jupyter daemon
+	docker stop greenguard-jupyter
