@@ -297,17 +297,37 @@ pipeline.tune(X_train, y_train, tables, iterations=10)
 
 After the tuning process has finished, the hyperparameters have been already set in the classifier.
 
-We can see the found hyperparameters by calling the `get_hyperparameters` method.
+We can see the found hyperparameters by calling the `get_hyperparameters` method,
 
 ```python
 pipeline.get_hyperparameters()
+```
+
+which will return a dictionary with the best hyperparameters found so far:
+
+```
+{
+    "pandas.DataFrame.resample#1": {
+        "rule": "1D",
+        "time_index": "timestamp",
+        "groupby": [
+            "turbine_id",
+            "signal_id"
+        ],
+        "aggregation": "mean"
+    },
+    "pandas.DataFrame.unstack#1": {
+        "level": "signal_id",
+        "reset_index": true
+    },
+    ...
 ```
 
 as well as the obtained cross validation score by looking at the `score` attribute of the
 `pipeline` object:
 
 ```python
-pipeline.score
+pipeline.score  # -> 0.6447509660798626
 ```
 
 **NOTE**: If the score is not good enough, we can call the `tune` method again as many times
