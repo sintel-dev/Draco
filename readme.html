@@ -86,23 +86,54 @@
 <li class="toctree-l3"><a class="reference internal" href="#demo-dataset">Demo Dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#concepts">Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#current-tasks-and-pipelines">Current tasks and pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#primitive">Primitive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template">Template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline">Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#greenguardpipeline">GreenGuardPipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#greenguardloader">GreenGuardLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuning">Tuning</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-your-own-dataset">Use your own Dataset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#docker-usage">Docker Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#distributing-as-a-file">Distributing as a file</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-and-explore-the-data">1. Load and explore the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#split-the-data">2. Split the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fitting-the-pipeline">4. Fitting the pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#save-and-load-the-pipeline">6. Save and load the pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#use-your-own-dataset">Use your own Dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prepare-the-data">1. Prepare the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-greenguardloader">2. Create a GreenGuardLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#call-the-loader-load-method">3. Call the loader.load method.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#docker-usage">Docker Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#distributing-as-a-file">Distributing as a file</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -300,6 +331,8 @@ demo one that we are using here is exhaustively shown and explained in the
 <div class="section" id="concepts">
 <h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
 <p>Before diving into the software usage, we briefly explain some concepts and terminology.</p>
+<div class="section" id="primitive">
+<h3>Primitive<a class="headerlink" href="#primitive" title="Permalink to this headline">¶</a></h3>
 <p>We call the smallest computational blocks used in a Machine Learning process
 <strong>primitives</strong>, which:</p>
 <ul class="simple">
@@ -307,6 +340,9 @@ demo one that we are using here is exhaustively shown and explained in the
 <li><p>Have some initialization arguments, which MLBlocks calls <code class="docutils literal notranslate"><span class="pre">init_params</span></code>.</p></li>
 <li><p>Have some tunable hyperparameters, which have types and a list or range of valid values.</p></li>
 </ul>
+</div>
+<div class="section" id="template">
+<h3>Template<a class="headerlink" href="#template" title="Permalink to this headline">¶</a></h3>
 <p>Primitives can be combined to form what we call <strong>Templates</strong>, which:</p>
 <ul class="simple">
 <li><p>Have a list of primitives.</p></li>
@@ -315,6 +351,9 @@ of their primitives.</p></li>
 <li><p>Have some tunable hyperparameters, which correspond to the tunable hyperparameters
 of their primitives.</p></li>
 </ul>
+</div>
+<div class="section" id="pipeline">
+<h3>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h3>
 <p>Templates can be used to build <strong>Pipelines</strong> by taking and fixing a set of valid
 hyperparameters for a Template. Hence, Pipelines:</p>
 <ul class="simple">
@@ -326,15 +365,24 @@ hyperparameters of their template.</p></li>
 </ul>
 <p>A pipeline can be fitted and evaluated using the MLPipeline API in MLBlocks.</p>
 </div>
+</div>
 <div class="section" id="current-tasks-and-pipelines">
 <h2>Current tasks and pipelines<a class="headerlink" href="#current-tasks-and-pipelines" title="Permalink to this headline">¶</a></h2>
 <p>In our current phase, we are addressing two tasks - time series classification and time series
 regression. To provide solutions for these two tasks we have two components.</p>
+<div class="section" id="greenguardpipeline">
+<h3>GreenGuardPipeline<a class="headerlink" href="#greenguardpipeline" title="Permalink to this headline">¶</a></h3>
 <p>This class is the one in charge of learning from the data and making predictions by building
-<a class="reference external" href="https://hdi-project.github.io/MLBlocks">MLBlocks</a> and later on tuning them using
+<a class="reference external" href="https://hdi-project.github.io/MLBlocks">MLBlocks</a> pipelines and later on tuning them using
 <a class="reference external" href="https://hdi-project.github.io/BTB/">BTB</a></p>
+</div>
+<div class="section" id="greenguardloader">
+<h3>GreenGuardLoader<a class="headerlink" href="#greenguardloader" title="Permalink to this headline">¶</a></h3>
 <p>A class responsible for loading the time series data from CSV files, and return it in the
 format ready to be used by the <strong>GreenGuardPipeline</strong>.</p>
+</div>
+<div class="section" id="tuning">
+<h3>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h3>
 <p>We call tuning the process of, given a dataset and a template, find the pipeline derived from the
 given template that gets the best possible score on the given dataset.</p>
 <p>This process usually involves fitting and evaluating multiple pipelines with different hyperparameter
@@ -343,14 +391,18 @@ likely to get the best results in the next iterations.</p>
 <p>We call each one of these tries a <strong>tuning iteration</strong>.</p>
 </div>
 </div>
+</div>
 <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <p><strong>GreenGuard</strong> has been developed and runs on Python 3.5, 3.6 and 3.7.</p>
 <p>Also, although it is not strictly required, the usage of a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>
 is highly recommended in order to avoid interfering with other software installed in the system
 where you are trying to run <strong>GreenGuard</strong>.</p>
+</div>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -370,24 +422,18 @@ make install-develop
 <p>In this example we will load some demo data using the <strong>GreenGuardLoader</strong> and fetch it to the
 <strong>GreenGuardPipeline</strong> for it to find the best possible pipeline, fit it using the given data
 and then make predictions from it.</p>
-<p><strong>NOTE</strong>: All the examples of this tutorial are run in an <a class="reference external" href="https://ipython.org/">IPython Shell</a>,
-which you can install by running the following commands inside your <em>virtualenv</em>:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install ipython
-ipython
-</pre></div>
-</div>
+<div class="section" id="load-and-explore-the-data">
+<h3>1. Load and explore the data<a class="headerlink" href="#load-and-explore-the-data" title="Permalink to this headline">¶</a></h3>
 <p>The first step is to load the demo data.</p>
 <p>For this, we will import and call the <code class="docutils literal notranslate"><span class="pre">greenguard.loader.load_demo</span></code> function without any arguments:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">load_demo</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">load_demo</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">load_demo</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">load_demo</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The returned objects are:</p>
 <p><code class="docutils literal notranslate"><span class="pre">X</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table data without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [3]: X.head()
-Out[3]:
-   target_id  turbine_id  timestamp
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   target_id  turbine_id  timestamp
 0          1           1 2013-01-01
 1          2           1 2013-01-02
 2          3           1 2013-01-03
@@ -396,9 +442,7 @@ Out[3]:
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">y</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.Series</span></code> with the <code class="docutils literal notranslate"><span class="pre">target</span></code> column from the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [4]: y.head()
-Out[4]:
-0    0.0
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0    0.0
 1    0.0
 2    0.0
 3    0.0
@@ -406,27 +450,23 @@ Out[4]:
 Name: target, dtype: float64
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">tables</span></code>: A dictionary containing the <code class="docutils literal notranslate"><span class="pre">readings</span></code>, <code class="docutils literal notranslate"><span class="pre">turbines</span></code> and <code class="docutils literal notranslate"><span class="pre">signals</span></code> tables.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [5]: tables.keys()
-Out[5]: dict_keys([&#39;readings&#39;, &#39;signals&#39;, &#39;turbines&#39;])
-
-In [6]: tables[&#39;turbines&#39;]
-Out[6]:
-   turbine_id       name
+<p><cite>tables</cite>: A dictionary containing three tables in the format explained above:</p>
+<p>the <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   turbine_id       name
 0           1  Turbine 1
-
-In [7]: tables[&#39;signals&#39;].head()
-Out[7]:
-   signal_id                                          name
+</pre></div>
+</div>
+<p>the <code class="docutils literal notranslate"><span class="pre">signals</span></code> table:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   signal_id                                          name
 0          1  WTG01_Grid Production PossiblePower Avg. (1)
 1          2  WTG02_Grid Production PossiblePower Avg. (2)
 2          3  WTG03_Grid Production PossiblePower Avg. (3)
 3          4  WTG04_Grid Production PossiblePower Avg. (4)
 4          5  WTG05_Grid Production PossiblePower Avg. (5)
-
-In [8]: tables[&#39;readings&#39;].head()
-Out[8]:
-   reading_id  turbine_id  signal_id  timestamp  value
+</pre></div>
+</div>
+<p>and the <code class="docutils literal notranslate"><span class="pre">readings</span></code> table:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   reading_id  turbine_id  signal_id  timestamp  value
 0           1           1          1 2013-01-01  817.0
 1           2           1          2 2013-01-01  805.0
 2           3           1          3 2013-01-01  786.0
@@ -434,14 +474,20 @@ Out[8]:
 4           5           1          5 2013-01-01  755.0
 </pre></div>
 </div>
+</div>
+<div class="section" id="split-the-data">
+<h3>2. Split the data<a class="headerlink" href="#split-the-data" title="Permalink to this headline">¶</a></h3>
 <p>If we want to split the data in train and test subsets, we can do so by splitting the
 <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> variables with any suitable tool.</p>
 <p>In this case, we will do it using the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">train_test_split function from scikit-learn</a>.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="finding-the-best-pipeline">
+<h3>3. Finding the best Pipeline<a class="headerlink" href="#finding-the-best-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>Once we have loaded the data, we create a <strong>GreenGuardPipeline</strong> instance by passing:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">template</span> <span class="pre">(string)</span></code>: the name of a template or the path to a template json file.</p></li>
@@ -457,90 +503,94 @@ Out[8]:
 </ul>
 <p>In this case, we will be loading the <code class="docutils literal notranslate"><span class="pre">greenguard_classification</span></code> pipeline, using
 the <code class="docutils literal notranslate"><span class="pre">accuracy</span></code> metric, and using only 2 cross validation splits:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">GreenGuardPipeline</span><span class="p">(</span><span class="s1">&#39;greenguard_classification&#39;</span><span class="p">,</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">Using</span> <span class="n">TensorFlow</span> <span class="n">backend</span><span class="o">.</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">GreenGuardPipeline</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s1">&#39;greenguard_classification&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once we have created the pipeline, we can call its <code class="docutils literal notranslate"><span class="pre">tune</span></code> method to find the best possible
 hyperparameters for our data, passing the <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">tables</span></code> variables returned by the loader,
 as well as an indication of the number of tuning iterations that we want to perform.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [13]: pipeline.tune(X_train, y_train, tables, iterations=10)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>After the tuning process has finished, the hyperparameters have been already set in the classifier.</p>
-<p>We can see the found hyperparameters by calling the <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">json</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
-<span class="p">{</span>
-    <span class="s2">&quot;pandas.DataFrame.resample#1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;1D&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;time_index&quot;</span><span class="p">:</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;groupby&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;turbine_id&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;signal_id&quot;</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;aggregation&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;pandas.DataFrame.unstack#1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;signal_id&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reset_index&quot;</span><span class="p">:</span> <span class="n">true</span>
-    <span class="p">},</span>
-    <span class="o">...</span>
+<p>We can see the found hyperparameters by calling the <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>which will return a dictionary with the best hyperparameters found so far:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>{
+    &quot;pandas.DataFrame.resample#1&quot;: {
+        &quot;rule&quot;: &quot;1D&quot;,
+        &quot;time_index&quot;: &quot;timestamp&quot;,
+        &quot;groupby&quot;: [
+            &quot;turbine_id&quot;,
+            &quot;signal_id&quot;
+        ],
+        &quot;aggregation&quot;: &quot;mean&quot;
+    },
+    &quot;pandas.DataFrame.unstack#1&quot;: {
+        &quot;level&quot;: &quot;signal_id&quot;,
+        &quot;reset_index&quot;: true
+    },
+    ...
 </pre></div>
 </div>
 <p>as well as the obtained cross validation score by looking at the <code class="docutils literal notranslate"><span class="pre">score</span></code> attribute of the
 <code class="docutils literal notranslate"><span class="pre">pipeline</span></code> object:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [16]: pipeline.score
-Out[16]: 0.6447509660798626
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">score</span>  <span class="c1"># -&gt; 0.6447509660798626</span>
 </pre></div>
 </div>
 <p><strong>NOTE</strong>: If the score is not good enough, we can call the <code class="docutils literal notranslate"><span class="pre">tune</span></code> method again as many times
 as needed and the pipeline will continue its tuning process every time based on the previous
 results!</p>
+</div>
+<div class="section" id="fitting-the-pipeline">
+<h3>4. Fitting the pipeline<a class="headerlink" href="#fitting-the-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>Once we are satisfied with the obtained cross validation score, we can proceed to call
 the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing again the same data elements.</p>
 <p>This will fit the pipeline with all the training data available using the best hyperparameters
 found during the tuning process:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [17]: pipeline.fit(X_train, y_train, tables)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="use-the-fitted-pipeline">
+<h3>5. Use the fitted pipeline<a class="headerlink" href="#use-the-fitted-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>After fitting the pipeline, we are ready to make predictions on new data:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [18]: predictions = pipeline.predict(X_test, tables)
-
-In [19]: predictions[0:5]
-Out[19]: array([1., 0., 0., 0., 0.])
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And evaluate its prediction performance:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
-<span class="n">Out</span><span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="mf">0.6413043478260869</span>
+<span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span> <span class="c1"># -&gt; 0.6413043478260869</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="save-and-load-the-pipeline">
+<h3>6. Save and load the pipeline<a class="headerlink" href="#save-and-load-the-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>Since the tuning and fitting process takes time to execute and requires a lot of data, you
 will probably want to save a fitted instance and load it later to analyze new signals
 instead of fitting pipelines over and over again.</p>
 <p>This can be done by using the <code class="docutils literal notranslate"><span class="pre">save</span></code> and <code class="docutils literal notranslate"><span class="pre">load</span></code> methods from the <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code>.</p>
 <p>In order to save an instance, call its <code class="docutils literal notranslate"><span class="pre">save</span></code> method passing it the path and filename
 where the model should be saved.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [22]: path = &#39;my_pipeline.pkl&#39;
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;my_pipeline.pkl&#39;</span>
 
-In [22]: pipeline.save(path)
+<span class="n">pipeline</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once the pipeline is saved, it can be loaded back as a new <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> by using the
 <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline.load</span></code> method:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [23]: new_pipeline = GreenGuardPipeline.load(path)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_pipeline</span> <span class="o">=</span> <span class="n">GreenGuardPipeline</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once loaded, it can be directly used to make predictions on new data.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [24]: new_pipeline.predict(X_test, tables)
-Out[24]: array([1., 0., 0., 0., 0.])
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="use-your-own-dataset">
@@ -548,8 +598,13 @@ Out[24]: array([1., 0., 0., 0., 0.])
 <p>Once you are familiar with the <strong>GreenGuardPipeline</strong> usage, you will probably want to run it
 on your own dataset.</p>
 <p>Here are the necessary steps:</p>
+<div class="section" id="prepare-the-data">
+<h3>1. Prepare the data<a class="headerlink" href="#prepare-the-data" title="Permalink to this headline">¶</a></h3>
 <p>Firt of all, you will need to prepare your data as 4 CSV files like the ones described in the
 <a class="reference external" href="#data-format">data format</a> section above.</p>
+</div>
+<div class="section" id="create-a-greenguardloader">
+<h3>2. Create a GreenGuardLoader<a class="headerlink" href="#create-a-greenguardloader" title="Permalink to this headline">¶</a></h3>
 <p>Once you have the CSV files ready, you will need to import the <code class="docutils literal notranslate"><span class="pre">greenguard.loader.GreenGuardLoader</span></code>
 class and create an instance passing:</p>
 <ul class="simple">
@@ -564,24 +619,23 @@ class and create an instance passing:</p>
 </ul>
 <p>For example, here we will be loading a custom dataset which has been sorted in gzip format
 inside the <code class="docutils literal notranslate"><span class="pre">my_dataset</span></code> folder, and for which the target table has a different name:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">25</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">GreenGuardLoader</span>
 
-<span class="n">In</span> <span class="p">[</span><span class="mi">26</span><span class="p">]:</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">)</span>
-<span class="n">Out</span><span class="p">[</span><span class="mi">26</span><span class="p">]:</span> <span class="p">[</span><span class="s1">&#39;readings.csv.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;turbines.csv.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;signals.csv.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;labels.csv.gz&#39;</span><span class="p">]</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">27</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">GreenGuardLoader</span>
-
-<span class="n">In</span> <span class="p">[</span><span class="mi">28</span><span class="p">]:</span> <span class="n">loader</span> <span class="o">=</span> <span class="n">GreenGuardLoader</span><span class="p">(</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">GreenGuardLoader</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="call-the-loader-load-method">
+<h3>3. Call the loader.load method.<a class="headerlink" href="#call-the-loader-load-method" title="Permalink to this headline">¶</a></h3>
 <p>Once the <code class="docutils literal notranslate"><span class="pre">loader</span></code> instance has been created, we can call its <code class="docutils literal notranslate"><span class="pre">load</span></code> method:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [29]: X, y, tables = loader.load()
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Optionally, if the dataset contains only data to make predictions and the <code class="docutils literal notranslate"><span class="pre">target</span></code> column
 does not exist, we can pass it the argument <code class="docutils literal notranslate"><span class="pre">False</span></code> to skip it:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>In [29]: X, tables = loader.load(target=False)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">tables</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="docker-usage">
@@ -589,59 +643,67 @@ does not exist, we can pass it the argument <code class="docutils literal notran
 <p><strong>GreenGuard</strong> comes configured and ready to be distributed and run as a docker image which starts
 a jupyter notebook already configured to use greenguard, with all the required dependencies already
 installed.</p>
+<div class="section" id="id2">
+<h3>Requirements<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>The only requirement in order to run the GreenGuard Docker image is to have Docker installed and
 that the user has enough permissions to run it.</p>
 <p>Installation instructions for any possible system compatible can be found <a class="reference external" href="https://docs.docker.com/install/">here</a></p>
 <p>Additionally, the system that builds the GreenGuard Docker image will also need to have a working
 internet connection that allows downloading the base image and the additional python depenedencies.</p>
+</div>
+<div class="section" id="building-the-greenguard-docker-image">
+<h3>Building the GreenGuard Docker Image<a class="headerlink" href="#building-the-greenguard-docker-image" title="Permalink to this headline">¶</a></h3>
 <p>After having cloned the <strong>GreenGuard</strong> repository, all you have to do in order to build the GreenGuard Docker
 Image is running this command:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-build
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-build
 </pre></div>
 </div>
 <p>After a few minutes, the new image, called <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code>, will have been built into the system
 and will be ready to be used or distributed.</p>
+</div>
+<div class="section" id="distributing-the-greenguard-docker-image">
+<h3>Distributing the GreenGuard Docker Image<a class="headerlink" href="#distributing-the-greenguard-docker-image" title="Permalink to this headline">¶</a></h3>
 <p>Once the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image is built, it can be distributed in several ways.</p>
 <div class="section" id="distributing-using-a-docker-registry">
-<h3>Distributing using a Docker registry<a class="headerlink" href="#distributing-using-a-docker-registry" title="Permalink to this headline">¶</a></h3>
+<h4>Distributing using a Docker registry<a class="headerlink" href="#distributing-using-a-docker-registry" title="Permalink to this headline">¶</a></h4>
 <p>The simplest way to distribute the recently created image is <a class="reference external" href="https://docs.docker.com/registry/">using a registry</a>.</p>
 <p>In order to do so, we will need to have write access to a public or private registry (remember to
 <a class="reference external" href="https://docs.docker.com/engine/reference/commandline/login/">login</a>!) and execute these commands:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker tag greenguard-jupyter:latest your-registry-name:some-tag
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker tag greenguard-jupyter:latest your-registry-name:some-tag
 docker push your-registry-name:some-tag
 </pre></div>
 </div>
 <p>Afterwards, in the receiving machine:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker pull your-registry-name:some-tag
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull your-registry-name:some-tag
 docker tag your-registry-name:some-tag greenguard-jupyter:latest
 </pre></div>
 </div>
 </div>
 <div class="section" id="distributing-as-a-file">
-<h3>Distributing as a file<a class="headerlink" href="#distributing-as-a-file" title="Permalink to this headline">¶</a></h3>
+<h4>Distributing as a file<a class="headerlink" href="#distributing-as-a-file" title="Permalink to this headline">¶</a></h4>
 <p>If the distribution of the image has to be done offline for any reason, it can be achieved
 using the following command.</p>
 <p>In the system that already has the image:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker save --output greenguard-jupyter.tar greenguard-jupyter
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker save --output greenguard-jupyter.tar greenguard-jupyter
 </pre></div>
 </div>
 <p>Then copy over the file <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter.tar</span></code> to the new system and there, run:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker load --input greenguard-jupyter.tar
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker load --input greenguard-jupyter.tar
 </pre></div>
 </div>
 <p>After these commands, the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image should be available and ready to be used in the
 new system.</p>
+</div>
+</div>
 <div class="section" id="running-the-greenguard-jupyter-image">
-<h4>Running the greenguard-jupyter image<a class="headerlink" href="#running-the-greenguard-jupyter-image" title="Permalink to this headline">¶</a></h4>
+<h3>Running the greenguard-jupyter image<a class="headerlink" href="#running-the-greenguard-jupyter-image" title="Permalink to this headline">¶</a></h3>
 <p>Once the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image has been built, pulled or loaded, it is ready to be run.</p>
 <p>This can be done in two ways:</p>
-</div>
-</div>
 <div class="section" id="running-greenguard-jupyter-with-the-code">
-<h3>Running greenguard-jupyter with the code<a class="headerlink" href="#running-greenguard-jupyter-with-the-code" title="Permalink to this headline">¶</a></h3>
+<h4>Running greenguard-jupyter with the code<a class="headerlink" href="#running-greenguard-jupyter-with-the-code" title="Permalink to this headline">¶</a></h4>
 <p>If the GreenGuard source code is available in the system, running the image is as simple as running
 this command from within the root of the project:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-run
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-run
 </pre></div>
 </div>
 <p>This will start a jupyter notebook using the docker image, which you can access by pointing your
@@ -652,15 +714,16 @@ within your notebooks, and that any notebook that you create within jupyter will
 up in your <code class="docutils literal notranslate"><span class="pre">notebooks</span></code> folder!</p>
 </div>
 <div class="section" id="running-greenguard-jupyter-without-the-greenguard-code">
-<h3>Running greenguard-jupyter without the greenguard code<a class="headerlink" href="#running-greenguard-jupyter-without-the-greenguard-code" title="Permalink to this headline">¶</a></h3>
+<h4>Running greenguard-jupyter without the greenguard code<a class="headerlink" href="#running-greenguard-jupyter-without-the-greenguard-code" title="Permalink to this headline">¶</a></h4>
 <p>If the GreenGuard source code is not available in the system and only the Docker Image is, you can
 still run the image by using this command:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>docker run -ti -p8888:8888 greenguard-jupyter
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti -p8888:8888 greenguard-jupyter
 </pre></div>
 </div>
 <p>In this case, the code changes and the notebooks that you create within jupyter will stay
 inside the container and you will only be able to access and download them through the
 jupyter interface.</p>
+</div>
 </div>
 </div>
 </div>
