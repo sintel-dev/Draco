@@ -67,7 +67,7 @@ The salient aspects of this customized project are:
      value or a categorical label. This column can also be skipped when preparing data that
      will be used only to make predictions and not to fit any pipeline.
 
-#### Demo Dataset
+### Demo Dataset
 
 For development and demonstration purposes, we include a dataset with data from several telemetry
 signals associated with one wind energy production turbine.
@@ -129,7 +129,7 @@ regression. To provide solutions for these two tasks we have two components.
 ### GreenGuardPipeline
 
 This class is the one in charge of learning from the data and making predictions by building
-[MLBlocks](https://hdi-project.github.io/MLBlocks) and later on tuning them using
+[MLBlocks](https://hdi-project.github.io/MLBlocks) pipelines and later on tuning them using
 [BTB](https://hdi-project.github.io/BTB/)
 
 ### GreenGuardLoader
@@ -183,24 +183,16 @@ In this example we will load some demo data using the **GreenGuardLoader** and f
 **GreenGuardPipeline** for it to find the best possible pipeline, fit it using the given data
 and then make predictions from it.
 
-**NOTE**: All the examples of this tutorial are run in an [IPython Shell](https://ipython.org/),
-which you can install by running the following commands inside your *virtualenv*:
-
-```
-pip install ipython
-ipython
-```
-
 ### 1. Load and explore the data
 
 The first step is to load the demo data.
 
 For this, we will import and call the `greenguard.loader.load_demo` function without any arguments:
 
-```
-In [1]: from greenguard.loader import load_demo
+```python
+from greenguard.loader import load_demo
 
-In [2]: X, y, tables = load_demo()
+X, y, tables = load_demo()
 ```
 
 The returned objects are:
@@ -208,8 +200,6 @@ The returned objects are:
 `X`: A `pandas.DataFrame` with the `targets` table data without the `target` column.
 
 ```
-In [3]: X.head()
-Out[3]:
    target_id  turbine_id  timestamp
 0          1           1 2013-01-01
 1          2           1 2013-01-02
@@ -221,8 +211,6 @@ Out[3]:
 `y`: A `pandas.Series` with the `target` column from the `targets` table.
 
 ```
-In [4]: y.head()
-Out[4]:
 0    0.0
 1    0.0
 2    0.0
@@ -231,28 +219,29 @@ Out[4]:
 Name: target, dtype: float64
 ```
 
-`tables`: A dictionary containing the `readings`, `turbines` and `signals` tables.
+`tables`: A dictionary containing three tables in the format explained above:
+
+the `turbines` table:
 
 ```
-In [5]: tables.keys()
-Out[5]: dict_keys(['readings', 'signals', 'turbines'])
-
-In [6]: tables['turbines']
-Out[6]:
    turbine_id       name
 0           1  Turbine 1
+```
 
-In [7]: tables['signals'].head()
-Out[7]:
+the `signals` table:
+
+```
    signal_id                                          name
 0          1  WTG01_Grid Production PossiblePower Avg. (1)
 1          2  WTG02_Grid Production PossiblePower Avg. (2)
 2          3  WTG03_Grid Production PossiblePower Avg. (3)
 3          4  WTG04_Grid Production PossiblePower Avg. (4)
 4          5  WTG05_Grid Production PossiblePower Avg. (5)
+```
 
-In [8]: tables['readings'].head()
-Out[8]:
+and the `readings` table:
+
+```
    reading_id  turbine_id  signal_id  timestamp  value
 0           1           1          1 2013-01-01  817.0
 1           2           1          2 2013-01-01  805.0
@@ -268,10 +257,10 @@ If we want to split the data in train and test subsets, we can do so by splittin
 
 In this case, we will do it using the [train_test_split function from scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html).
 
-```
-In [9]: from sklearn.model_selection import train_test_split
+```python
+from sklearn.model_selection import train_test_split
 
-In [10]: X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
 ```
 
 ### 3. Finding the best Pipeline
@@ -292,29 +281,31 @@ Optionally, we can also pass defails about the cross validation configuration:
 In this case, we will be loading the `greenguard_classification` pipeline, using
 the `accuracy` metric, and using only 2 cross validation splits:
 
-```
-In [11]: from greenguard.pipeline import GreenGuardPipeline
+```python
+from greenguard.pipeline import GreenGuardPipeline
 
-In [12]: pipeline = GreenGuardPipeline('greenguard_classification', 'accuracy', cv_splits=2)
-Using TensorFlow backend.
+pipeline = GreenGuardPipeline(template='greenguard_classification', metric='accuracy', cv_splits=2)
 ```
 
 Once we have created the pipeline, we can call its `tune` method to find the best possible
 hyperparameters for our data, passing the `X`, `y`, and `tables` variables returned by the loader,
 as well as an indication of the number of tuning iterations that we want to perform.
 
-```
-In [13]: pipeline.tune(X_train, y_train, tables, iterations=10)
+```python
+pipeline.tune(X_train, y_train, tables, iterations=10)
 ```
 
 After the tuning process has finished, the hyperparameters have been already set in the classifier.
 
-We can see the found hyperparameters by calling the `get_hyperparameters` method.
+We can see the found hyperparameters by calling the `get_hyperparameters` method,
+
+```python
+pipeline.get_hyperparameters()
+```
+
+which will return a dictionary with the best hyperparameters found so far:
 
 ```
-In [14]: import json
-
-In [15]: print(json.dumps(pipeline.get_hyperparameters(), indent=4))
 {
     "pandas.DataFrame.resample#1": {
         "rule": "1D",
@@ -335,10 +326,8 @@ In [15]: print(json.dumps(pipeline.get_hyperparameters(), indent=4))
 as well as the obtained cross validation score by looking at the `score` attribute of the
 `pipeline` object:
 
-
-```
-In [16]: pipeline.score
-Out[16]: 0.6447509660798626
+```python
+pipeline.score  # -> 0.6447509660798626
 ```
 
 **NOTE**: If the score is not good enough, we can call the `tune` method again as many times
@@ -353,28 +342,24 @@ the `fit` method passing again the same data elements.
 This will fit the pipeline with all the training data available using the best hyperparameters
 found during the tuning process:
 
-```
-In [17]: pipeline.fit(X_train, y_train, tables)
+```python
+pipeline.fit(X_train, y_train, tables)
 ```
 
 ### 5. Use the fitted pipeline
 
 After fitting the pipeline, we are ready to make predictions on new data:
 
-```
-In [18]: predictions = pipeline.predict(X_test, tables)
-
-In [19]: predictions[0:5]
-Out[19]: array([1., 0., 0., 0., 0.])
+```python
+predictions = pipeline.predict(X_test, tables)
 ```
 
 And evaluate its prediction performance:
 
-```
-In [20]: from sklearn.metrics import accuracy_score
+```python
+from sklearn.metrics import accuracy_score
 
-In [21]: f1_score(y_test, predictions)
-Out[21]: 0.6413043478260869
+f1_score(y_test, predictions) # -> 0.6413043478260869
 ```
 
 ### 6. Save and load the pipeline
@@ -388,24 +373,23 @@ This can be done by using the `save` and `load` methods from the `GreenGuardPipe
 In order to save an instance, call its `save` method passing it the path and filename
 where the model should be saved.
 
-```
-In [22]: path = 'my_pipeline.pkl'
+```python
+path = 'my_pipeline.pkl'
 
-In [22]: pipeline.save(path)
+pipeline.save(path)
 ```
 
 Once the pipeline is saved, it can be loaded back as a new `GreenGuardPipeline` by using the
 `GreenGuardPipeline.load` method:
 
-```
-In [23]: new_pipeline = GreenGuardPipeline.load(path)
+```python
+new_pipeline = GreenGuardPipeline.load(path)
 ```
 
 Once loaded, it can be directly used to make predictions on new data.
 
-```
-In [24]: new_pipeline.predict(X_test, tables)
-Out[24]: array([1., 0., 0., 0., 0.])
+```python
+new_pipeline.predict(X_test, tables)
 ```
 
 
@@ -438,30 +422,25 @@ class and create an instance passing:
 For example, here we will be loading a custom dataset which has been sorted in gzip format
 inside the `my_dataset` folder, and for which the target table has a different name:
 
-```
-In [25]: import os
+```python
+from greenguard.loader import GreenGuardLoader
 
-In [26]: os.listdir('my_dataset')
-Out[26]: ['readings.csv.gz', 'turbines.csv.gz', 'signals.csv.gz', 'labels.csv.gz']
-
-In [27]: from greenguard.loader import GreenGuardLoader
-
-In [28]: loader = GreenGuardLoader('my_dataset', target='labels', gzip=True)
+loader = GreenGuardLoader(path='my_dataset', target='labels', gzip=True)
 ```
 
 ### 3. Call the loader.load method.
 
 Once the `loader` instance has been created, we can call its `load` method:
 
-```
-In [29]: X, y, tables = loader.load()
+```python
+X, y, tables = loader.load()
 ```
 
 Optionally, if the dataset contains only data to make predictions and the `target` column
 does not exist, we can pass it the argument `False` to skip it:
 
-```
-In [29]: X, tables = loader.load(target=False)
+```python
+X, tables = loader.load(target=False)
 ```
 
 ## Docker Usage
@@ -485,7 +464,7 @@ internet connection that allows downloading the base image and the additional py
 After having cloned the **GreenGuard** repository, all you have to do in order to build the GreenGuard Docker
 Image is running this command:
 
-```
+```bash
 make docker-jupyter-build
 ```
 
@@ -503,14 +482,14 @@ The simplest way to distribute the recently created image is [using a registry](
 In order to do so, we will need to have write access to a public or private registry (remember to
 [login](https://docs.docker.com/engine/reference/commandline/login/)!) and execute these commands:
 
-```
+```bash
 docker tag greenguard-jupyter:latest your-registry-name:some-tag
 docker push your-registry-name:some-tag
 ```
 
 Afterwards, in the receiving machine:
 
-```
+```bash
 docker pull your-registry-name:some-tag
 docker tag your-registry-name:some-tag greenguard-jupyter:latest
 ```
@@ -522,13 +501,13 @@ using the following command.
 
 In the system that already has the image:
 
-```
+```bash
 docker save --output greenguard-jupyter.tar greenguard-jupyter
 ```
 
 Then copy over the file `greenguard-jupyter.tar` to the new system and there, run:
 
-```
+```bash
 docker load --input greenguard-jupyter.tar
 ```
 
@@ -547,7 +526,7 @@ This can be done in two ways:
 If the GreenGuard source code is available in the system, running the image is as simple as running
 this command from within the root of the project:
 
-```
+```bash
 make docker-jupyter-run
 ```
 
@@ -564,7 +543,7 @@ up in your `notebooks` folder!
 If the GreenGuard source code is not available in the system and only the Docker Image is, you can
 still run the image by using this command:
 
-```
+```bash
 docker run -ti -p8888:8888 greenguard-jupyter
 ```
 
