@@ -5,14 +5,12 @@
    :maxdepth: 2
 
    Overview <readme>
-   installation
-   usage
 
 .. toctree::
    :caption: Advanced Usage
    :hidden:
 
-   API Reference <api/wind>
+   API Reference <api/greenguard>
 
 .. toctree::
    :caption: Development Notes

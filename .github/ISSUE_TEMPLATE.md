@@ -1,4 +1,4 @@
-* Wind version:
+* GreenGuard version:
 * Python version:
 * Operating System:
 
