@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contributing &mdash; GreenGuard 0.1.0-dev documentation</title>
+  <title>Contributing &mdash; GreenGuard 0.1.0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Credits" href="authors.html" />
-    <link rel="prev" title="Usage" href="usage.html" /> 
+    <link rel="prev" title="greenguard.utils module" href="api/greenguard.utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -138,12 +138,20 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-source">From source</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/greenguard.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.data.html">greenguard.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.loader.html">greenguard.loader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Development Notes</span></p>
 <ul class="current">
@@ -247,7 +255,7 @@ helps, and credit will always be given.</p>
 <h2>Types of Contributions<a class="headerlink" href="#types-of-contributions" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="report-bugs">
 <h3>Report Bugs<a class="headerlink" href="#report-bugs" title="Permalink to this headline">¶</a></h3>
-<p>Report bugs at the <a class="reference external" href="https://github.com/D3-AI/wind/issues">GitHub Issues page</a>.</p>
+<p>Report bugs at the <a class="reference external" href="https://github.com/D3-AI/GreenGuard/issues">GitHub Issues page</a>.</p>
 <p>If you are reporting a bug, please include:</p>
 <ul class="simple">
 <li><p>Your operating system name and version.</p></li>
@@ -267,13 +275,13 @@ and “help wanted” is open to whoever wants to implement it.</p>
 </div>
 <div class="section" id="write-documentation">
 <h3>Write Documentation<a class="headerlink" href="#write-documentation" title="Permalink to this headline">¶</a></h3>
-<p>Wind could always use more documentation, whether as part of the
-official Wind docs, in docstrings, or even on the web in blog posts,
+<p>GreenGuard could always use more documentation, whether as part of the
+official GreenGuard docs, in docstrings, or even on the web in blog posts,
 articles, and such.</p>
 </div>
 <div class="section" id="submit-feedback">
 <h3>Submit Feedback<a class="headerlink" href="#submit-feedback" title="Permalink to this headline">¶</a></h3>
-<p>The best way to send feedback is to file an issue at the <a class="reference external" href="https://github.com/D3-AI/wind/issues">GitHub Issues page</a>.</p>
+<p>The best way to send feedback is to file an issue at the <a class="reference external" href="https://github.com/D3-AI/GreenGuard/issues">GitHub Issues page</a>.</p>
 <p>If you are proposing a feature:</p>
 <ul class="simple">
 <li><p>Explain in detail how it would work.</p></li>
@@ -285,18 +293,18 @@ are welcome :)</p></li>
 </div>
 <div class="section" id="get-started">
 <h2>Get Started!<a class="headerlink" href="#get-started" title="Permalink to this headline">¶</a></h2>
-<p>Ready to contribute? Here’s how to set up <cite>Wind</cite> for local development.</p>
+<p>Ready to contribute? Here’s how to set up <cite>GreenGuard</cite> for local development.</p>
 <ol class="arabic">
-<li><p>Fork the <cite>Wind</cite> repo on GitHub.</p></li>
+<li><p>Fork the <cite>GreenGuard</cite> repo on GitHub.</p></li>
 <li><p>Clone your fork locally:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/wind.git
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/GreenGuard.git
 </pre></div>
 </div>
 </li>
 <li><p>Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed,
 this is how you set up your fork for local development:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkvirtualenv wind
-$ <span class="nb">cd</span> wind/
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkvirtualenv GreenGuard
+$ <span class="nb">cd</span> GreenGuard/
 $ make install-develop
 </pre></div>
 </div>
@@ -356,7 +364,7 @@ one issue, try to split it in more than one pull request.</p></li>
 <li><p>If the pull request adds functionality, the docs should be updated. Put
 your new functionality into a function with a docstring, and add the
 feature to the documentation in an appropriate place.</p></li>
-<li><p>The pull request should work for all the supported Python versions. Check the <a class="reference external" href="https://travis-ci.org/D3-AI/wind/pull_requests">Travis Build
+<li><p>The pull request should work for all the supported Python versions. Check the <a class="reference external" href="https://travis-ci.org/D3-AI/GreenGuard/pull_requests">Travis Build
 Status page</a> and make sure that all the checks pass.</p></li>
 </ol>
 </div>
@@ -365,9 +373,9 @@ Status page</a> and make sure that all the checks pass.</p></li>
 <p>All the Unit Tests should comply with the following requirements:</p>
 <ol class="arabic simple">
 <li><p>Unit Tests should be based only in unittest and pytest modules.</p></li>
-<li><p>The tests that cover a module called <code class="docutils literal notranslate"><span class="pre">wind/path/to/a_module.py</span></code>
+<li><p>The tests that cover a module called <code class="docutils literal notranslate"><span class="pre">greenguard/path/to/a_module.py</span></code>
 should be implemented in a separated module called
-<code class="docutils literal notranslate"><span class="pre">tests/wind/path/to/test_a_module.py</span></code>.
+<code class="docutils literal notranslate"><span class="pre">tests/greenguard/path/to/test_a_module.py</span></code>.
 Note that the module name has the <code class="docutils literal notranslate"><span class="pre">test_</span></code> prefix and is located in a path similar
 to the one of the tested module, just inside the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder.</p></li>
 <li><p>Each method of the tested module should have at least one associated test method, and
@@ -391,7 +399,7 @@ mocked.</p></li>
 <div class="section" id="tips">
 <h2>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h2>
 <p>To run a subset of tests:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python -m pytest tests.test_wind
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python -m pytest tests.test_greenguard
 $ python -m pytest -k <span class="s1">&#39;foo&#39;</span>
 </pre></div>
 </div>
@@ -402,11 +410,11 @@ $ python -m pytest -k <span class="s1">&#39;foo&#39;</span>
 <code class="docutils literal notranslate"><span class="pre">bumpversion</span></code> which, briefly:</p>
 <ol class="arabic simple">
 <li><p>Merge what is in <code class="docutils literal notranslate"><span class="pre">master</span></code> branch into <code class="docutils literal notranslate"><span class="pre">stable</span></code> branch.</p></li>
-<li><p>Update the version in <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>, <code class="docutils literal notranslate"><span class="pre">wind/__init__.py</span></code> and
+<li><p>Update the version in <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>, <code class="docutils literal notranslate"><span class="pre">greenguard/__init__.py</span></code> and
 <code class="docutils literal notranslate"><span class="pre">HISTORY.md</span></code> files.</p></li>
 <li><p>Create a new git tag pointing at the corresponding commit in <code class="docutils literal notranslate"><span class="pre">stable</span></code> branch.</p></li>
 <li><p>Merge the new commit from <code class="docutils literal notranslate"><span class="pre">stable</span></code> into <code class="docutils literal notranslate"><span class="pre">master</span></code>.</p></li>
-<li><p>Update the version in <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> and <code class="docutils literal notranslate"><span class="pre">wind/__init__.py</span></code>
+<li><p>Update the version in <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> and <code class="docutils literal notranslate"><span class="pre">greenguard/__init__.py</span></code>
 to open the next development iteration.</p></li>
 </ol>
 <div class="admonition note">
@@ -448,7 +456,7 @@ since the last release.</p>
         <a href="authors.html" class="btn btn-neutral float-right" title="Credits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="api/greenguard.utils.html" class="btn btn-neutral float-left" title="greenguard.utils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
