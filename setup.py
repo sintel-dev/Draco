@@ -3,13 +3,25 @@
 
 from setuptools import setup, find_packages
 
-with open('README.md') as readme_file:
-    readme = readme_file.read()
+try:
+    with open('README.md') as readme_file:
+        readme = readme_file.read()
+except IOError:
+    readme = ''
 
-with open('HISTORY.md') as history_file:
-    history = history_file.read()
+try:
+    with open('HISTORY.md') as history_file:
+        history = history_file.read()
+except IOError:
+    history = ''
 
 install_requires = [
+    'baytune>=0.2.3,<0.3',
+    'mlblocks>=0.3.0,<0.4',
+    'mlprimitives>=0.1.8,<0.2',
+    'numpy>=1.15.4,<1.17',
+    'pymongo>=3.7.2,<4',
+    'scikit-learn>=0.20.1,<0.21',
 ]
 
 setup_requires = [
@@ -19,19 +31,20 @@ setup_requires = [
 tests_require = [
     'coverage>=4.5.1',
     'pytest>=3.4.2',
-    'tox>=2.9.1',
+    'tox>=2.9.1'
 ]
 
 development_requires = [
     # general
     'bumpversion>=0.5.3',
-    'pip>=9.0.1',
+    'pip>=10.0.0',
     'watchdog>=0.8.3',
 
     # docs
     'm2r>=0.2.0',
     'Sphinx>=1.7.1',
     'sphinx_rtd_theme>=0.2.4',
+    'recommonmark>=0.4.0',
 
     # style check
     'flake8>=3.5.0',
@@ -44,7 +57,11 @@ development_requires = [
     # distribute on PyPI
     'twine>=1.10.0',
     'wheel>=0.30.0',
+
+    # Jupyter
+    'jupyter>=1.0.0',
 ]
+
 
 setup(
     author="MIT Data To AI Lab",
@@ -55,29 +72,31 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="Wind Project",
+    description=(
+        "The GreenGuard project is a collection of end-to-end solutions for machine"
+        " learning tasks commonly found in monitoring wind energy production systems."
+    ),
     extras_require={
         'test': tests_require,
         'dev': development_requires + tests_require,
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='wind',
+    keywords='wind machine learning green guard',
     license="MIT license",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
-    name='wind',
-    packages=find_packages(include=['wind', 'wind.*']),
-    python_requires='>=3.4',
+    name='greenguard',
+    packages=find_packages(include=['greenguard', 'greenguard.*']),
+    python_requires='>=3.5',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
-    url='https://github.com/D3-AI/wind',
+    url='https://github.com/D3-AI/GreenGuard',
     version='0.1.0-dev',
     zip_safe=False,
 )

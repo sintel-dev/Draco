@@ -29,6 +29,46 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
+
+# CLEAN TARGETS
+
+.PHONY: clean-build
+clean-build: ## remove build artifacts
+	rm -fr build/
+	rm -fr dist/
+	rm -fr .eggs/
+	find . -name '*.egg-info' -exec rm -fr {} +
+	find . -name '*.egg' -exec rm -f {} +
+
+.PHONY: clean-pyc
+clean-pyc: ## remove Python file artifacts
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
+
+.PHONY: clean-docs
+clean-docs: ## remove previously built docs
+	rm -f docs/api/*.rst
+	-$(MAKE) -C docs clean 2>/dev/null  # this fails if sphinx is not yet installed
+
+.PHONY: clean-coverage
+clean-coverage: ## remove coverage artifacts
+	rm -f .coverage
+	rm -f .coverage.*
+	rm -fr htmlcov/
+
+.PHONY: clean-test
+clean-test: ## remove test artifacts
+	rm -fr .tox/
+	rm -fr .pytest_cache
+
+.PHONY: clean
+clean: clean-build clean-pyc clean-test clean-coverage clean-docs ## remove all build, test, coverage, docs and Python artifacts
+
+
+# INSTALL TARGETS
+
 .PHONY: install
 install: clean-build clean-pyc ## install the package to the active Python's site-packages
 	pip install .
@@ -37,43 +77,52 @@ install: clean-build clean-pyc ## install the package to the active Python's sit
 install-test: clean-build clean-pyc ## install the package and test dependencies
 	pip install .[test]
 
-.PHONY: test
-test: ## run tests quickly with the default Python
-	python -m pytest
-
-.PHONY: lint
-lint: ## check style with flake8 and isort
-	flake8 wind tests
-	isort -c --recursive wind tests
-
 .PHONY: install-develop
 install-develop: clean-build clean-pyc ## install the package in editable mode and dependencies for development
 	pip install -e .[dev]
 
-.PHONY: test-all
-test-all: ## run tests on every Python version with tox
-	tox
+
+# LINT TARGETS
+
+.PHONY: lint
+lint: ## check style with flake8 and isort
+	flake8 greenguard tests
+	isort -c --recursive greenguard tests
 
 .PHONY: fix-lint
 fix-lint: ## fix lint issues using autoflake, autopep8, and isort
-	find wind -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
-	autopep8 --in-place --recursive --aggressive wind
-	isort --apply --atomic --recursive wind
+	find greenguard -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+	autopep8 --in-place --recursive --aggressive greenguard
+	isort --apply --atomic --recursive greenguard
 
 	find tests -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
 	autopep8 --in-place --recursive --aggressive tests
 	isort --apply --atomic --recursive tests
 
+
+# TEST TARGETS
+
+.PHONY: test
+test: ## run tests quickly with the default Python
+	python -m pytest
+
+.PHONY: test-all
+test-all: ## run tests on every Python version with tox
+	tox
+
 .PHONY: coverage
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source wind -m pytest
+	coverage run --source greenguard -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
+
+# DOCS TARGETS
+
 .PHONY: docs
 docs: clean-docs ## generate Sphinx HTML documentation, including API docs
-	sphinx-apidoc --module-first --separate -o docs/api/ wind
+	sphinx-apidoc --module-first --separate -T -o docs/api/ greenguard
 	$(MAKE) -C docs html
 
 .PHONY: view-docs
@@ -82,7 +131,10 @@ view-docs: docs ## view docs in browser
 
 .PHONY: serve-docs
 serve-docs: view-docs ## compile the docs watching for changes
-	watchmedo shell-command -W -R -D -p '*.rst;*.md' -c '$(MAKE) -C docs html' .
+	watchmedo shell-command -W -R -D -p '*.rst;*.md' -c '$(MAKE) -C docs html' docs
+
+
+# RELEASE TARGETS
 
 .PHONY: dist
 dist: clean ## builds source and wheel package
@@ -121,7 +173,7 @@ bumpversion-major: ## Bump the version the next major skipping the release
 	bumpversion --no-tag major
 
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-CHANGELOG_LINES := $(shell git diff HEAD..stable HISTORY.md | wc -l)
+CHANGELOG_LINES := $(shell git diff HEAD..stable HISTORY.md 2>/dev/null | wc -l)
 
 .PHONY: check-release
 check-release: ## Check if the release can be made
@@ -130,6 +182,8 @@ ifneq ($(CURRENT_BRANCH),master)
 endif
 ifeq ($(CHANGELOG_LINES),0)
 	$(error Please insert the release notes in HISTORY.md before releasing)
+else
+	@echo "A new release can be made"
 endif
 
 .PHONY: release
@@ -141,36 +195,33 @@ release-minor: check-release bumpversion-minor release
 .PHONY: release-major
 release-major: check-release bumpversion-major release
 
-.PHONY: clean
-clean: clean-build clean-pyc clean-test clean-coverage clean-docs ## remove all build, test, coverage, docs and Python artifacts
 
-.PHONY: clean-build
-clean-build: ## remove build artifacts
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
+# DOCKER TARGETS
 
-.PHONY: clean-pyc
-clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+.PHONY: docker-jupyter-clean
+docker-jupyter-clean: ## Remove the greenguard-jupyter docker image
+	docker rmi -f greenguard-jupyter
 
-.PHONY: clean-coverage
-clean-coverage: ## remove coverage artifacts
-	rm -f .coverage
-	rm -f .coverage.*
-	rm -fr htmlcov/
+.PHONY: docker-jupyter-build
+docker-jupyter-build: docker-jupyter-clean ## Build the greenguard-jupyter docker image using repo2docker
+	docker build -f docker/greenguard-jupyter.Dockerfile -t greenguard-jupyter .
 
-.PHONY: clean-test
-clean-test: ## remove test artifacts
-	rm -fr .tox/
-	rm -fr .pytest_cache
+.PHONY: docker-jupyter-save
+docker-jupyter-save: docker-jupyter-build  ## Build the greenguard-jupyter image and save it as greenguard-jupyter.tar
+	docker save --output greenguard-jupyter.tar greenguard-jupyter
 
-.PHONY: clean-docs
-clean-docs: ## remove previously built docs
-	rm -f docs/api/*.rst
-	-$(MAKE) -C docs clean 2>/dev/null  # this fails if sphinx is not yet installed
+.PHONY: docker-jupyter-load
+docker-jupyter-load: ## Load the greenguard-jupyter image from greenguard-jupyter.tar
+	docker load --input greenguard-jupyter.tar
+
+.PHONY: docker-jupyter-run
+docker-jupyter-run: ## Run the greenguard-jupyter image in editable mode
+	docker run --rm -v $(shell pwd):/app -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+
+.PHONY: docker-jupyter-start
+docker-jupyter-start: ## Start the greenguard-jupyter image as a daemon
+	docker run --rm -d -v $(shell pwd):/app -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+
+.PHONY: docker-jupyter-stop
+docker-jupyter-stop: ## Stop the greenguard-jupyter daemon
+	docker stop greenguard-jupyter
