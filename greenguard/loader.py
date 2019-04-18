@@ -8,50 +8,23 @@ import pandas as pd
 
 LOGGER = logging.getLogger(__name__)
 
-DATA_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'data'
-)
-BUCKET = 'd3-ai-greenguard'
-S3_URL = 'https://{}.s3.amazonaws.com/{}.csv'
-
-
-def download(name):
-    """Load the CSV with the given name from S3.
-
-    If the CSV has never been loaded before, it will be downloaded
-    from the [d3-ai-orion bucket](https://d3-ai-orion.s3.amazonaws.com)
-    and then cached inside the `data` folder, within the `orion` package
-    directory, and then returned.
-
-    Otherwise, if it has been downloaded and cached before, it will be directly
-    loaded from the `orion/data` folder without contacting S3.
-
-    Args:
-        name (str): Name of the CSV to load.
-
-    Returns:
-        If no test_size is given, a single pandas.DataFrame is returned containing all
-        the data. If test_size is given, a tuple containing one pandas.DataFrame for
-        the train split and another one for the test split is returned.
-    """
-
-    filename = os.path.join(DATA_PATH, name + '.csv')
-    if os.path.exists(filename):
-        data = pd.read_csv(filename)
-
-    else:
-        url = S3_URL.format(BUCKET, name)
-
-        LOGGER.debug('Downloading CSV %s from %s', name, url)
-        os.makedirs(DATA_PATH, exist_ok=True)
-        data = pd.read_csv(url)
-        data.to_csv(filename, index=False)
-
-    return data
-
 
 class GreenGuardLoader(object):
+    """GreenGuardLoader class.
+
+    The GreenGuardLoader class provides a simple interface to load a relational
+    dataset in the format expected by the GreenGuard Pipelines.
+
+    Args:
+        dataset_path (str): Path to the root folder of the dataset.
+        target (str): Name of the target table.
+        target_column (str): Name of the target column within the target table.
+        readings (str): Name of the readings table.
+        turbines (str): Name of the turbines table.
+        signals (str): Name of the signals table.
+        gzip (bool): Whether the CSV files will be in GZipped. If `True`, the filenames
+            are expected to have the `.csv.gz` extension.
+    """
 
     def __init__(self, dataset_path, target='targets', target_column='target',
                  readings='readings', turbines='turbines', signals='signals', gzip=False):
@@ -64,7 +37,7 @@ class GreenGuardLoader(object):
         self._signals = signals
         self._gzip = gzip
 
-    def read_csv(self, table, timestamp=False):
+    def _read_csv(self, table, timestamp=False):
         if timestamp:
             timestamp = ['timestamp']
 
@@ -75,13 +48,29 @@ class GreenGuardLoader(object):
         return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
 
     def load(self, target=True):
+        """Load the dataset.
+
+        Args:
+            target (bool): If True, return the target column as a separated vector.
+                Otherwise, the target column is expected to be already missing from
+                the target table.
+
+        Returns:
+            (tuple):
+                * ``X (pandas.DataFrame)``: A pandas.DataFrame with the contents of the
+                  target table.
+                * ``y (pandas.Series, optional)``: A pandas.Series with the contents of
+                  the target column.
+                * ``tables (dict)``: A dictionary containing the readings, turbines and
+                  signals tables as pandas.DataFrames.
+        """
         tables = {
-            'readings': self.read_csv(self._readings, True),
-            'signals': self.read_csv(self._signals),
-            'turbines': self.read_csv(self._turbines),
+            'readings': self._read_csv(self._readings, True),
+            'signals': self._read_csv(self._signals),
+            'turbines': self._read_csv(self._turbines),
         }
 
-        X = self.read_csv(self._target, True)
+        X = self._read_csv(self._target, True)
         if target:
             y = X.pop(self._target_column)
             return X, y, tables
@@ -91,6 +80,12 @@ class GreenGuardLoader(object):
 
 
 def load_demo():
+    """Load the demo included in the GreenGuard project.
+
+    The first time that this function is executed, the data will be downloaded
+    and cached inside the `greenguard/demo` folder.
+    Subsequent calls will load the cached data instead of downloading it again.
+    """
     demo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'demo')
     if os.path.exists(demo_path):
         loader = GreenGuardLoader(demo_path, gzip=True)
