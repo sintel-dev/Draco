@@ -43,7 +43,7 @@ The salient aspects of this customized project are:
 * A robust continuous integration and testing infrastructure.
 * A ``learning database`` recording all past outcomes --> tasks, pipelines, outcomes.
 
-## Data Format
+# Data Format
 
 **GreenGuard Pipelines** work on time Series formatted as follows:
 
@@ -63,11 +63,11 @@ The salient aspects of this customized project are:
   * `target_id`: Unique identifier of the turbine which this label corresponds to.
   * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
   * `timestamp`: Time associated with this target
-  * `target - optional`: The value that we want to predict. This can either be a numerical
-     value or a categorical label. This column can also be skipped when preparing data that
-     will be used only to make predictions and not to fit any pipeline.
+  * `target`: The value that we want to predict. This can either be a numerical value or a
+  categorical label. This column can also be skipped when preparing data that will be used
+  only to make predictions and not to fit any pipeline.
 
-### Demo Dataset
+## Demo Dataset
 
 For development and demonstration purposes, we include a dataset with data from several telemetry
 signals associated with one wind energy production turbine.
@@ -84,11 +84,11 @@ The complete list of manipulations performed on the original dataset to convert 
 demo one that we are using here is exhaustively shown and explained in the
 [Green Guard Demo Data notebook](notebooks/Green%20Guard%20Demo%20Data.ipynb).
 
-## Concepts
+# Concepts
 
 Before diving into the software usage, we briefly explain some concepts and terminology.
 
-### Primitive
+## Primitive
 
 We call the smallest computational blocks used in a Machine Learning process
 **primitives**, which:
@@ -97,7 +97,7 @@ We call the smallest computational blocks used in a Machine Learning process
 * Have some initialization arguments, which MLBlocks calls `init_params`.
 * Have some tunable hyperparameters, which have types and a list or range of valid values.
 
-### Template
+## Template
 
 Primitives can be combined to form what we call **Templates**, which:
 
@@ -107,7 +107,7 @@ Primitives can be combined to form what we call **Templates**, which:
 * Have some tunable hyperparameters, which correspond to the tunable hyperparameters
   of their primitives.
 
-### Pipeline
+## Pipeline
 
 Templates can be used to build **Pipelines** by taking and fixing a set of valid
 hyperparameters for a Template. Hence, Pipelines:
@@ -120,24 +120,7 @@ hyperparameters for a Template. Hence, Pipelines:
 
 A pipeline can be fitted and evaluated using the MLPipeline API in MLBlocks.
 
-
-## Current tasks and pipelines
-
-In our current phase, we are addressing two tasks - time series classification and time series
-regression. To provide solutions for these two tasks we have two components.
-
-### GreenGuardPipeline
-
-This class is the one in charge of learning from the data and making predictions by building
-[MLBlocks](https://hdi-project.github.io/MLBlocks) pipelines and later on tuning them using
-[BTB](https://hdi-project.github.io/BTB/)
-
-### GreenGuardLoader
-
-A class responsible for loading the time series data from CSV files, and return it in the
-format ready to be used by the **GreenGuardPipeline**.
-
-### Tuning
+## Tuning
 
 We call tuning the process of, given a dataset and a template, find the pipeline derived from the
 given template that gets the best possible score on the given dataset.
@@ -148,8 +131,23 @@ likely to get the best results in the next iterations.
 
 We call each one of these tries a **tuning iteration**.
 
+# Current tasks and pipelines
 
-# Getting Started
+In our current phase, we are addressing two tasks - time series classification and time series
+regression. To provide solutions for these two tasks we have two components.
+
+## GreenGuardPipeline
+
+This class is the one in charge of learning from the data and making predictions by building
+[MLBlocks](https://hdi-project.github.io/MLBlocks) pipelines and later on tuning them using
+[BTB](https://hdi-project.github.io/BTB/)
+
+## GreenGuardLoader
+
+A class responsible for loading the time series data from CSV files, and return it in the
+format ready to be used by the **GreenGuardPipeline**.
+
+# Install
 
 ## Requirements
 
@@ -177,13 +175,13 @@ cd GreenGuard
 make install-develop
 ```
 
-## Quickstart
+# Quickstart
 
 In this example we will load some demo data using the **GreenGuardLoader** and fetch it to the
 **GreenGuardPipeline** for it to find the best possible pipeline, fit it using the given data
 and then make predictions from it.
 
-### 1. Load and explore the data
+## 1. Load and explore the data
 
 The first step is to load the demo data.
 
@@ -250,7 +248,7 @@ and the `readings` table:
 4           5           1          5 2013-01-01  755.0
 ```
 
-### 2. Split the data
+## 2. Split the data
 
 If we want to split the data in train and test subsets, we can do so by splitting the
 `X` and `y` variables with any suitable tool.
@@ -263,7 +261,7 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
 ```
 
-### 3. Finding the best Pipeline
+## 3. Finding the best Pipeline
 
 Once we have loaded the data, we create a **GreenGuardPipeline** instance by passing:
 
@@ -334,7 +332,7 @@ pipeline.score  # -> 0.6447509660798626
 as needed and the pipeline will continue its tuning process every time based on the previous
 results!
 
-### 4. Fitting the pipeline
+## 4. Fitting the pipeline
 
 Once we are satisfied with the obtained cross validation score, we can proceed to call
 the `fit` method passing again the same data elements.
@@ -346,7 +344,7 @@ found during the tuning process:
 pipeline.fit(X_train, y_train, tables)
 ```
 
-### 5. Use the fitted pipeline
+## 5. Use the fitted pipeline
 
 After fitting the pipeline, we are ready to make predictions on new data:
 
@@ -362,7 +360,7 @@ from sklearn.metrics import accuracy_score
 f1_score(y_test, predictions) # -> 0.6413043478260869
 ```
 
-### 6. Save and load the pipeline
+## 6. Save and load the pipeline
 
 Since the tuning and fitting process takes time to execute and requires a lot of data, you
 will probably want to save a fitted instance and load it later to analyze new signals
@@ -393,25 +391,25 @@ new_pipeline.predict(X_test, tables)
 ```
 
 
-## Use your own Dataset
+# Use your own Dataset
 
 Once you are familiar with the **GreenGuardPipeline** usage, you will probably want to run it
 on your own dataset.
 
 Here are the necessary steps:
 
-### 1. Prepare the data
+## 1. Prepare the data
 
 Firt of all, you will need to prepare your data as 4 CSV files like the ones described in the
 [data format](#data-format) section above.
 
-### 2. Create a GreenGuardLoader
+## 2. Create a GreenGuardLoader
 
 Once you have the CSV files ready, you will need to import the `greenguard.loader.GreenGuardLoader`
 class and create an instance passing:
 
 * `path - str`: The path to the folder where the 4 CSV files are
-* `target - str, optional`: The name of the target table. Defaults to `targets`.
+* `target - str, gptional`: The name of the target table. Defaults to `targets`.
 * `target_column - str, optional`: The name of the target column. Defaults to `target`.
 * `readings - str, optional`: The name of the readings table. Defaults to `readings`.
 * `turbines - str, optional`: The name of the turbines table. Defaults to `turbines`.
@@ -428,7 +426,7 @@ from greenguard.loader import GreenGuardLoader
 loader = GreenGuardLoader(path='my_dataset', target='labels', gzip=True)
 ```
 
-### 3. Call the loader.load method.
+## 3. Call the loader.load method.
 
 Once the `loader` instance has been created, we can call its `load` method:
 
@@ -443,13 +441,13 @@ does not exist, we can pass it the argument `False` to skip it:
 X, tables = loader.load(target=False)
 ```
 
-## Docker Usage
+# Docker Usage
 
 **GreenGuard** comes configured and ready to be distributed and run as a docker image which starts
 a jupyter notebook already configured to use greenguard, with all the required dependencies already
 installed.
 
-### Requirements
+## Docker Requirements
 
 The only requirement in order to run the GreenGuard Docker image is to have Docker installed and
 that the user has enough permissions to run it.
@@ -459,7 +457,7 @@ Installation instructions for any possible system compatible can be found [here]
 Additionally, the system that builds the GreenGuard Docker image will also need to have a working
 internet connection that allows downloading the base image and the additional python depenedencies.
 
-### Building the GreenGuard Docker Image
+## Building the GreenGuard Docker Image
 
 After having cloned the **GreenGuard** repository, all you have to do in order to build the GreenGuard Docker
 Image is running this command:
@@ -471,11 +469,11 @@ make docker-jupyter-build
 After a few minutes, the new image, called `greenguard-jupyter`, will have been built into the system
 and will be ready to be used or distributed.
 
-### Distributing the GreenGuard Docker Image
+## Distributing the GreenGuard Docker Image
 
 Once the `greenguard-jupyter` image is built, it can be distributed in several ways.
 
-#### Distributing using a Docker registry
+### Distributing using a Docker registry
 
 The simplest way to distribute the recently created image is [using a registry](https://docs.docker.com/registry/).
 
@@ -494,7 +492,7 @@ docker pull your-registry-name:some-tag
 docker tag your-registry-name:some-tag greenguard-jupyter:latest
 ```
 
-#### Distributing as a file
+### Distributing as a file
 
 If the distribution of the image has to be done offline for any reason, it can be achieved
 using the following command.
@@ -515,13 +513,13 @@ After these commands, the `greenguard-jupyter` image should be available and rea
 new system.
 
 
-### Running the greenguard-jupyter image
+## Running the greenguard-jupyter image
 
 Once the `greenguard-jupyter` image has been built, pulled or loaded, it is ready to be run.
 
 This can be done in two ways:
 
-#### Running greenguard-jupyter with the code
+### Running greenguard-jupyter with the code
 
 If the GreenGuard source code is available in the system, running the image is as simple as running
 this command from within the root of the project:
@@ -538,7 +536,7 @@ which means that any changes that you do in your local code will immediately be 
 within your notebooks, and that any notebook that you create within jupyter will also show
 up in your `notebooks` folder!
 
-#### Running greenguard-jupyter without the greenguard code
+### Running greenguard-jupyter without the greenguard code
 
 If the GreenGuard source code is not available in the system and only the Docker Image is, you can
 still run the image by using this command:
