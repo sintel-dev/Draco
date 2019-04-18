@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard package &mdash; GreenGuard 0.1.0 documentation</title>
+  <title>greenguard package &mdash; GreenGuard 0.1.1-dev documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../_static/GreenGuard.ico"/>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.data module" href="greenguard.data.html" />
+    <link rel="next" title="greenguard.db module" href="greenguard.db.html" />
     <link rel="prev" title="GreenGuard" href="../readme.html" /> 
 </head>
 
@@ -55,6 +55,9 @@
             <a href="../index.html" class="icon icon-home"> GreenGuard
           
 
+          
+            
+            <img src="../_static/GreenGuard-200.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -81,59 +84,57 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#demo-dataset">Demo Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#demo-dataset">Demo Dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#concepts">Concepts</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#primitive">Primitive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#template">Template</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#pipeline">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#concepts">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#primitive">Primitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#template">Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#pipeline">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#tuning">Tuning</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#greenguardpipeline">GreenGuardPipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#greenguardloader">GreenGuardLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#tuning">Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardpipeline">GreenGuardPipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardloader">GreenGuardLoader</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#getting-started">Getting Started</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../readme.html#python">Python</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#split-the-data">2. Split the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#save-and-load-the-pipeline">6. Save and load the pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#use-your-own-dataset">Use your own Dataset</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#prepare-the-data">1. Prepare the data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#create-a-greenguardloader">2. Create a GreenGuardLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#call-the-loader-load-method">3. Call the loader.load method.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#split-the-data">2. Split the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#save-and-load-the-pipeline">6. Save and load the pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-usage">Docker Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#id2">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../readme.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../readme.html#distributing-as-a-file">Distributing as a file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#use-your-own-dataset">Use your own Dataset</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#prepare-the-data">1. Prepare the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#create-a-greenguardloader">2. Create a GreenGuardLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#call-the-loader-load-method">3. Call the loader.load method.</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../readme.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../readme.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#docker-usage">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-requirements">Docker Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#distributing-as-a-file">Distributing as a file</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
 </ul>
 </li>
 </ul>
@@ -143,7 +144,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.loader.html">greenguard.loader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
@@ -171,11 +171,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../contributing.html#release-workflow">Release Workflow</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../authors.html#development-lead">Development Lead</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../history.html#id1">0.1.0</a></li>
 </ul>
@@ -232,7 +228,7 @@
         
             
             
-              <a href="https://github.com/HDI-Project/GreenGuard/blob/master/docs/api/greenguard.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -253,7 +249,6 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.loader.html">greenguard.loader module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
@@ -271,7 +266,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.data.html" class="btn btn-neutral float-right" title="greenguard.data module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.db.html" class="btn btn-neutral float-right" title="greenguard.db module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../readme.html" class="btn btn-neutral float-left" title="GreenGuard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
