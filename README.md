@@ -28,7 +28,7 @@
 
 # Overview
 
-The GreenGuard project is a collection of end-to-end solutions for machine learning tasks commonly
+The GreenGuard project is a collection of end-to-end solutions for machine learning problems commonly
 found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
 automation of machine Learning at Data to AI Lab at MIT.
