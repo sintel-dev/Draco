@@ -542,7 +542,7 @@ If the GreenGuard source code is not available in the system and only the Docker
 still run the image by using this command:
 
 ```bash
-docker run -ti -p8888:8888 greenguard-jupyter
+docker run -ti -p 8888:8888 greenguard-jupyter
 ```
 
 In this case, the code changes and the notebooks that you create within jupyter will stay
