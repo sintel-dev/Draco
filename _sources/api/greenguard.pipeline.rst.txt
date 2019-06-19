@@ -2,6 +2,6 @@ greenguard.pipeline module
 ==========================
 
 .. automodule:: greenguard.pipeline
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

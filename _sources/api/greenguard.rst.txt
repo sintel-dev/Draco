@@ -2,9 +2,9 @@ greenguard package
 ==================
 
 .. automodule:: greenguard
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------
@@ -15,4 +15,3 @@ Submodules
    greenguard.loader
    greenguard.pipeline
    greenguard.utils
-

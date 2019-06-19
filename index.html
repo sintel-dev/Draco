@@ -434,45 +434,45 @@ and then make predictions from it.</p>
 </div>
 <p>The returned objects are:</p>
 <p><code class="docutils literal notranslate"><span class="pre">X</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table data without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   target_id  turbine_id  timestamp
-0          1           1 2013-01-01
-1          2           1 2013-01-02
-2          3           1 2013-01-03
-3          4           1 2013-01-04
-4          5           1 2013-01-05
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">target_id</span>  <span class="n">turbine_id</span>  <span class="k">timestamp</span>
+<span class="mi">0</span>          <span class="mi">1</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+<span class="mi">1</span>          <span class="mi">2</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">02</span>
+<span class="mi">2</span>          <span class="mi">3</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">03</span>
+<span class="mi">3</span>          <span class="mi">4</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">04</span>
+<span class="mi">4</span>          <span class="mi">5</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">05</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">y</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.Series</span></code> with the <code class="docutils literal notranslate"><span class="pre">target</span></code> column from the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0    0.0
-1    0.0
-2    0.0
-3    0.0
-4    0.0
-Name: target, dtype: float64
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">1</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">2</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">3</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">4</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">target</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
 </pre></div>
 </div>
 <p><cite>tables</cite>: A dictionary containing three tables in the format explained above:</p>
 <p>the <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   turbine_id       name
-0           1  Turbine 1
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">turbine_id</span>       <span class="n">name</span>
+<span class="mi">0</span>           <span class="mi">1</span>  <span class="n">Turbine</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>the <code class="docutils literal notranslate"><span class="pre">signals</span></code> table:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   signal_id                                          name
-0          1  WTG01_Grid Production PossiblePower Avg. (1)
-1          2  WTG02_Grid Production PossiblePower Avg. (2)
-2          3  WTG03_Grid Production PossiblePower Avg. (3)
-3          4  WTG04_Grid Production PossiblePower Avg. (4)
-4          5  WTG05_Grid Production PossiblePower Avg. (5)
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">signal_id</span>                                          <span class="n">name</span>
+<span class="mi">0</span>          <span class="mi">1</span>  <span class="n">WTG01_Grid</span> <span class="n">Production</span> <span class="n">PossiblePower</span> <span class="k">Avg</span><span class="p">.</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="mi">1</span>          <span class="mi">2</span>  <span class="n">WTG02_Grid</span> <span class="n">Production</span> <span class="n">PossiblePower</span> <span class="k">Avg</span><span class="p">.</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="mi">2</span>          <span class="mi">3</span>  <span class="n">WTG03_Grid</span> <span class="n">Production</span> <span class="n">PossiblePower</span> <span class="k">Avg</span><span class="p">.</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="mi">3</span>          <span class="mi">4</span>  <span class="n">WTG04_Grid</span> <span class="n">Production</span> <span class="n">PossiblePower</span> <span class="k">Avg</span><span class="p">.</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="mi">4</span>          <span class="mi">5</span>  <span class="n">WTG05_Grid</span> <span class="n">Production</span> <span class="n">PossiblePower</span> <span class="k">Avg</span><span class="p">.</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>and the <code class="docutils literal notranslate"><span class="pre">readings</span></code> table:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   reading_id  turbine_id  signal_id  timestamp  value
-0           1           1          1 2013-01-01  817.0
-1           2           1          2 2013-01-01  805.0
-2           3           1          3 2013-01-01  786.0
-3           4           1          4 2013-01-01  809.0
-4           5           1          5 2013-01-01  755.0
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">reading_id</span>  <span class="n">turbine_id</span>  <span class="n">signal_id</span>  <span class="k">timestamp</span>  <span class="n">value</span>
+<span class="mi">0</span>           <span class="mi">1</span>           <span class="mi">1</span>          <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">817</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">1</span>           <span class="mi">2</span>           <span class="mi">1</span>          <span class="mi">2</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">805</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">2</span>           <span class="mi">3</span>           <span class="mi">1</span>          <span class="mi">3</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">786</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">3</span>           <span class="mi">4</span>           <span class="mi">1</span>          <span class="mi">4</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">809</span><span class="p">.</span><span class="mi">0</span>
+<span class="mi">4</span>           <span class="mi">5</span>           <span class="mi">1</span>          <span class="mi">5</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">755</span><span class="p">.</span><span class="mi">0</span>
 </pre></div>
 </div>
 </div>
@@ -718,7 +718,7 @@ up in your <code class="docutils literal notranslate"><span class="pre">notebook
 <h3>Running greenguard-jupyter without the greenguard code<a class="headerlink" href="#running-greenguard-jupyter-without-the-greenguard-code" title="Permalink to this headline">¶</a></h3>
 <p>If the GreenGuard source code is not available in the system and only the Docker Image is, you can
 still run the image by using this command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti -p8888:8888 greenguard-jupyter
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti -p <span class="m">8888</span>:8888 greenguard-jupyter
 </pre></div>
 </div>
 <p>In this case, the code changes and the notebooks that you create within jupyter will stay
