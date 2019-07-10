@@ -139,17 +139,16 @@ class GreenGuardRawLoader(object):
     Args:
         target_times_path (str):
             Path to the target_times CSV file.
-        signals_path (str):
-            Path to the folder containing all the turbines data.
-        turbines_path (str, optional):
+        turbines_path (str):
             Path to the CSV file containing metadata about the turbines.
-            If `None`, it will be generated dynamically with only the turbine names in it.
+        data_path (str):
+            Path to the folder containing all the turbines data.
     """
 
-    def __init__(self, target_times_path, signals_path, turbines_path=None):
+    def __init__(self, target_times_path, turbines_path, data_path):
         self._target_times_path = target_times_path
-        self._signals_path = signals_path
         self._turbines_path = turbines_path
+        self._data_path = data_path
 
     def load(self, target=True):
         """Load the dataset.
