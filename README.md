@@ -59,13 +59,13 @@ The salient aspects of this customized project are:
   * `signal_id`: Unique identifier of the signal which this reading comes from.
   * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
   * `value`: Numeric value of this reading.
-* A **Targets** table that contains:
-  * `target_id`: Unique identifier of the turbine which this label corresponds to.
+* A **Target times** table that contains:
+  * `target_time_id`: Unique identifier of the turbine which this label corresponds to.
   * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
-  * `timestamp`: Time associated with this target
+  * `cutoff_time`: Time associated with this target
   * `target`: The value that we want to predict. This can either be a numerical value or a
-  categorical label. This column can also be skipped when preparing data that will be used
-  only to make predictions and not to fit any pipeline.
+    categorical label. This column can also be skipped when preparing data that will be used
+    only to make predictions and not to fit any pipeline.
 
 ## Demo Dataset
 
@@ -195,7 +195,7 @@ X, y, tables = load_demo()
 
 The returned objects are:
 
-`X`: A `pandas.DataFrame` with the `targets` table data without the `target` column.
+`X`: A `pandas.DataFrame` with the `target_times` table data without the `target` column.
 
 ```
    target_id  turbine_id  timestamp
@@ -206,7 +206,7 @@ The returned objects are:
 4          5           1 2013-01-05
 ```
 
-`y`: A `pandas.Series` with the `target` column from the `targets` table.
+`y`: A `pandas.Series` with the `target` column from the `target_times` table.
 
 ```
 0    0.0
@@ -409,7 +409,7 @@ Once you have the CSV files ready, you will need to import the `greenguard.loade
 class and create an instance passing:
 
 * `path - str`: The path to the folder where the 4 CSV files are
-* `target - str, gptional`: The name of the target table. Defaults to `targets`.
+* `target_times - str, gptional`: The name of the target table. Defaults to `target_times`.
 * `target_column - str, optional`: The name of the target column. Defaults to `target`.
 * `readings - str, optional`: The name of the readings table. Defaults to `readings`.
 * `turbines - str, optional`: The name of the turbines table. Defaults to `turbines`.
