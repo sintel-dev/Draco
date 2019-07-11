@@ -48,7 +48,7 @@ class GreenGuardLoader(object):
         if timestamp:
             timestamp = ['timestamp']
 
-        if '.csv' not table:
+        if '.csv' not in table:
             table += '.csv'
             if self._gzip:
                 table += '.gz'
@@ -94,27 +94,22 @@ class GreenGuardRawLoader(object):
     """GreenGuardRawLoader class.
 
     The GreenGuardRawLoader class provides a simple interface to load a
-    timeseries dataset in raw format and return it in the format expected
-    by the GreenGuard Pipelines.
+    time series data provided turbine in raw format and return it in the
+    format expected by the GreenGuard Pipelines.
 
     This raw format has the following characteristics:
 
         * All the data from all the turbines is inside a single folder.
-        * Inside the data folder, the data from each turbine is separated in either
-          a single CSV file or a folder containing several CSV files inside.
-            * If the data is in a single CSV file, it will be named after the
-              corresponding turbine + the `'.csv'` extension: `T001.csv`.
-            * If the data is in a folder with several CSV files, the folder itself
-              will be named after the corresponding turbine: `T001`.
-              In this case, the names of the CSV files are irrelevant.
-        * Whether it is a single CSV file or many, each CSV file will have the
-          the following columns:
-            * timestamp: timestemp of the reading.
-            * signal: name of the signal.
-            * value: value of the reading.
-        * Additionally, a turbines.csv file can be passed with metadata about each turbine.
+        * Inside the data folder, a folder exists for each turbine.
+          This folders are named exactly like each turbine id, and inside it one or more
+          CSV files can be found. The names of these files is not relevant.
+        * Each CSV file will have the the following columns:
 
-    And the output is composed by 4 tables:
+            * timestamp: timestemp of the reading.
+            * signal: name or id of the signal.
+            * value: value of the reading.
+
+    And the output is the following 4 tables:
 
         * turbines:
             * `turbine_id`: column with the unique id of each turbine.
@@ -129,51 +124,95 @@ class GreenGuardRawLoader(object):
             * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
             * `value`: Numeric value of this reading.
         * target_times:
-            * `target_id`: Unique identifier of the turbine which this label corresponds to.
-            * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
-            * `timestamp`: Time associated with this target
+            * `turbine_id`: Unique identifier of the turbine which this target corresponds to.
+            * `cutoff_timestamp`: The timestamp at which the target value is deemed to be known.
+              This timestamp is used to filter data such that only data prior to this is used
+              for featurize.
             * `target`: The value that we want to predict. This can either be a numerical value
-                or a categorical label. This column can also be skipped when preparing data that
-                will be used only to make predictions and not to fit any pipeline.
+              or a categorical label. This column can also be skipped when preparing data that
+              will be used only to make predictions and not to fit any pipeline.
 
     Args:
         target_times_path (str):
-            Path to the target_times CSV file.
-        turbines_path (str):
-            Path to the CSV file containing metadata about the turbines.
+            Path to the target_times CSV file. If turbines file is given,
+            this file is expected to have a `turbines_id` column that acts
+            as a foreign key to the turbines table.
+            Otherwise, this file is expected to have a `turbines` column
+            with the name of the turbine.
         data_path (str):
             Path to the folder containing all the turbines data.
     """
 
-    def __init__(self, target_times_path, turbines_path, data_path):
+    def __init__(self, target_times_path, data_path):
         self._target_times_path = target_times_path
-        self._turbines_path = turbines_path
         self._data_path = data_path
 
-    def load(self, target=True):
+    def _load_turbine_file(self, turbine_file):
+        data = pd.read_csv(turbine_file)
+        data.columns = data.columns.str.lower()
+
+        if 'unnamed: 0' in data.columns:
+            # Someone forgot to drop the index before
+            # storing the DataFrame as a CSV
+            del data['unnamed: 0']
+
+        return data
+
+    def _load_turbine(self, turbine):
+        turbine_path = os.path.join(self._data_path, turbine)
+
+        readings = list()
+        for turbine_file in os.listdir(turbine_path):
+            turbine_file_path = os.path.join(turbine_path, turbine_file)
+            readings.append(self._load_turbine_file(turbine_file_path))
+
+        return pd.concat(readings)
+
+    def _load_readings(self, turbine_ids):
+        readings = list()
+        for turbine_id in turbine_ids:
+            turbine_readings = self._load_turbine(turbine_id)
+            turbine_readings['turbine_id'] = turbine_id
+            readings.append(turbine_readings)
+
+        return pd.concat(readings)
+
+    def load(self, return_target=True):
         """Load the dataset.
 
         Args:
-            target (bool): If True, return the target column as a separated vector.
+            return_target (bool):
+                If True, return the target column as a separated vector.
                 Otherwise, the target column is expected to be already missing from
                 the target table.
 
         Returns:
             (tuple):
                 * ``X (pandas.DataFrame)``: A pandas.DataFrame with the contents of the
-                  target table.
+                  target_times table.
                 * ``y (pandas.Series, optional)``: A pandas.Series with the contents of
                   the target column.
                 * ``tables (dict)``: A dictionary containing the readings, turbines and
                   signals tables as pandas.DataFrames.
         """
-        X = self._read_csv(self._target_times, True)
+        X = pd.read_csv(self._target_times_path)
 
-        # Loading of the raw data, filtering and conversion to readings,
-        # turbines and signals will happen here
+        turbine_ids = X.turbine_id.unique()
 
-        if target:
-            y = X.pop(self._target_column)
+        readings = self._load_readings(turbine_ids)
+        readings.rename(columns={'signal': 'signal_id'}, inplace=True)
+
+        turbines = pd.DataFrame({'turbine_id': turbine_ids})
+        signals = pd.DataFrame({'signal_id': readings.signal_id.unique()})
+
+        tables = {
+            'turbines': turbines,
+            'readings': readings[['turbine_id', 'signal_id', 'timestamp', 'value']],
+            'signals': signals
+        }
+
+        if return_target:
+            y = X.pop('target')
             return X, y, tables
 
         else:
