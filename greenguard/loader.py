@@ -115,14 +115,14 @@ class GreenGuardRawLoader(object):
             * signal: name or id of the signal.
             * value: value of the reading.
 
-    And the output is the following 4 tables:
+    And the output is the following 3 elements:
 
-        * target_times:
+        * `X`: target times table containing:
             * `turbine_id`: Unique identifier of the turbine which this target corresponds to.
             * `cutoff_timestamp`: The timestamp at which the target value is deemed to be known.
               This timestamp is used to filter data such that only data prior to this is used
               for featurize.
-            * `target`: The value that we want to predict. This can either be a numerical value
+        * `y`: 1d vector of value sthat we want to predict. This can either be a numerical value
               or a categorical label. This column can also be skipped when preparing data that
               will be used only to make predictions and not to fit any pipeline.
         * readings:
@@ -131,27 +131,17 @@ class GreenGuardRawLoader(object):
             * `signal_id`: Unique identifier of the signal which this reading comes from.
             * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
             * `value`: Numeric value of this reading.
-        * turbines:
-            * `turbine_id`: column with the unique id of each turbine.
-            * A number of additional columns with information about each turbine.
-        * signals:
-            * `signal_id`: column with the unique id of each signal.
-            * A number of additional columns with information about each signal.
 
     Args:
-        target_times_path (str):
-            Path to the target_times CSV file. If a turbines file is given,
-            this file is expected to have a `turbines_id` column that acts
-            as a foreign key to the turbines table.
-            Otherwise, this file is expected to have a `turbines` column
-            with the name of the turbine.
-        data_path (str):
-            Path to the folder containing all the turbines data.
+        target_times (str or pd.DataFrame):
+            Path to the target_times CSV file.
+        readings_path (str):
+            Path to the folder containing all the readings data.
     """
 
-    def __init__(self, target_times_path, data_path):
-        self._target_times_path = target_times_path
-        self._data_path = data_path
+    def __init__(self, target_times, readings_path):
+        self._target_times = target_times
+        self._readings_path = readings_path
 
     def _load_readings_file(self, turbine_file):
         data = pd.read_csv(turbine_file)
@@ -165,7 +155,7 @@ class GreenGuardRawLoader(object):
         return data
 
     def _load_turbine_readings(self, turbine):
-        turbine_path = os.path.join(self._data_path, turbine)
+        turbine_path = os.path.join(self._readings_path, turbine)
 
         readings = list()
         for readings_file in os.listdir(turbine_path):
@@ -200,7 +190,10 @@ class GreenGuardRawLoader(object):
                   the target column.
                 * ``readings (pandas.DataFrame)``: A pandas.DataFrame containing the readings.
         """
-        X = pd.read_csv(self._target_times_path)
+        if isinstance(self._target_time, pd.DataFrame):
+            X = self._target_times.copy()
+        else:
+            X = pd.read_csv(self._target_times)
 
         turbine_ids = X.turbine_id.unique()
 

@@ -7,20 +7,39 @@ from collections import defaultdict
 
 import cloudpickle
 import numpy as np
+import pandas as pd
 from btb import HyperParameter
 from btb.tuning import GP
 from mlblocks import MLPipeline
 from sklearn.exceptions import NotFittedError
-from sklearn.metrics import accuracy_score, mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import (
+    accuracy_score, f1_score, mean_absolute_error, mean_squared_error, r2_score)
 from sklearn.model_selection import KFold, StratifiedKFold
 
 LOGGER = logging.getLogger(__name__)
 
 
-PIPELINES_DIR = os.path.join(os.path.dirname(__file__), 'pipelines')
+PIPELINES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'pipelines'))
+
+def get_pipelines():
+    pipelines = dict()
+    for filename in os.listdir(PIPELINES_DIR):
+        if filename.endswith('.json'):
+            name = os.path.basename(filename)[:-len('.json')]
+            path = os.path.join(PIPELINES_DIR, filename)
+            pipelines[name] = path
+
+    return pipelines
+
+
+def f1_macro(exp, obs):
+    return f1_score(exp, obs, average='macro')
+
 
 METRICS = {
     'accuracy': (accuracy_score, False),
+    'f1': (f1_score, False),
+    'f1_macro': (f1_macro, False),
     'r2': (r2_score, False),
     'mse': (mean_squared_error, True),
     'mae': (mean_absolute_error, True)
@@ -31,7 +50,7 @@ class GreenGuardPipeline(object):
 
     template = None
     fitted = False
-    score = None
+    cv_score = None
 
     _cv_class = None
     _metric = None
@@ -91,9 +110,9 @@ class GreenGuardPipeline(object):
 
     def _is_better(self, score):
         if self._cost:
-            return score < self.score
+            return score < self.cv_score
 
-        return score > self.score
+        return score > self.cv_score
 
     def _get_tunables(self):
         tunables = []
@@ -115,18 +134,29 @@ class GreenGuardPipeline(object):
 
         return tunables, tunable_keys
 
-    def _score_pipeline(self, pipeline, X, y, tables):
-        scores = []
+    @staticmethod
+    def _get_turbines_signals(readings, turbines, signals):
+        if turbines is None:
+            turbines = pd.DataFrame({'turbine_id': readings['turbine_id'].unique()})
+        if signals is None:
+            signals = pd.DataFrame({'signal_id': readings['signal_id'].unique()})
 
+        return turbines, signals
+
+    def cross_validate(self, pipeline, X, y, readings, turbines=None, signals=None):
+        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
+
+        scores = []
         for fold, (train_index, test_index) in enumerate(self._cv.split(X, y)):
             LOGGER.debug('Scoring fold %s', fold)
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
             pipeline = self._clone_pipeline(pipeline)
-            pipeline.fit(X_train, y_train, **tables)
+            pipeline.fit(X_train, y_train, readings=readings, turbines=turbines, signals=signals)
 
-            predictions = pipeline.predict(X_test, **tables)
+            predictions = pipeline.predict(X_test, readings=readings,
+                                           turbines=turbines, signals=signals)
             score = self._metric(y_test, predictions)
 
             LOGGER.debug('Fold fold %s score: %s', fold, score)
@@ -170,16 +200,16 @@ class GreenGuardPipeline(object):
 
         # Inform the tuner about the score that the default hyperparmeters obtained
         param_tuples = self._to_tuples(self._pipeline.get_hyperparameters(), tunable_keys)
-        tuner.add(param_tuples, self.score)
+        tuner.add(param_tuples, self.cv_score)
 
         return tuner
 
-    def tune(self, X, y, tables, iterations=10):
-        tables.setdefault('entityset', None)
+    def tune(self, X, y, readings, turbines=None, signals=None, iterations=10):
+        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
         if not self._tuner:
             LOGGER.info('Scoring the default pipeline')
-            self.score = self._score_pipeline(self._pipeline, X, y, tables)
-            LOGGER.info('Default Pipeline score: %s', self.score)
+            self.cv_score = self.cross_validate(self._pipeline, X, y, readings, turbines, signals)
+            LOGGER.info('Default Pipeline score: %s', self.cv_score)
 
             self._tuner = self._get_tuner()
 
@@ -193,12 +223,12 @@ class GreenGuardPipeline(object):
             candidate.set_hyperparameters(param_dicts)
 
             try:
-                score = self._score_pipeline(candidate, X, y, tables)
+                score = self.cross_validate(candidate, X, y, readings, turbines, signals)
 
                 LOGGER.info('Pipeline %s score: %s', i + 1, score)
 
                 if self._is_better(score):
-                    self.score = score
+                    self.cv_score = score
                     self.set_hyperparameters(param_dicts)
 
                 self._tuner.add(params, score)
@@ -208,17 +238,18 @@ class GreenGuardPipeline(object):
                 LOGGER.exception("Caught an exception scoring pipeline %s with params:\n%s",
                                  i + 1, failed)
 
-    def fit(self, X, y, tables):
-        tables.setdefault('entityset', None)
-        self._pipeline.fit(X, y, **tables)
+    def fit(self, X, y, readings, turbines=None, signals=None):
+        import ipdb; ipdb.set_trace()
+        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
+        self._pipeline.fit(X, y, readings=readings, turbines=turbines, signals=signals)
         self.fitted = True
 
-    def predict(self, X, tables):
+    def predict(self, X, readings, turbines=None, signals=None):
         if not self.fitted:
             raise NotFittedError()
 
-        tables.setdefault('entityset', None)
-        return self._pipeline.predict(X, **tables)
+        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
+        return self._pipeline.predict(X, readings=readings, turbines=turbines, signals=signals)
 
     def save(self, path):
         with open(path, 'wb') as pickle_file:
