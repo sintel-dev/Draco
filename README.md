@@ -41,27 +41,60 @@ The salient aspects of this customized project are:
 
 # Data Format
 
-**GreenGuard Pipelines** work on time Series formatted as follows:
+In order to be able to use the **GreenGuard Pipelines** to make predictions over you
+time Series data, you will need to following tables, formatted as CSV files:
 
-* A **Turbines** table that contains:
-  * `turbine_id`: column with the unique id of each turbine.
-  * A number of additional columns with information about each turbine.
-* A **Signals** table that contains:
-  * `signal_id`: column with the unique id of each signal.
-  * A number of additional columns with information about each signal.
 * A **Readings** table that contains:
-  * `reading_id`: Unique identifier of this reading.
   * `turbine_id`: Unique identifier of the turbine which this reading comes from.
   * `signal_id`: Unique identifier of the signal which this reading comes from.
   * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
   * `value`: Numeric value of this reading.
+
+|    | turbine_id   | signal_id   | timestamp           |   value |
+|----|--------------|-------------|---------------------|---------|
+|  0 | T1           | S1          | 2001-01-01 00:00:00 |       1 |
+|  1 | T1           | S1          | 2001-01-01 12:00:00 |       2 |
+|  2 | T1           | S1          | 2001-01-02 00:00:00 |       3 |
+|  3 | T1           | S1          | 2001-01-02 12:00:00 |       4 |
+|  4 | T1           | S1          | 2001-01-03 00:00:00 |       5 |
+|  5 | T1           | S1          | 2001-01-03 12:00:00 |       6 |
+|  6 | T1           | S2          | 2001-01-01 00:00:00 |       7 |
+|  7 | T1           | S2          | 2001-01-01 12:00:00 |       8 |
+|  8 | T1           | S2          | 2001-01-02 00:00:00 |       9 |
+|  9 | T1           | S2          | 2001-01-02 12:00:00 |      10 |
+| 10 | T1           | S2          | 2001-01-03 00:00:00 |      11 |
+| 11 | T1           | S2          | 2001-01-03 12:00:00 |      12 |
+
 * A **Target times** table that contains:
-  * `target_time_id`: Unique identifier of the turbine which this label corresponds to.
   * `turbine_id`: Unique identifier of the turbine which this label corresponds to.
   * `cutoff_time`: Time associated with this target
   * `target`: The value that we want to predict. This can either be a numerical value or a
     categorical label. This column can also be skipped when preparing data that will be used
     only to make predictions and not to fit any pipeline.
+
+|    | turbine_id   | cutoff_time         |   target |
+|----|--------------|---------------------|----------|
+|  0 | T1           | 2001-01-02 00:00:00 |        0 |
+|  1 | T1           | 2001-01-03 00:00:00 |        1 |
+|  2 | T1           | 2001-01-04 00:00:00 |        0 |
+
+Additionally, if available, two more tables can be passed alongside the previous ones in order
+to provide additional information about the turbines and signals.
+
+* A **Turbines** table that contains a `turbine_id` and additional properties about each turbine
+
+|    | turbine_id   |   latitude |   longitude |   height | manufacturer   |
+|----|--------------|------------|-------------|----------|----------------|
+|  0 | T1           |    49.8729 |    -6.44571 |   23.435 | M1             |
+|  1 | T2           |    49.8729 |    -6.4457  |   24.522 | M1             |
+|  2 | T3           |    49.8729 |    -6.44565 |   23.732 | M2             |
+
+* A **Signals** table that contains a `signal_id` and additional properties about each signal
+
+|    | signal_id   | sensor_type   | sensor_brand   |   sensitivity |
+|----|-------------|---------------|----------------|---------------|
+|  0 | S1          | t1            | b1             |           200 |
+|  1 | S2          | t2            | b2             |           500 |
 
 ## Demo Dataset
 
@@ -73,7 +106,9 @@ browsed and downloaded directly from the
 [d3-ai-greenguard AWS S3 Bucket](https://d3-ai-greenguard.s3.amazonaws.com/index.html).
 
 This dataset is adapted from the one used in the project by Cohen, Elliot J.,
-"Wind Analysis." Joint Initiative of the ECOWAS Centre for Renewable Energy and Energy Efficiency (ECREEE), The United Nations Industrial Development Organization (UNIDO) and the Sustainable Engineering Lab (SEL). Columbia University, 22 Aug. 2014.
+"Wind Analysis." Joint Initiative of the ECOWAS Centre for Renewable Energy and Energy Efficiency
+(ECREEE), The United Nations Industrial Development Organization (UNIDO) and the Sustainable
+Engineering Lab (SEL). Columbia University, 22 Aug. 2014.
 [Available online here](https://github.com/Ecohen4/ECREEE)
 
 The complete list of manipulations performed on the original dataset to convert it into the
@@ -186,7 +221,7 @@ For this, we will import and call the `greenguard.loader.load_demo` function wit
 ```python
 from greenguard.loader import load_demo
 
-X, y, tables = load_demo()
+X, y, readings = load_demo()
 ```
 
 The returned objects are:
@@ -194,12 +229,12 @@ The returned objects are:
 `X`: A `pandas.DataFrame` with the `target_times` table data without the `target` column.
 
 ```
-   target_id  turbine_id  timestamp
-0          1           1 2013-01-01
-1          2           1 2013-01-02
-2          3           1 2013-01-03
-3          4           1 2013-01-04
-4          5           1 2013-01-05
+   turbine_id  timestamp
+0          T1 2013-01-01
+1          T1 2013-01-02
+2          T1 2013-01-03
+3          T1 2013-01-04
+4          T1 2013-01-05
 ```
 
 `y`: A `pandas.Series` with the `target` column from the `target_times` table.
@@ -213,35 +248,15 @@ The returned objects are:
 Name: target, dtype: float64
 ```
 
-`tables`: A dictionary containing three tables in the format explained above:
-
-the `turbines` table:
+`readings`: A `pandas.DataFrame` containing the time series data in the format explained above.
 
 ```
-   turbine_id       name
-0           1  Turbine 1
-```
-
-the `signals` table:
-
-```
-   signal_id                                          name
-0          1  WTG01_Grid Production PossiblePower Avg. (1)
-1          2  WTG02_Grid Production PossiblePower Avg. (2)
-2          3  WTG03_Grid Production PossiblePower Avg. (3)
-3          4  WTG04_Grid Production PossiblePower Avg. (4)
-4          5  WTG05_Grid Production PossiblePower Avg. (5)
-```
-
-and the `readings` table:
-
-```
-   reading_id  turbine_id  signal_id  timestamp  value
-0           1           1          1 2013-01-01  817.0
-1           2           1          2 2013-01-01  805.0
-2           3           1          3 2013-01-01  786.0
-3           4           1          4 2013-01-01  809.0
-4           5           1          5 2013-01-01  755.0
+   turbine_id  signal_id  timestamp  value
+0  T1          S1        2013-01-01  817.0
+1  T1          S2        2013-01-01  805.0
+2  T1          S3        2013-01-01  786.0
+3  T1          S4        2013-01-01  809.0
+4  T1          S5        2013-01-01  755.0
 ```
 
 ## 2. Split the data
@@ -249,12 +264,34 @@ and the `readings` table:
 If we want to split the data in train and test subsets, we can do so by splitting the
 `X` and `y` variables with any suitable tool.
 
-In this case, we will do it using the [train_test_split function from scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html).
+In this case, we will do it using the [train_test_split function from scikit-learn](
+https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html).
 
 ```python
 from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+```
+
+## 3. Finding a Pipeline
+
+Once we have the data ready, we need to find a suitable pipeline.
+
+The list of available GreenGuard Pipelines can be obtained using the `greenguard.get_pipelines`
+function.
+
+```python
+from greenguard import get_pipelines
+
+pipelines = get_pipelines()
+```
+
+The returned `pipeline` variable will be `dict` containing the names of all the pipelines
+available and their paths:
+
+```
+'greenguard_classification'
+'greenguard_classification'
 ```
 
 ## 3. Finding the best Pipeline
@@ -278,15 +315,19 @@ the `accuracy` metric, and using only 2 cross validation splits:
 ```python
 from greenguard.pipeline import GreenGuardPipeline
 
-pipeline = GreenGuardPipeline(template='greenguard_classification', metric='accuracy', cv_splits=2)
+pipeline = GreenGuardPipeline(
+    template='greenguard_classification',
+    metric='f1_macro',
+    cv_splits=5
+)
 ```
 
 Once we have created the pipeline, we can call its `tune` method to find the best possible
-hyperparameters for our data, passing the `X`, `y`, and `tables` variables returned by the loader,
+hyperparameters for our data, passing the `X`, `y`, and `readings` variables returned by the loader,
 as well as an indication of the number of tuning iterations that we want to perform.
 
 ```python
-pipeline.tune(X_train, y_train, tables, iterations=10)
+pipeline.tune(X_train, y_train, readings, iterations=10)
 ```
 
 After the tuning process has finished, the hyperparameters have been already set in the classifier.
@@ -337,7 +378,7 @@ This will fit the pipeline with all the training data available using the best h
 found during the tuning process:
 
 ```python
-pipeline.fit(X_train, y_train, tables)
+pipeline.fit(X_train, y_train, readings)
 ```
 
 ## 5. Use the fitted pipeline
@@ -345,7 +386,7 @@ pipeline.fit(X_train, y_train, tables)
 After fitting the pipeline, we are ready to make predictions on new data:
 
 ```python
-predictions = pipeline.predict(X_test, tables)
+predictions = pipeline.predict(X_test, readings)
 ```
 
 And evaluate its prediction performance:
@@ -383,7 +424,7 @@ new_pipeline = GreenGuardPipeline.load(path)
 Once loaded, it can be directly used to make predictions on new data.
 
 ```python
-new_pipeline.predict(X_test, tables)
+new_pipeline.predict(X_test, readings)
 ```
 
 
@@ -408,9 +449,8 @@ class and create an instance passing:
 * `target_times - str, gptional`: The name of the target table. Defaults to `target_times`.
 * `target_column - str, optional`: The name of the target column. Defaults to `target`.
 * `readings - str, optional`: The name of the readings table. Defaults to `readings`.
-* `turbines - str, optional`: The name of the turbines table. Defaults to `turbines`.
-* `signals - str, optional`: The name of the signals table. Defaults to `signals`.
-* `readings - str, optional`: The name of the readings table. Defaults to `readings`.
+* `turbines - str, optional`: The name of the turbines table. Defaults to `None`.
+* `signals - str, optional`: The name of the signals table. Defaults to `None`.
 * `gzip - bool, optional`: Set to True if the CSV files are gzipped. Defaults to False.
 
 For example, here we will be loading a custom dataset which has been sorted in gzip format
@@ -434,7 +474,7 @@ Optionally, if the dataset contains only data to make predictions and the `targe
 does not exist, we can pass it the argument `False` to skip it:
 
 ```python
-X, tables = loader.load(target=False)
+X, readings = loader.load(target=False)
 ```
 
 # Docker Usage
