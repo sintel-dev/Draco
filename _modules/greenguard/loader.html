@@ -256,21 +256,28 @@
 <span class="sd">    dataset in the format expected by the GreenGuard Pipelines.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        dataset_path (str): Path to the root folder of the dataset.</span>
-<span class="sd">        target (str): Name of the target table.</span>
-<span class="sd">        target_column (str): Name of the target column within the target table.</span>
-<span class="sd">        readings (str): Name of the readings table.</span>
-<span class="sd">        turbines (str): Name of the turbines table.</span>
-<span class="sd">        signals (str): Name of the signals table.</span>
-<span class="sd">        gzip (bool): Whether the CSV files will be in GZipped. If `True`, the filenames</span>
+<span class="sd">        dataset_path (str):</span>
+<span class="sd">            Path to the root folder of the dataset.</span>
+<span class="sd">        target_times (str):</span>
+<span class="sd">            Name of the target_times file.</span>
+<span class="sd">        target_column (str):</span>
+<span class="sd">            Name of the target column within the target_times file.</span>
+<span class="sd">        readings (str):</span>
+<span class="sd">            Name of the readings file.</span>
+<span class="sd">        turbines (str):</span>
+<span class="sd">            Name of the turbines file.</span>
+<span class="sd">        signals (str):</span>
+<span class="sd">            Name of the signals file.</span>
+<span class="sd">        gzip (bool):</span>
+<span class="sd">            Whether the CSV files will be in GZipped. If `True`, the filenames</span>
 <span class="sd">            are expected to have the `.csv.gz` extension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_path</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;targets&#39;</span><span class="p">,</span> <span class="n">target_column</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_path</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="s1">&#39;target_times&#39;</span><span class="p">,</span> <span class="n">target_column</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">,</span>
                  <span class="n">readings</span><span class="o">=</span><span class="s1">&#39;readings&#39;</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="s1">&#39;turbines&#39;</span><span class="p">,</span> <span class="n">signals</span><span class="o">=</span><span class="s1">&#39;signals&#39;</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_path</span> <span class="o">=</span> <span class="n">dataset_path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_target</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target_times</span> <span class="o">=</span> <span class="n">target_times</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_target_column</span> <span class="o">=</span> <span class="n">target_column</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_readings</span> <span class="o">=</span> <span class="n">readings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_turbines</span> <span class="o">=</span> <span class="n">turbines</span>
@@ -281,17 +288,21 @@
         <span class="k">if</span> <span class="n">timestamp</span><span class="p">:</span>
             <span class="n">timestamp</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
 
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset_path</span><span class="p">,</span> <span class="n">table</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gzip</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">+=</span> <span class="s1">&#39;.gz&#39;</span>
+        <span class="k">if</span> <span class="s1">&#39;.csv&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">+=</span> <span class="s1">&#39;.csv&#39;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gzip</span><span class="p">:</span>
+                <span class="n">table</span> <span class="o">+=</span> <span class="s1">&#39;.gz&#39;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset_path</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">infer_datetime_format</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GreenGuardLoader.load"><a class="viewcode-back" href="../../api/greenguard.loader.html#greenguard.loader.GreenGuardLoader.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardLoader.load"><a class="viewcode-back" href="../../api/greenguard.loader.html#greenguard.loader.GreenGuardLoader.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_target</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load the dataset.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            target (bool): If True, return the target column as a separated vector.</span>
+<span class="sd">            return_target (bool):</span>
+<span class="sd">                If True, return the target column as a separated vector.</span>
 <span class="sd">                Otherwise, the target column is expected to be already missing from</span>
 <span class="sd">                the target table.</span>
 
@@ -310,9 +321,138 @@
             <span class="s1">&#39;turbines&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_turbines</span><span class="p">),</span>
         <span class="p">}</span>
 
-        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_times</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_target</span><span class="p">:</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_column</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">tables</span></div></div>
+
+
+<div class="viewcode-block" id="GreenGuardRawLoader"><a class="viewcode-back" href="../../api/greenguard.loader.html#greenguard.loader.GreenGuardRawLoader">[docs]</a><span class="k">class</span> <span class="nc">GreenGuardRawLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;GreenGuardRawLoader class.</span>
+
+<span class="sd">    The GreenGuardRawLoader class provides a simple interface to load a</span>
+<span class="sd">    time series data provided turbine in raw format and return it in the</span>
+<span class="sd">    format expected by the GreenGuard Pipelines.</span>
+
+<span class="sd">    This raw format has the following characteristics:</span>
+
+<span class="sd">        * All the data from all the turbines is inside a single folder.</span>
+<span class="sd">        * Inside the data folder, a folder exists for each turbine.</span>
+<span class="sd">          This folders are named exactly like each turbine id, and inside it one or more</span>
+<span class="sd">          CSV files can be found. The names of these files is not relevant.</span>
+<span class="sd">        * Each CSV file will have the the following columns:</span>
+
+<span class="sd">            * timestamp: timestemp of the reading.</span>
+<span class="sd">            * signal: name or id of the signal.</span>
+<span class="sd">            * value: value of the reading.</span>
+
+<span class="sd">    And the output is the following 4 tables:</span>
+
+<span class="sd">        * turbines:</span>
+<span class="sd">            * `turbine_id`: column with the unique id of each turbine.</span>
+<span class="sd">            * A number of additional columns with information about each turbine.</span>
+<span class="sd">        * signals:</span>
+<span class="sd">            * `signal_id`: column with the unique id of each signal.</span>
+<span class="sd">            * A number of additional columns with information about each signal.</span>
+<span class="sd">        * readings:</span>
+<span class="sd">            * `reading_id`: Unique identifier of this reading.</span>
+<span class="sd">            * `turbine_id`: Unique identifier of the turbine which this reading comes from.</span>
+<span class="sd">            * `signal_id`: Unique identifier of the signal which this reading comes from.</span>
+<span class="sd">            * `timestamp`: Time where the reading took place, as an ISO formatted datetime.</span>
+<span class="sd">            * `value`: Numeric value of this reading.</span>
+<span class="sd">        * target_times:</span>
+<span class="sd">            * `turbine_id`: Unique identifier of the turbine which this target corresponds to.</span>
+<span class="sd">            * `cutoff_timestamp`: The timestamp at which the target value is deemed to be known.</span>
+<span class="sd">              This timestamp is used to filter data such that only data prior to this is used</span>
+<span class="sd">              for featurize.</span>
+<span class="sd">            * `target`: The value that we want to predict. This can either be a numerical value</span>
+<span class="sd">              or a categorical label. This column can also be skipped when preparing data that</span>
+<span class="sd">              will be used only to make predictions and not to fit any pipeline.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target_times_path (str):</span>
+<span class="sd">            Path to the target_times CSV file. If turbines file is given,</span>
+<span class="sd">            this file is expected to have a `turbines_id` column that acts</span>
+<span class="sd">            as a foreign key to the turbines table.</span>
+<span class="sd">            Otherwise, this file is expected to have a `turbines` column</span>
+<span class="sd">            with the name of the turbine.</span>
+<span class="sd">        data_path (str):</span>
+<span class="sd">            Path to the folder containing all the turbines data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times_path</span><span class="p">,</span> <span class="n">data_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target_times_path</span> <span class="o">=</span> <span class="n">target_times_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_path</span> <span class="o">=</span> <span class="n">data_path</span>
+
+    <span class="k">def</span> <span class="nf">_load_turbine_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turbine_file</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">turbine_file</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;unnamed: 0&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="c1"># Someone forgot to drop the index before</span>
+            <span class="c1"># storing the DataFrame as a CSV</span>
+            <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;unnamed: 0&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_load_turbine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turbine</span><span class="p">):</span>
+        <span class="n">turbine_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_path</span><span class="p">,</span> <span class="n">turbine</span><span class="p">)</span>
+
+        <span class="n">readings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">turbine_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">turbine_path</span><span class="p">):</span>
+            <span class="n">turbine_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">turbine_path</span><span class="p">,</span> <span class="n">turbine_file</span><span class="p">)</span>
+            <span class="n">readings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_load_turbine_file</span><span class="p">(</span><span class="n">turbine_file_path</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_load_readings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turbine_ids</span><span class="p">):</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">turbine_id</span> <span class="ow">in</span> <span class="n">turbine_ids</span><span class="p">:</span>
+            <span class="n">turbine_readings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_turbine</span><span class="p">(</span><span class="n">turbine_id</span><span class="p">)</span>
+            <span class="n">turbine_readings</span><span class="p">[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">turbine_id</span>
+            <span class="n">readings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">turbine_readings</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GreenGuardRawLoader.load"><a class="viewcode-back" href="../../api/greenguard.loader.html#greenguard.loader.GreenGuardRawLoader.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_target</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load the dataset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            return_target (bool):</span>
+<span class="sd">                If True, return the target column as a separated vector.</span>
+<span class="sd">                Otherwise, the target column is expected to be already missing from</span>
+<span class="sd">                the target table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (tuple):</span>
+<span class="sd">                * ``X (pandas.DataFrame)``: A pandas.DataFrame with the contents of the</span>
+<span class="sd">                  target_times table.</span>
+<span class="sd">                * ``y (pandas.Series, optional)``: A pandas.Series with the contents of</span>
+<span class="sd">                  the target column.</span>
+<span class="sd">                * ``tables (dict)``: A dictionary containing the readings, turbines and</span>
+<span class="sd">                  signals tables as pandas.DataFrames.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_times_path</span><span class="p">)</span>
+
+        <span class="n">turbine_ids</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">turbine_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+        <span class="n">readings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_readings</span><span class="p">(</span><span class="n">turbine_ids</span><span class="p">)</span>
+        <span class="n">readings</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;signal&#39;</span><span class="p">:</span> <span class="s1">&#39;signal_id&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">turbines</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">:</span> <span class="n">turbine_ids</span><span class="p">})</span>
+        <span class="n">signals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;signal_id&#39;</span><span class="p">:</span> <span class="n">readings</span><span class="o">.</span><span class="n">signal_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()})</span>
+
+        <span class="n">tables</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;turbines&#39;</span><span class="p">:</span> <span class="n">turbines</span><span class="p">,</span>
+            <span class="s1">&#39;readings&#39;</span><span class="p">:</span> <span class="n">readings</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;signal_id&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]],</span>
+            <span class="s1">&#39;signals&#39;</span><span class="p">:</span> <span class="n">signals</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">return_target</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span>
 
         <span class="k">else</span><span class="p">:</span>

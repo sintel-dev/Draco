@@ -304,11 +304,11 @@ vetted through testing across multiple publicly available datasets for the same 
 <li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: Numeric value of this reading.</p></li>
 </ul>
 </li>
-<li><p>A <strong>Targets</strong> table that contains:</p>
+<li><p>A <strong>Target times</strong> table that contains:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">target_id</span></code>: Unique identifier of the turbine which this label corresponds to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_time_id</span></code>: Unique identifier of the turbine which this label corresponds to.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: Unique identifier of the turbine which this label corresponds to.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code>: Time associated with this target</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>: Time associated with this target</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">target</span></code>: The value that we want to predict. This can either be a numerical value or a
 categorical label. This column can also be skipped when preparing data that will be used
 only to make predictions and not to fit any pipeline.</p></li>
@@ -434,7 +434,7 @@ and then make predictions from it.</p>
 </pre></div>
 </div>
 <p>The returned objects are:</p>
-<p><code class="docutils literal notranslate"><span class="pre">X</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table data without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.</p>
+<p><code class="docutils literal notranslate"><span class="pre">X</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table data without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">target_id</span>  <span class="n">turbine_id</span>  <span class="k">timestamp</span>
 <span class="mi">0</span>          <span class="mi">1</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
 <span class="mi">1</span>          <span class="mi">2</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">02</span>
@@ -443,7 +443,7 @@ and then make predictions from it.</p>
 <span class="mi">4</span>          <span class="mi">5</span>           <span class="mi">1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">05</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">y</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.Series</span></code> with the <code class="docutils literal notranslate"><span class="pre">target</span></code> column from the <code class="docutils literal notranslate"><span class="pre">targets</span></code> table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">y</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.Series</span></code> with the <code class="docutils literal notranslate"><span class="pre">target</span></code> column from the <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table.</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
 <span class="mi">1</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
 <span class="mi">2</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
@@ -611,7 +611,7 @@ on your own dataset.</p>
 class and create an instance passing:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span> <span class="pre">-</span> <span class="pre">str</span></code>: The path to the folder where the 4 CSV files are</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">gptional</span></code>: The name of the target table. Defaults to <code class="docutils literal notranslate"><span class="pre">targets</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_times</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">gptional</span></code>: The name of the target table. Defaults to <code class="docutils literal notranslate"><span class="pre">target_times</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">target_column</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the target column. Defaults to <code class="docutils literal notranslate"><span class="pre">target</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">readings</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the readings table. Defaults to <code class="docutils literal notranslate"><span class="pre">readings</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">turbines</span> <span class="pre">-</span> <span class="pre">str,</span> <span class="pre">optional</span></code>: The name of the turbines table. Defaults to <code class="docutils literal notranslate"><span class="pre">turbines</span></code>.</p></li>
