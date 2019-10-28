@@ -34,7 +34,7 @@ class GreenGuardLoader(object):
     """
 
     def __init__(self, dataset_path, target_times='target_times', target_column='target',
-                 readings='readings', turbines='turbines', signals='signals', gzip=False):
+                 readings='readings', turbines=None, signals=None, gzip=False):
 
         self._dataset_path = dataset_path
         self._target_times = target_times
@@ -44,9 +44,11 @@ class GreenGuardLoader(object):
         self._signals = signals
         self._gzip = gzip
 
-    def _read_csv(self, table, timestamp=False):
+    def _read_csv(self, table, timestamp=None):
         if timestamp:
-            timestamp = ['timestamp']
+            parse_dates = [timestamp]
+        else:
+            parse_dates = False
 
         if '.csv' not in table:
             table += '.csv'
@@ -55,7 +57,7 @@ class GreenGuardLoader(object):
 
         path = os.path.join(self._dataset_path, table)
 
-        return pd.read_csv(path, parse_dates=timestamp, infer_datetime_format=True)
+        return pd.read_csv(path, parse_dates=parse_dates, infer_datetime_format=True)
 
     def load(self, return_target=True):
         """Load the dataset.
@@ -76,12 +78,16 @@ class GreenGuardLoader(object):
                   signals tables as pandas.DataFrames.
         """
         tables = {
-            'readings': self._read_csv(self._readings, True),
-            'signals': self._read_csv(self._signals),
-            'turbines': self._read_csv(self._turbines),
+            'readings': self._read_csv(self._readings, 'timestamp'),
         }
 
-        X = self._read_csv(self._target_times, True)
+        if self._signals:
+            tables['signals'] = self._read_csv(self._signals)
+
+        if self._turbines:
+            tables['turbines'] = self._read_csv(self._turbines)
+
+        X = self._read_csv(self._target_times, 'cutoff_time')
         if return_target:
             y = X.pop(self._target_column)
             return X, y, tables
@@ -111,18 +117,6 @@ class GreenGuardRawLoader(object):
 
     And the output is the following 4 tables:
 
-        * turbines:
-            * `turbine_id`: column with the unique id of each turbine.
-            * A number of additional columns with information about each turbine.
-        * signals:
-            * `signal_id`: column with the unique id of each signal.
-            * A number of additional columns with information about each signal.
-        * readings:
-            * `reading_id`: Unique identifier of this reading.
-            * `turbine_id`: Unique identifier of the turbine which this reading comes from.
-            * `signal_id`: Unique identifier of the signal which this reading comes from.
-            * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
-            * `value`: Numeric value of this reading.
         * target_times:
             * `turbine_id`: Unique identifier of the turbine which this target corresponds to.
             * `cutoff_timestamp`: The timestamp at which the target value is deemed to be known.
@@ -131,10 +125,22 @@ class GreenGuardRawLoader(object):
             * `target`: The value that we want to predict. This can either be a numerical value
               or a categorical label. This column can also be skipped when preparing data that
               will be used only to make predictions and not to fit any pipeline.
+        * readings:
+            * `reading_id`: Unique identifier of this reading.
+            * `turbine_id`: Unique identifier of the turbine which this reading comes from.
+            * `signal_id`: Unique identifier of the signal which this reading comes from.
+            * `timestamp`: Time where the reading took place, as an ISO formatted datetime.
+            * `value`: Numeric value of this reading.
+        * turbines:
+            * `turbine_id`: column with the unique id of each turbine.
+            * A number of additional columns with information about each turbine.
+        * signals:
+            * `signal_id`: column with the unique id of each signal.
+            * A number of additional columns with information about each signal.
 
     Args:
         target_times_path (str):
-            Path to the target_times CSV file. If turbines file is given,
+            Path to the target_times CSV file. If a turbines file is given,
             this file is expected to have a `turbines_id` column that acts
             as a foreign key to the turbines table.
             Otherwise, this file is expected to have a `turbines` column
@@ -147,7 +153,7 @@ class GreenGuardRawLoader(object):
         self._target_times_path = target_times_path
         self._data_path = data_path
 
-    def _load_turbine_file(self, turbine_file):
+    def _load_readings_file(self, turbine_file):
         data = pd.read_csv(turbine_file)
         data.columns = data.columns.str.lower()
 
@@ -158,20 +164,20 @@ class GreenGuardRawLoader(object):
 
         return data
 
-    def _load_turbine(self, turbine):
+    def _load_turbine_readings(self, turbine):
         turbine_path = os.path.join(self._data_path, turbine)
 
         readings = list()
-        for turbine_file in os.listdir(turbine_path):
-            turbine_file_path = os.path.join(turbine_path, turbine_file)
-            readings.append(self._load_turbine_file(turbine_file_path))
+        for readings_file in os.listdir(turbine_path):
+            readings_file_path = os.path.join(turbine_path, readings_file)
+            readings.append(self._load_readings_file(readings_file_path))
 
         return pd.concat(readings)
 
     def _load_readings(self, turbine_ids):
         readings = list()
         for turbine_id in turbine_ids:
-            turbine_readings = self._load_turbine(turbine_id)
+            turbine_readings = self._load_turbine_readings(turbine_id)
             turbine_readings['turbine_id'] = turbine_id
             readings.append(turbine_readings)
 
@@ -182,7 +188,7 @@ class GreenGuardRawLoader(object):
 
         Args:
             return_target (bool):
-                If True, return the target column as a separated vector.
+                If ``True``, return the target column as a separated vector.
                 Otherwise, the target column is expected to be already missing from
                 the target table.
 
@@ -192,8 +198,7 @@ class GreenGuardRawLoader(object):
                   target_times table.
                 * ``y (pandas.Series, optional)``: A pandas.Series with the contents of
                   the target column.
-                * ``tables (dict)``: A dictionary containing the readings, turbines and
-                  signals tables as pandas.DataFrames.
+                * ``readings (pandas.DataFrame)``: A pandas.DataFrame containing the readings.
         """
         X = pd.read_csv(self._target_times_path)
 
@@ -202,21 +207,12 @@ class GreenGuardRawLoader(object):
         readings = self._load_readings(turbine_ids)
         readings.rename(columns={'signal': 'signal_id'}, inplace=True)
 
-        turbines = pd.DataFrame({'turbine_id': turbine_ids})
-        signals = pd.DataFrame({'signal_id': readings.signal_id.unique()})
-
-        tables = {
-            'turbines': turbines,
-            'readings': readings[['turbine_id', 'signal_id', 'timestamp', 'value']],
-            'signals': signals
-        }
-
         if return_target:
             y = X.pop('target')
-            return X, y, tables
+            return X, y, readings
 
         else:
-            return X, tables
+            return X, readings
 
 
 def load_demo():
@@ -229,7 +225,8 @@ def load_demo():
     demo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'demo')
     if os.path.exists(demo_path):
         loader = GreenGuardLoader(demo_path, gzip=True)
-        return loader.load()
+        X, y, tables = loader.load()
+        return X, y, tables['readings']
 
     else:
         os.mkdir(demo_path)
@@ -241,7 +238,7 @@ def load_demo():
                 table.to_csv(os.path.join(demo_path, name + '.csv.gz'), index=False)
 
             y = X.pop('target')
-            return X, y, tables
+            return X, y, tables['readings']
         except Exception:
             shutil.rmtree(demo_path)
             raise
