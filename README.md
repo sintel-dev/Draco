@@ -291,7 +291,7 @@ available and their paths:
 
 ```
 'greenguard_classification'
-'greenguard_classification'
+'greenguard_regression'
 ```
 
 ## 3. Finding the best Pipeline
@@ -476,6 +476,7 @@ does not exist, we can pass it the argument `False` to skip it:
 ```python
 X, readings = loader.load(target=False)
 ```
+
 
 # Docker Usage
 

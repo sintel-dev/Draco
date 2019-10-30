@@ -133,8 +133,8 @@ class GreenGuardRawLoader(object):
             * `value`: Numeric value of this reading.
 
     Args:
-        target_times (str or pd.DataFrame):
-            Path to the target_times CSV file.
+        target_times (pd.DataFrame or str):
+            target_times DataFrame or path to the target_times CSV file.
         readings_path (str):
             Path to the folder containing all the readings data.
     """
@@ -143,37 +143,63 @@ class GreenGuardRawLoader(object):
         self._target_times = target_times
         self._readings_path = readings_path
 
-    def _load_readings_file(self, turbine_file):
+    def _load_readings_file(self, turbine_file, signals):
+        LOGGER.info('Loading file %s', turbine_file)
         data = pd.read_csv(turbine_file)
         data.columns = data.columns.str.lower()
+        data.rename(columns={'signal': 'signal_id'}, inplace=True)
 
         if 'unnamed: 0' in data.columns:
             # Someone forgot to drop the index before
             # storing the DataFrame as a CSV
             del data['unnamed: 0']
 
+        if signals:
+            LOGGER.info('Filtering by signal')
+            data = data[data.signal_id.isin(signals)]
+
+        LOGGER.info('Parsing timestamps')
+        data['timestamp'] = pd.to_datetime(data['timestamp'], format='%m/%d/%y %H:%M:%S')
+
         return data
 
-    def _load_turbine_readings(self, turbine):
-        turbine_path = os.path.join(self._readings_path, turbine)
+    def _filter_by_window_size(self, filenames, data, window_size):
+        window_size = pd.to_timedelta(window_size)
+        min_timestamp = (data.cutoff_time - window_size).dt.strftime('%Y-%m-.csv')
+        max_timestamp = data.cutoff_time.dt.strftime('%Y-%m-.csv')
+
+        for filename in filenames:
+            if ((min_timestamp <= filename) & (filename <= max_timestamp)).any():
+                yield filename
+
+    def _load_turbine_readings(self, turbine_id, data, signals, window_size):
+        turbine_path = os.path.join(self._readings_path, turbine_id)
+        filenames = sorted(os.listdir(turbine_path))
+
+        if window_size:
+            filenames = self._filter_by_window_size(filenames, data, window_size)
 
         readings = list()
-        for readings_file in os.listdir(turbine_path):
+        for readings_file in filenames:
             readings_file_path = os.path.join(turbine_path, readings_file)
-            readings.append(self._load_readings_file(readings_file_path))
+            readings.append(self._load_readings_file(readings_file_path, signals))
 
         return pd.concat(readings)
 
-    def _load_readings(self, turbine_ids):
+    def _load_readings(self, X, signals, window_size):
+        turbine_ids = X.turbine_id.unique()
+
         readings = list()
-        for turbine_id in turbine_ids:
-            turbine_readings = self._load_turbine_readings(turbine_id)
+        for turbine_id in sorted(turbine_ids):
+            data = X[X['turbine_id'] == turbine_id]
+            LOGGER.info('Loading turbine %s readings', turbine_id)
+            turbine_readings = self._load_turbine_readings(turbine_id, data, signals, window_size)
             turbine_readings['turbine_id'] = turbine_id
             readings.append(turbine_readings)
 
         return pd.concat(readings)
 
-    def load(self, return_target=True):
+    def load(self, return_target=True, signals=None, window_size=None):
         """Load the dataset.
 
         Args:
@@ -181,6 +207,12 @@ class GreenGuardRawLoader(object):
                 If ``True``, return the target column as a separated vector.
                 Otherwise, the target column is expected to be already missing from
                 the target table.
+            signals (list):
+                List of signals to load from the readings files. If not given, load
+                all the signals available.
+            window_size (str):
+                Rule indicating how long back before the cutoff times we have to go
+                when loading the data.
 
         Returns:
             (tuple):
@@ -190,15 +222,14 @@ class GreenGuardRawLoader(object):
                   the target column.
                 * ``readings (pandas.DataFrame)``: A pandas.DataFrame containing the readings.
         """
-        if isinstance(self._target_time, pd.DataFrame):
+        if isinstance(self._target_times, pd.DataFrame):
             X = self._target_times.copy()
         else:
             X = pd.read_csv(self._target_times)
+            X['cutoff_time'] = pd.to_datetime(X['cutoff_time'])
 
-        turbine_ids = X.turbine_id.unique()
-
-        readings = self._load_readings(turbine_ids)
-        readings.rename(columns={'signal': 'signal_id'}, inplace=True)
+        readings = self._load_readings(X, signals, window_size)
+        LOGGER.info('Loaded %s turbine readings', len(readings))
 
         if return_target:
             y = X.pop('target')
