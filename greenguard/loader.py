@@ -133,14 +133,11 @@ class GreenGuardRawLoader(object):
             * `value`: Numeric value of this reading.
 
     Args:
-        target_times (pd.DataFrame or str):
-            target_times DataFrame or path to the target_times CSV file.
         readings_path (str):
             Path to the folder containing all the readings data.
     """
 
-    def __init__(self, target_times, readings_path):
-        self._target_times = target_times
+    def __init__(self, readings_path):
         self._readings_path = readings_path
 
     def _load_readings_file(self, turbine_file, signals):
@@ -156,7 +153,7 @@ class GreenGuardRawLoader(object):
 
         if signals:
             LOGGER.info('Filtering by signal')
-            data = data[data.signal_id.isin(signals)]
+            data = data[data.signal_id.isin(signals.signal_id)]
 
         LOGGER.info('Parsing timestamps')
         data['timestamp'] = pd.to_datetime(data['timestamp'], format='%m/%d/%y %H:%M:%S')
@@ -199,20 +196,22 @@ class GreenGuardRawLoader(object):
 
         return pd.concat(readings)
 
-    def load(self, return_target=True, signals=None, window_size=None):
+    def load(self, target_times, signals=None, window_size=None, return_target=True):
         """Load the dataset.
 
         Args:
-            return_target (bool):
-                If ``True``, return the target column as a separated vector.
-                Otherwise, the target column is expected to be already missing from
-                the target table.
+            target_times (pd.DataFrame or str):
+                target_times DataFrame or path to the target_times CSV file.
             signals (list):
                 List of signals to load from the readings files. If not given, load
                 all the signals available.
             window_size (str):
                 Rule indicating how long back before the cutoff times we have to go
                 when loading the data.
+            return_target (bool):
+                If ``True``, return the target column as a separated vector.
+                Otherwise, the target column is expected to be already missing from
+                the target table.
 
         Returns:
             (tuple):
@@ -221,12 +220,18 @@ class GreenGuardRawLoader(object):
                 * ``y (pandas.Series, optional)``: A pandas.Series with the contents of
                   the target column.
                 * ``readings (pandas.DataFrame)``: A pandas.DataFrame containing the readings.
+                * ``signals (pandas.DataFrame)``: A pandas.DataFrame containing the signal_ids.
         """
-        if isinstance(self._target_times, pd.DataFrame):
-            X = self._target_times.copy()
+        if isinstance(target_times, pd.DataFrame):
+            X = target_times.copy()
         else:
-            X = pd.read_csv(self._target_times)
+            X = pd.read_csv(target_times)
             X['cutoff_time'] = pd.to_datetime(X['cutoff_time'])
+
+        if isinstance(signals, list):
+            signals = pd.DataFrame({'signal_id': signals})
+        elif isinstance(signals, str):
+            signals = pd.read_csv(signals)
 
         readings = self._load_readings(X, signals, window_size)
         LOGGER.info('Loaded %s turbine readings', len(readings))
