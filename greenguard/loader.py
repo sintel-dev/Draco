@@ -3,6 +3,7 @@
 import logging
 import os
 import shutil
+from datetime import datetime
 
 import pandas as pd
 
@@ -140,7 +141,15 @@ class GreenGuardRawLoader(object):
     def __init__(self, readings_path):
         self._readings_path = readings_path
 
-    def _load_readings_file(self, turbine_file, signals):
+    def _filter_by_filename(self, X, filenames):
+        max_csv = X.end.dt.strftime('%Y-%m-.csv')
+        min_csv = X.start.dt.strftime('%Y-%m-.csv')
+
+        for filename in filenames:
+            if ((min_csv <= filename) & (filename <= max_csv)).any():
+                yield filename
+
+    def _load_readings_file(self, turbine_file):
         LOGGER.info('Loading file %s', turbine_file)
         data = pd.read_csv(turbine_file)
         data.columns = data.columns.str.lower()
@@ -151,46 +160,85 @@ class GreenGuardRawLoader(object):
             # storing the DataFrame as a CSV
             del data['unnamed: 0']
 
-        if signals:
-            LOGGER.info('Filtering by signal')
-            data = data[data.signal_id.isin(signals.signal_id)]
-
-        LOGGER.info('Parsing timestamps')
-        data['timestamp'] = pd.to_datetime(data['timestamp'], format='%m/%d/%y %H:%M:%S')
+        LOGGER.info('Loaded %s readings from file %s', len(data), turbine_file)
 
         return data
 
-    def _filter_by_window_size(self, filenames, data, window_size):
-        window_size = pd.to_timedelta(window_size)
-        min_timestamp = (data.cutoff_time - window_size).dt.strftime('%Y-%m-.csv')
-        max_timestamp = data.cutoff_time.dt.strftime('%Y-%m-.csv')
+    def _filter_by_signal(self, data, signals):
+        if signals is not None:
+            LOGGER.info('Filtering by signal')
+            data = data[data.signal_id.isin(signals.signal_id)]
 
-        for filename in filenames:
-            if ((min_timestamp <= filename) & (filename <= max_timestamp)).any():
-                yield filename
+        LOGGER.info('Selected %s readings by signal', len(data))
 
-    def _load_turbine_readings(self, turbine_id, data, signals, window_size):
+        return data
+
+    def _filter_by_timestamp(self, data, X):
+        LOGGER.info('Parsing timestamps')
+        timestamps = pd.to_datetime(data['timestamp'], format='%m/%d/%y %H:%M:%S')
+        data['timestamp'] = timestamps
+
+        LOGGER.info('Filtering by timestamp')
+
+        related = [False] * len(timestamps)
+        for row in X.itertuples():
+            related |= (row.start <= timestamps) & (timestamps <= row.end)
+
+        data = data[related]
+
+        LOGGER.info('Selected %s readings by timestamp', len(data))
+
+        return data
+
+    def _load_turbine_readings(self, X, signals):
+        turbine_id = X.turbine_id.iloc[0]
         turbine_path = os.path.join(self._readings_path, turbine_id)
         filenames = sorted(os.listdir(turbine_path))
 
-        if window_size:
-            filenames = self._filter_by_window_size(filenames, data, window_size)
+        filenames = self._filter_by_filename(X, filenames)
 
         readings = list()
         for readings_file in filenames:
             readings_file_path = os.path.join(turbine_path, readings_file)
-            readings.append(self._load_readings_file(readings_file_path, signals))
+            data = self._load_readings_file(readings_file_path)
+            data = self._filter_by_signal(data, signals)
+            data = self._filter_by_timestamp(data, X)
 
-        return pd.concat(readings)
+            readings.append(data)
+
+        if readings:
+            readings = pd.concat(readings)
+        else:
+            readings = pd.DataFrame(columns=['timestamp', 'signal_id', 'value', 'turbine_id'])
+
+        LOGGER.info('Loaded %s readings from turbine %s', len(readings), turbine_id)
+
+        return readings
+
+    def _get_times(self, X, window_size):
+        cutoff_times = X.cutoff_time
+        if window_size:
+            window_size = pd.to_timedelta(window_size)
+            min_times = cutoff_times - window_size
+        else:
+            min_times = [datetime.min] * len(cutoff_times)
+
+        return pd.DataFrame({
+            'turbine_id': X.turbine_id,
+            'start': min_times,
+            'end': cutoff_times,
+        })
 
     def _load_readings(self, X, signals, window_size):
         turbine_ids = X.turbine_id.unique()
 
+        X = self._get_times(X, window_size)
+
         readings = list()
         for turbine_id in sorted(turbine_ids):
-            data = X[X['turbine_id'] == turbine_id]
+            turbine_X = X[X['turbine_id'] == turbine_id]
             LOGGER.info('Loading turbine %s readings', turbine_id)
-            turbine_readings = self._load_turbine_readings(turbine_id, data, signals, window_size)
+            turbine_readings = self._load_turbine_readings(turbine_X, signals)
             turbine_readings['turbine_id'] = turbine_id
             readings.append(turbine_readings)
 
@@ -226,7 +274,12 @@ class GreenGuardRawLoader(object):
             X = target_times.copy()
         else:
             X = pd.read_csv(target_times)
-            X['cutoff_time'] = pd.to_datetime(X['cutoff_time'])
+
+        X['cutoff_time'] = pd.to_datetime(X['cutoff_time'])
+
+        without_duplicates = X.drop_duplicates(subset=['cutoff_time', 'turbine_id'])
+        if len(X) != len(without_duplicates):
+            raise ValueError("Duplicate rows found in target_times")
 
         if isinstance(signals, list):
             signals = pd.DataFrame({'signal_id': signals})
