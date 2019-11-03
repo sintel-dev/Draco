@@ -21,6 +21,7 @@ LOGGER = logging.getLogger(__name__)
 
 PIPELINES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'pipelines'))
 
+
 def get_pipelines():
     pipelines = dict()
     for filename in os.listdir(PIPELINES_DIR):
@@ -239,7 +240,6 @@ class GreenGuardPipeline(object):
                                  i + 1, failed)
 
     def fit(self, X, y, readings, turbines=None, signals=None):
-        import ipdb; ipdb.set_trace()
         turbines, signals = self._get_turbines_signals(readings, turbines, signals)
         self._pipeline.fit(X, y, readings=readings, turbines=turbines, signals=signals)
         self.fitted = True

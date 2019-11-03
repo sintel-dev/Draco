@@ -53,7 +53,10 @@
             "time_index": "cutoff_time",
             "encode": false,
             "max_depth": -1,
-            "copy": true
+            "n_jobs": -1,
+            "copy": true,
+            "training_window": "3d",
+            "verbose": true
         }
     },
     "input_names": {
