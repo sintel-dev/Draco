@@ -1,6 +1,6 @@
-"""readings module.
+"""Data module.
 
-This module contains functions to work directly with turbine readins in raw format.
+This module contains functions to work directly with GreenGuard data in raw format.
 
 This raw format has the following characteristics:
 
@@ -175,8 +175,7 @@ def _load_readings(readings_path, target_times, signals, window_size):
     return pd.concat(readings)
 
 
-def extract_readings(readings_path, target_times, signals=None, window_size=None,
-                     add_targets=False, new_target_value=None):
+def extract_readings(readings_path, target_times, signals=None, window_size=None):
     """Extract raw readings data for the given target_times.
 
     The ``target_times`` table is examined to decide from which turbines found
@@ -200,10 +199,6 @@ def extract_readings(readings_path, target_times, signals=None, window_size=None
         window_size (str):
             Rule indicating how long back before the cutoff times we have to go
             when loading the data.
-        add_targets (bool):
-            Whether to add new target times with random cutoff times.
-        new_target_value (str):
-            Target value to use when adding target times.
 
     Returns:
         pandas.DataFrame
@@ -214,11 +209,6 @@ def extract_readings(readings_path, target_times, signals=None, window_size=None
         target_times = pd.read_csv(target_times)
 
     target_times['cutoff_time'] = pd.to_datetime(target_times['cutoff_time'])
-
-    if add_targets:
-        if not new_target_value:
-            raise ValueError('Cannot add targets without a new target value')
-        target_times = make_targets(target_times, window_size, new_target_value)
 
     without_duplicates = target_times.drop_duplicates(subset=['cutoff_time', 'turbine_id'])
     if len(target_times) != len(without_duplicates):
