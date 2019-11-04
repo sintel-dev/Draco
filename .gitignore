@@ -106,3 +106,5 @@ ENV/
 .*.swp
 
 greenguard/demo/
+notebooks-private
+scripts/

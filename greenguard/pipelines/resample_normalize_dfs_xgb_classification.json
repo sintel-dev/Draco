@@ -1,54 +1,47 @@
 {
     "primitives": [
         "pandas.DataFrame.resample",
-        "pandas.DataFrame.unstack",
         "featuretools.EntitySet.entity_from_dataframe",
-        "featuretools.EntitySet.entity_from_dataframe",
-        "featuretools.EntitySet.entity_from_dataframe",
-        "featuretools.EntitySet.add_relationship",
+        "featuretools.EntitySet.normalize_entity",
+        "featuretools.EntitySet.normalize_entity",
         "featuretools.dfs",
-        "mlprimitives.custom.feature_extraction.CategoricalEncoder",
         "sklearn.impute.SimpleImputer",
         "sklearn.preprocessing.StandardScaler",
         "xgboost.XGBClassifier"
     ],
     "init_params": {
         "pandas.DataFrame.resample#1": {
-            "rule": "1D",
+            "rule": "1h",
             "on": "timestamp",
             "groupby": ["turbine_id", "signal_id"],
             "aggregation": "mean",
-            "reset_index": false
-        },
-        "pandas.DataFrame.unstack#1": {
-            "level": "signal_id",
             "reset_index": true
         },
         "featuretools.EntitySet.entity_from_dataframe#1": {
             "entity_id": "readings",
-            "index": "index",
+            "index": "reading_id",
             "make_index": true,
             "time_index": "timestamp"
         },
-        "featuretools.EntitySet.entity_from_dataframe#2": {
-            "entity_id": "turbines",
-            "index": "turbine_id"
+        "featuretools.EntitySet.normalize_entity#1": {
+            "base_entity_id": "readings",
+            "new_entity_id": "turbines",
+            "index": "turbine_id",
+            "make_time_index": false
         },
-        "featuretools.EntitySet.entity_from_dataframe#3": {
-            "entity_id": "signals",
-            "index": "signal_id"
-        },
-        "featuretools.EntitySet.add_relationship#1": {
-            "parent": "turbines",
-            "parent_column": "turbine_id",
-            "child": "readings",
-            "child_column": "turbine_id"
+        "featuretools.EntitySet.normalize_entity#2": {
+            "base_entity_id": "readings",
+            "new_entity_id": "signals",
+            "index": "signal_id",
+            "make_time_index": false
         },
         "featuretools.dfs#1": {
             "target_entity": "turbines",
             "index": "turbine_id",
-            "time_index": "timestamp",
-            "encode": false
+            "time_index": "cutoff_time",
+            "encode": false,
+            "max_depth": -1,
+            "copy": true
         }
     },
     "input_names": {
@@ -60,12 +53,6 @@
         },
         "featuretools.EntitySet.entity_from_dataframe#1": {
             "dataframe": "readings"
-        },
-        "featuretools.EntitySet.entity_from_dataframe#2": {
-            "dataframe": "turbines"
-        },
-        "featuretools.EntitySet.entity_from_dataframe#3": {
-            "dataframe": "signals"
         }
     },
     "output_names": {
@@ -77,4 +64,3 @@
         }
     }
 }
-
