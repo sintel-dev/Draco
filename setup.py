@@ -81,8 +81,7 @@ setup(
     ),
     entry_points={
         'mlblocks': [
-            'primitives=orion:MLBLOCKS_PRIMITIVES',
-            'pipelines=orion:MLBLOCKS_PIPELINES'
+            'pipelines=greenguard:MLBLOCKS_PIPELINES'
         ],
     },
     extras_require={
