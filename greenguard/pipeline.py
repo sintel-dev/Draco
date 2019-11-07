@@ -7,7 +7,6 @@ from collections import defaultdict
 
 import cloudpickle
 import numpy as np
-import pandas as pd
 from btb import HyperParameter
 from btb.tuning import GP
 from mlblocks import MLPipeline
@@ -135,17 +134,7 @@ class GreenGuardPipeline(object):
 
         return tunables, tunable_keys
 
-    @staticmethod
-    def _get_turbines_signals(readings, turbines, signals):
-        if turbines is None:
-            turbines = pd.DataFrame({'turbine_id': readings['turbine_id'].unique()})
-        if signals is None:
-            signals = pd.DataFrame({'signal_id': readings['signal_id'].unique()})
-
-        return turbines, signals
-
-    def cross_validate(self, pipeline, X, y, readings, turbines=None, signals=None):
-        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
+    def cross_validate(self, pipeline, X, y, readings):
 
         scores = []
         for fold, (train_index, test_index) in enumerate(self._cv.split(X, y)):
@@ -154,10 +143,9 @@ class GreenGuardPipeline(object):
             y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
             pipeline = self._clone_pipeline(pipeline)
-            pipeline.fit(X_train, y_train, readings=readings, turbines=turbines, signals=signals)
+            pipeline.fit(X=X_train, y=y_train, readings=readings)
 
-            predictions = pipeline.predict(X_test, readings=readings,
-                                           turbines=turbines, signals=signals)
+            predictions = pipeline.predict(X=X_test, readings=readings)
             score = self._metric(y_test, predictions)
 
             LOGGER.debug('Fold fold %s score: %s', fold, score)
@@ -205,11 +193,10 @@ class GreenGuardPipeline(object):
 
         return tuner
 
-    def tune(self, X, y, readings, turbines=None, signals=None, iterations=10):
-        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
+    def tune(self, X, y, readings, iterations=10):
         if not self._tuner:
             LOGGER.info('Scoring the default pipeline')
-            self.cv_score = self.cross_validate(self._pipeline, X, y, readings, turbines, signals)
+            self.cv_score = self.cross_validate(self._pipeline, X, y, readings)
             LOGGER.info('Default Pipeline score: %s', self.cv_score)
 
             self._tuner = self._get_tuner()
@@ -224,7 +211,7 @@ class GreenGuardPipeline(object):
             candidate.set_hyperparameters(param_dicts)
 
             try:
-                score = self.cross_validate(candidate, X, y, readings, turbines, signals)
+                score = self.cross_validate(candidate, X, y, readings)
 
                 LOGGER.info('Pipeline %s score: %s', i + 1, score)
 
@@ -239,17 +226,15 @@ class GreenGuardPipeline(object):
                 LOGGER.exception("Caught an exception scoring pipeline %s with params:\n%s",
                                  i + 1, failed)
 
-    def fit(self, X, y, readings, turbines=None, signals=None):
-        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
-        self._pipeline.fit(X, y, readings=readings, turbines=turbines, signals=signals)
+    def fit(self, X, y, readings):
+        self._pipeline.fit(X=X, y=y, readings=readings)
         self.fitted = True
 
-    def predict(self, X, readings, turbines=None, signals=None):
+    def predict(self, X, readings):
         if not self.fitted:
             raise NotFittedError()
 
-        turbines, signals = self._get_turbines_signals(readings, turbines, signals)
-        return self._pipeline.predict(X, readings=readings, turbines=turbines, signals=signals)
+        return self._pipeline.predict(X=X, readings=readings)
 
     def save(self, path):
         with open(path, 'wb') as pickle_file:

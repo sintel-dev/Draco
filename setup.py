@@ -79,10 +79,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description=(
-        "The GreenGuard project is a collection of end-to-end solutions for machine"
-        " learning tasks commonly found in monitoring wind energy production systems."
-    ),
+    description="AutoML for Renewable Energy Industries.",
     entry_points={
         'mlblocks': [
             'pipelines=greenguard:MLBLOCKS_PIPELINES'
@@ -94,7 +91,7 @@ setup(
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='wind machine learning green guard',
+    keywords='wind machine learning greenguard',
     license="MIT license",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
@@ -105,6 +102,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/D3-AI/GreenGuard',
-    version='0.1.1-dev',
+    version='0.1.1.dev0',
     zip_safe=False,
 )

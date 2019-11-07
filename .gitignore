@@ -102,9 +102,9 @@ ENV/
 # mypy
 .mypy_cache/
 
-# vim
+# Vim
 .*.swp
 
 greenguard/demo/
-notebooks-private
+notebooks-private/
 scripts/
