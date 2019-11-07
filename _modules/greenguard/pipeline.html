@@ -100,16 +100,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../readme.html#requirements">Requirements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../readme.html#python">Python</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#installation">Installation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html#quickstart">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#split-the-data">2. Split the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#finding-a-pipeline">3. Finding a Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
@@ -123,37 +121,24 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html#docker-usage">Docker Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../readme.html#docker-requirements">Docker Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../readme.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../readme.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../readme.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../readme.html#distributing-as-a-file">Distributing as a file</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../readme.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../readme.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../readme.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#what-s-next">What’s next?</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/greenguard.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.loader.html">greenguard.loader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#module-greenguard">Module contents</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption"><span class="caption-text">Development Notes</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../contributing.html#report-bugs">Report Bugs</a></li>
@@ -167,7 +152,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../contributing.html#tips">Tips</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#release-workflow">Release Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#release-workflow">Release Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#release-candidates">Release Candidates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
@@ -251,27 +239,46 @@
 <span class="kn">from</span> <span class="nn">btb.tuning</span> <span class="k">import</span> <span class="n">GP</span>
 <span class="kn">from</span> <span class="nn">mlblocks</span> <span class="k">import</span> <span class="n">MLPipeline</span>
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="k">import</span> <span class="n">NotFittedError</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="n">PIPELINES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;pipelines&#39;</span><span class="p">)</span>
+<span class="n">PIPELINES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;pipelines&#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="get_pipelines"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.get_pipelines">[docs]</a><span class="k">def</span> <span class="nf">get_pipelines</span><span class="p">():</span>
+    <span class="n">pipelines</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">PIPELINES_DIR</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">)]</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PIPELINES_DIR</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">pipelines</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+
+    <span class="k">return</span> <span class="n">pipelines</span></div>
+
+
+<div class="viewcode-block" id="f1_macro"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.f1_macro">[docs]</a><span class="k">def</span> <span class="nf">f1_macro</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span></div>
+
 
 <span class="n">METRICS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">accuracy_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;f1_macro&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f1_macro</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
     <span class="s1">&#39;r2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">r2_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
     <span class="s1">&#39;mse&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mean_squared_error</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
     <span class="s1">&#39;mae&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="GreenGuardPipeline"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline">[docs]</a><span class="k">class</span> <span class="nc">GreenGuardPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline">[docs]</a><span class="k">class</span> <span class="nc">GreenGuardPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="n">template</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">fitted</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">cv_score</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">_cv_class</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_metric</span> <span class="o">=</span> <span class="kc">None</span>
@@ -318,10 +325,10 @@
         <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GreenGuardPipeline.get_hyperparameters"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.get_hyperparameters"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.set_hyperparameters"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.set_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.set_hyperparameters"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.set_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">False</span></div>
 
@@ -331,9 +338,9 @@
 
     <span class="k">def</span> <span class="nf">_is_better</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span>
+            <span class="k">return</span> <span class="n">score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span>
 
-        <span class="k">return</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span>
+        <span class="k">return</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span>
 
     <span class="k">def</span> <span class="nf">_get_tunables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tunables</span> <span class="o">=</span> <span class="p">[]</span>
@@ -355,24 +362,24 @@
 
         <span class="k">return</span> <span class="n">tunables</span><span class="p">,</span> <span class="n">tunable_keys</span>
 
-    <span class="k">def</span> <span class="nf">_score_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span><span class="p">):</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="GreenGuardPipeline.cross_validate"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.cross_validate">[docs]</a>    <span class="k">def</span> <span class="nf">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
 
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Scoring fold </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">)</span>
             <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
             <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
 
             <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="o">**</span><span class="n">tables</span><span class="p">)</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
 
-            <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="o">**</span><span class="n">tables</span><span class="p">)</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
             <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Fold fold </span><span class="si">%s</span><span class="s1"> score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
             <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_to_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
 
@@ -410,16 +417,15 @@
 
         <span class="c1"># Inform the tuner about the score that the default hyperparmeters obtained</span>
         <span class="n">param_tuples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_tuples</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span> <span class="n">tunable_keys</span><span class="p">)</span>
-        <span class="n">tuner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">param_tuples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+        <span class="n">tuner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">param_tuples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">tuner</span>
 
-<div class="viewcode-block" id="GreenGuardPipeline.tune"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">tables</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;entityset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<div class="viewcode-block" id="GreenGuardPipeline.tune"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Scoring the default pipeline&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Default Pipeline score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Default Pipeline score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tuner</span><span class="p">()</span>
 
@@ -433,12 +439,12 @@
             <span class="n">candidate</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">param_dicts</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score_pipeline</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span><span class="p">)</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
 
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Pipeline </span><span class="si">%s</span><span class="s1"> score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_better</span><span class="p">(</span><span class="n">score</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="n">score</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">param_dicts</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
@@ -448,23 +454,21 @@
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Caught an exception scoring pipeline </span><span class="si">%s</span><span class="s2"> with params:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                                  <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">failed</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tables</span><span class="p">):</span>
-        <span class="n">tables</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;entityset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">tables</span><span class="p">)</span>
+<div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">tables</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">()</span>
 
-        <span class="n">tables</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;entityset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">tables</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.save"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.save"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pickle_file</span><span class="p">:</span>
             <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pickle_file</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.load"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.load">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="GreenGuardPipeline.load"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.load">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pickle_file</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">)</span></div></div>

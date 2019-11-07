@@ -1,0 +1,7 @@
+greenguard.data module
+======================
+
+.. automodule:: greenguard.data
+   :members:
+   :undoc-members:
+   :show-inheritance:

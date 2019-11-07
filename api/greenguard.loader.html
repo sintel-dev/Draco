@@ -102,16 +102,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#python">Python</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#split-the-data">2. Split the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-a-pipeline">3. Finding a Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
@@ -125,37 +123,24 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#docker-usage">Docker Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-requirements">Docker Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#distributing-as-a-file">Distributing as a file</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../readme.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="greenguard.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.loader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="greenguard.html#module-greenguard">Module contents</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption"><span class="caption-text">Development Notes</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../contributing.html#types-of-contributions">Types of Contributions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../contributing.html#report-bugs">Report Bugs</a></li>
@@ -169,7 +154,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contributing.html#tips">Tips</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contributing.html#release-workflow">Release Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#release-workflow">Release Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#release-candidates">Release Candidates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -247,9 +235,36 @@
             
   <div class="section" id="module-greenguard.loader">
 <span id="greenguard-loader-module"></span><h1>greenguard.loader module<a class="headerlink" href="#module-greenguard.loader" title="Permalink to this headline">¶</a></h1>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loader.GreenGuardLoader" title="greenguard.loader.GreenGuardLoader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardLoader</span></code></a>(dataset_path[, …])</p></td>
+<td><p>GreenGuardLoader class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.loader.GreenGuardRawLoader" title="greenguard.loader.GreenGuardRawLoader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardRawLoader</span></code></a>(readings_path)</p></td>
+<td><p>GreenGuardRawLoader class.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loader.load_demo" title="greenguard.loader.load_demo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_demo</span></code></a>()</p></td>
+<td><p>Load the demo included in the GreenGuard project.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="class">
 <dt id="greenguard.loader.GreenGuardLoader">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.loader.</code><code class="sig-name descname">GreenGuardLoader</code><span class="sig-paren">(</span><em class="sig-param">dataset_path</em>, <em class="sig-param">target_times='target_times'</em>, <em class="sig-param">target_column='target'</em>, <em class="sig-param">readings='readings'</em>, <em class="sig-param">turbines='turbines'</em>, <em class="sig-param">signals='signals'</em>, <em class="sig-param">gzip=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardLoader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.loader.</code><code class="sig-name descname">GreenGuardLoader</code><span class="sig-paren">(</span><em class="sig-param">dataset_path</em>, <em class="sig-param">target_times='target_times'</em>, <em class="sig-param">target_column='target'</em>, <em class="sig-param">readings='readings'</em>, <em class="sig-param">turbines=None</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">gzip=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardLoader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>GreenGuardLoader class.</p>
 <p>The GreenGuardLoader class provides a simple interface to load a relational
@@ -268,6 +283,18 @@ are expected to have the <cite>.csv.gz</cite> extension.</p></li>
 </ul>
 </dd>
 </dl>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loader.GreenGuardLoader.load" title="greenguard.loader.GreenGuardLoader.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>([return_target])</p></td>
+<td><p>Load the dataset.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="greenguard.loader.GreenGuardLoader.load">
 <code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">return_target=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardLoader.load" title="Permalink to this definition">¶</a></dt>
@@ -299,7 +326,7 @@ signals tables as pandas.DataFrames.</p></li>
 
 <dl class="class">
 <dt id="greenguard.loader.GreenGuardRawLoader">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.loader.</code><code class="sig-name descname">GreenGuardRawLoader</code><span class="sig-paren">(</span><em class="sig-param">target_times_path</em>, <em class="sig-param">data_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardRawLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardRawLoader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.loader.</code><code class="sig-name descname">GreenGuardRawLoader</code><span class="sig-paren">(</span><em class="sig-param">readings_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardRawLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardRawLoader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>GreenGuardRawLoader class.</p>
 <p>The GreenGuardRawLoader class provides a simple interface to load a
@@ -323,22 +350,34 @@ CSV files can be found. The names of these files is not relevant.</p></li>
 </li>
 </ul>
 </div></blockquote>
-<p>And the output is the following 4 tables:</p>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loader.GreenGuardRawLoader.load" title="greenguard.loader.GreenGuardRawLoader.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(target_times[, signals, window_size, …])</p></td>
+<td><p>Load the dataset.</p></td>
+</tr>
+</tbody>
+</table>
+<p>And the output is the following 3 elements:</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt>turbines:</dt><dd><ul>
-<li><p><cite>turbine_id</cite>: column with the unique id of each turbine.</p></li>
-<li><p>A number of additional columns with information about each turbine.</p></li>
+<dt><cite>X</cite>: target times table containing:</dt><dd><ul>
+<li><p><cite>turbine_id</cite>: Unique identifier of the turbine which this target corresponds to.</p></li>
+<li><p><cite>cutoff_timestamp</cite>: The timestamp at which the target value is deemed to be known.
+This timestamp is used to filter data such that only data prior to this is used
+for featurize.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>signals:</dt><dd><ul>
-<li><p><cite>signal_id</cite>: column with the unique id of each signal.</p></li>
-<li><p>A number of additional columns with information about each signal.</p></li>
-</ul>
+<dt><cite>y</cite>: 1d vector of value sthat we want to predict. This can either be a numerical value</dt><dd><p>or a categorical label. This column can also be skipped when preparing data that
+will be used only to make predictions and not to fit any pipeline.</p>
 </dd>
 </dl>
 </li>
@@ -353,42 +392,29 @@ CSV files can be found. The names of these files is not relevant.</p></li>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt>target_times:</dt><dd><ul>
-<li><p><cite>turbine_id</cite>: Unique identifier of the turbine which this target corresponds to.</p></li>
-<li><p><cite>cutoff_timestamp</cite>: The timestamp at which the target value is deemed to be known.
-This timestamp is used to filter data such that only data prior to this is used
-for featurize.</p></li>
-<li><p><cite>target</cite>: The value that we want to predict. This can either be a numerical value
-or a categorical label. This column can also be skipped when preparing data that
-will be used only to make predictions and not to fit any pipeline.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>target_times_path</strong> (<em>str</em>) – Path to the target_times CSV file. If turbines file is given,
-this file is expected to have a <cite>turbines_id</cite> column that acts
-as a foreign key to the turbines table.
-Otherwise, this file is expected to have a <cite>turbines</cite> column
-with the name of the turbine.</p></li>
-<li><p><strong>data_path</strong> (<em>str</em>) – Path to the folder containing all the turbines data.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>readings_path</strong> (<em>str</em>) – Path to the folder containing all the readings data.</p>
 </dd>
 </dl>
 <dl class="method">
 <dt id="greenguard.loader.GreenGuardRawLoader.load">
-<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">return_target=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardRawLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardRawLoader.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">window_size=None</em>, <em class="sig-param">return_target=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#GreenGuardRawLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loader.GreenGuardRawLoader.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>return_target</strong> (<em>bool</em>) – If True, return the target column as a separated vector.
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_times</strong> (<em>pd.DataFrame</em><em> or </em><em>str</em>) – target_times DataFrame or path to the target_times CSV file.</p></li>
+<li><p><strong>signals</strong> (<em>list</em>) – List of signals to load from the readings files. If not given, load
+all the signals available.</p></li>
+<li><p><strong>window_size</strong> (<em>str</em>) – Rule indicating how long back before the cutoff times we have to go
+when loading the data.</p></li>
+<li><p><strong>return_target</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, return the target column as a separated vector.
 Otherwise, the target column is expected to be already missing from
-the target table.</p>
+the target table.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
@@ -396,8 +422,8 @@ the target table.</p>
 target_times table.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">(pandas.Series,</span> <span class="pre">optional)</span></code>: A pandas.Series with the contents of
 the target column.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tables</span> <span class="pre">(dict)</span></code>: A dictionary containing the readings, turbines and
-signals tables as pandas.DataFrames.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">readings</span> <span class="pre">(pandas.DataFrame)</span></code>: A pandas.DataFrame containing the readings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">signals</span> <span class="pre">(pandas.DataFrame)</span></code>: A pandas.DataFrame containing the signal_ids.</p></li>
 </ul>
 </p>
 </dd>

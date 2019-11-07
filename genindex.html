@@ -101,16 +101,14 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#requirements">Requirements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#python">Python</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#installation">Installation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#quickstart">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#split-the-data">2. Split the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#finding-a-pipeline">3. Finding a Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
@@ -124,37 +122,24 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#docker-usage">Docker Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#docker-requirements">Docker Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#distributing-as-a-file">Distributing as a file</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l3"><a class="reference internal" href="readme.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#what-s-next">What’s next?</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/greenguard.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.loader.html">greenguard.loader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#module-greenguard">Module contents</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption"><span class="caption-text">Development Notes</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of Contributions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#report-bugs">Report Bugs</a></li>
@@ -168,7 +153,10 @@
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#tips">Tips</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#release-workflow">Release Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#release-workflow">Release Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#release-candidates">Release Candidates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
@@ -247,6 +235,7 @@
 
 <div class="genindex-jumpbox">
  <a href="#C"><strong>C</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
@@ -264,42 +253,94 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.utils.html#greenguard.utils.clone_pipeline">clone_pipeline() (in module greenguard.utils)</a>
 </li>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.cross_validate">cross_validate() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.cross_validate">(greenguard.pipeline.GreenGuardPipeline method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.cv_score">cv_score (greenguard.GreenGuardPipeline attribute)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.cv_score">(greenguard.pipeline.GreenGuardPipeline attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.html#greenguard.extract_readings">extract_readings() (in module greenguard)</a>
+
+      <ul>
+        <li><a href="api/greenguard.data.html#greenguard.data.extract_readings">(in module greenguard.data)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.fit">fit() (greenguard.pipeline.GreenGuardPipeline method)</a>
+      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.f1_macro">f1_macro() (in module greenguard.pipeline)</a>
 </li>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.fit">fit() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.fit">(greenguard.pipeline.GreenGuardPipeline method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.fitted">fitted (greenguard.pipeline.GreenGuardPipeline attribute)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.fitted">fitted (greenguard.GreenGuardPipeline attribute)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.fitted">(greenguard.pipeline.GreenGuardPipeline attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.get_hyperparameters">get_hyperparameters() (greenguard.pipeline.GreenGuardPipeline method)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.get_hyperparameters">get_hyperparameters() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.get_hyperparameters">(greenguard.pipeline.GreenGuardPipeline method)</a>
 </li>
+      </ul></li>
+      <li><a href="api/greenguard.html#greenguard.get_pipelines">get_pipelines() (in module greenguard)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.get_pipelines">(in module greenguard.pipeline)</a>
+</li>
+      </ul></li>
       <li><a href="api/greenguard.html#module-greenguard">greenguard (module)</a>
+</li>
+      <li><a href="api/greenguard.data.html#module-greenguard.data">greenguard.data (module)</a>
 </li>
       <li><a href="api/greenguard.db.html#module-greenguard.db">greenguard.db (module)</a>
 </li>
-      <li><a href="api/greenguard.loader.html#module-greenguard.loader">greenguard.loader (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.loader.html#module-greenguard.loader">greenguard.loader (module)</a>
+</li>
       <li><a href="api/greenguard.pipeline.html#module-greenguard.pipeline">greenguard.pipeline (module)</a>
 </li>
       <li><a href="api/greenguard.utils.html#module-greenguard.utils">greenguard.utils (module)</a>
 </li>
       <li><a href="api/greenguard.loader.html#greenguard.loader.GreenGuardLoader">GreenGuardLoader (class in greenguard.loader)</a>
 </li>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline">GreenGuardPipeline (class in greenguard.pipeline)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline">GreenGuardPipeline (class in greenguard)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline">(class in greenguard.pipeline)</a>
 </li>
+      </ul></li>
       <li><a href="api/greenguard.loader.html#greenguard.loader.GreenGuardRawLoader">GreenGuardRawLoader (class in greenguard.loader)</a>
 </li>
   </ul></td>
@@ -320,9 +361,11 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.loader.html#greenguard.loader.GreenGuardLoader.load">load() (greenguard.loader.GreenGuardLoader method)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.load">load() (greenguard.GreenGuardPipeline class method)</a>
 
       <ul>
+        <li><a href="api/greenguard.loader.html#greenguard.loader.GreenGuardLoader.load">(greenguard.loader.GreenGuardLoader method)</a>
+</li>
         <li><a href="api/greenguard.loader.html#greenguard.loader.GreenGuardRawLoader.load">(greenguard.loader.GreenGuardRawLoader method)</a>
 </li>
         <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.load">(greenguard.pipeline.GreenGuardPipeline class method)</a>
@@ -330,8 +373,12 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.loader.html#greenguard.loader.load_demo">load_demo() (in module greenguard.loader)</a>
+      <li><a href="api/greenguard.html#greenguard.load_demo">load_demo() (in module greenguard)</a>
+
+      <ul>
+        <li><a href="api/greenguard.loader.html#greenguard.loader.load_demo">(in module greenguard.loader)</a>
 </li>
+      </ul></li>
       <li><a href="api/greenguard.db.html#greenguard.db.MongoDB.load_template">load_template() (greenguard.db.MongoDB method)</a>
 </li>
       <li><a href="api/greenguard.utils.html#greenguard.utils.logging_setup">logging_setup() (in module greenguard.utils)</a>
@@ -342,6 +389,14 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.html#greenguard.make_targets">make_targets() (in module greenguard)</a>
+
+      <ul>
+        <li><a href="api/greenguard.data.html#greenguard.data.make_targets">(in module greenguard.data)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.db.html#greenguard.db.MongoDB">MongoDB (class in greenguard.db)</a>
 </li>
   </ul></td>
@@ -350,8 +405,12 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.predict">predict() (greenguard.pipeline.GreenGuardPipeline method)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.predict">predict() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.predict">(greenguard.pipeline.GreenGuardPipeline method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -370,26 +429,40 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.save">save() (greenguard.pipeline.GreenGuardPipeline method)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.save">save() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.save">(greenguard.pipeline.GreenGuardPipeline method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.score">score (greenguard.pipeline.GreenGuardPipeline attribute)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.set_hyperparameters">set_hyperparameters() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.set_hyperparameters">(greenguard.pipeline.GreenGuardPipeline method)</a>
 </li>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.set_hyperparameters">set_hyperparameters() (greenguard.pipeline.GreenGuardPipeline method)</a>
-</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.template">template (greenguard.pipeline.GreenGuardPipeline attribute)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.template">template (greenguard.GreenGuardPipeline attribute)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.template">(greenguard.pipeline.GreenGuardPipeline attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.tune">tune() (greenguard.pipeline.GreenGuardPipeline method)</a>
+      <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.tune">tune() (greenguard.GreenGuardPipeline method)</a>
+
+      <ul>
+        <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.tune">(greenguard.pipeline.GreenGuardPipeline method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
