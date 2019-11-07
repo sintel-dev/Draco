@@ -21,13 +21,13 @@ class TestGreenGuardPipeline(TestCase):
 
         # Run
         instance = GreenGuardPipeline(dict(), 'accuracy')
-        instance.fit('an_X', 'a_y', {'some': 'tables'})
+        instance.fit('an_X', 'a_y', 'readings')
 
         # Asserts
         from_dict_mock.assert_called_once_with(dict())
         assert instance._pipeline == pipeline_mock
 
-        pipeline_mock.fit.assert_called_once_with('an_X', 'a_y', entityset=None, some='tables')
+        pipeline_mock.fit.assert_called_once_with(X='an_X', y='a_y', readings='readings')
 
         assert instance.fitted
 
@@ -41,7 +41,7 @@ class TestGreenGuardPipeline(TestCase):
         # Run
         instance = GreenGuardPipeline(dict(), 'accuracy')
         instance.fitted = True
-        instance.predict('an_X', {'some': 'tables'})
+        instance.predict('an_X', 'readings')
 
         # Asserts
-        pipeline_mock.predict.assert_called_once_with('an_X', entityset=None, some='tables')
+        pipeline_mock.predict.assert_called_once_with(X='an_X', readings='readings')
