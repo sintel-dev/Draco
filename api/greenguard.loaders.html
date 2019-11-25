@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.utils module &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard.loaders package &mdash; GreenGuard 0.1.1-dev documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributing" href="../contributing.html" />
-    <link rel="prev" title="greenguard.pipeline module" href="greenguard.pipeline.html" /> 
+    <link rel="next" title="greenguard.loaders.csv module" href="greenguard.loaders.csv.html" />
+    <link rel="prev" title="greenguard package" href="greenguard.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -130,19 +130,19 @@
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="greenguard.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="greenguard.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.loaders.html">greenguard.loaders package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="greenguard.loaders.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="greenguard.loaders.html#module-greenguard.loaders">Module contents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.loaders package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-greenguard.loaders">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="greenguard.html#module-greenguard">Module contents</a></li>
@@ -219,14 +219,14 @@
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
-      <li>greenguard.utils module</li>
+      <li>greenguard.loaders package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.utils.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.loaders.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -240,57 +240,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-greenguard.utils">
-<span id="greenguard-utils-module"></span><h1>greenguard.utils module<a class="headerlink" href="#module-greenguard.utils" title="Permalink to this headline">¶</a></h1>
-<p><strong>Functions</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.utils.clone_pipeline" title="greenguard.utils.clone_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clone_pipeline</span></code></a>(pipeline)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.utils.logging_setup" title="greenguard.utils.logging_setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging_setup</span></code></a>([verbosity, logfile, logger_name])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.utils.remove_dots" title="greenguard.utils.remove_dots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_dots</span></code></a>(document)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.utils.restore_dots" title="greenguard.utils.restore_dots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restore_dots</span></code></a>(document)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.utils.walk" title="greenguard.utils.walk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">walk</span></code></a>(document, transform)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<dl class="function">
-<dt id="greenguard.utils.clone_pipeline">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">clone_pipeline</code><span class="sig-paren">(</span><em class="sig-param">pipeline</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#clone_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.clone_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.logging_setup">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">logging_setup</code><span class="sig-paren">(</span><em class="sig-param">verbosity=1</em>, <em class="sig-param">logfile=None</em>, <em class="sig-param">logger_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#logging_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.logging_setup" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.remove_dots">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">remove_dots</code><span class="sig-paren">(</span><em class="sig-param">document</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#remove_dots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.remove_dots" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.restore_dots">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">restore_dots</code><span class="sig-paren">(</span><em class="sig-param">document</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#restore_dots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.restore_dots" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.walk">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">walk</code><span class="sig-paren">(</span><em class="sig-param">document</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.walk" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+  <div class="section" id="greenguard-loaders-package">
+<h1>greenguard.loaders package<a class="headerlink" href="#greenguard-loaders-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="greenguard.loaders.csv.html">greenguard.loaders.csv module</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-greenguard.loaders">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-greenguard.loaders" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -301,10 +263,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.loaders.csv.html" class="btn btn-neutral float-right" title="greenguard.loaders.csv module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="greenguard.pipeline.html" class="btn btn-neutral float-left" title="greenguard.pipeline module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="greenguard.html" class="btn btn-neutral float-left" title="greenguard package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

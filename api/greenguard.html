@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.data module" href="greenguard.data.html" />
+    <link rel="next" title="greenguard.loaders package" href="greenguard.loaders.html" />
     <link rel="prev" title="GreenGuard" href="../readme.html" /> 
 </head>
 
@@ -130,10 +130,17 @@
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.loaders.html">greenguard.loaders package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="greenguard.loaders.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="greenguard.loaders.html#module-greenguard.loaders">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.loader.html">greenguard.loader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -233,13 +240,27 @@
             
   <div class="section" id="greenguard-package">
 <h1>greenguard package<a class="headerlink" href="#greenguard-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="greenguard.loaders.html">greenguard.loaders package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="greenguard.loaders.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.loaders.csv.html">greenguard.loaders.csv module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="greenguard.loaders.html#module-greenguard.loaders">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="greenguard.loader.html">greenguard.loader module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -270,13 +291,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.get_pipelines" title="greenguard.get_pipelines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.load_demo" title="greenguard.load_demo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_demo</span></code></a>()</p></td>
-<td><p>Load the demo included in the GreenGuard project.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.extract_readings" title="greenguard.extract_readings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_readings</span></code></a>(readings_path, target_times)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.extract_readings" title="greenguard.extract_readings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_readings</span></code></a>(readings_path, target_times)</p></td>
 <td><p>Extract raw readings data for the given target_times.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.make_targets" title="greenguard.make_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_targets</span></code></a>(target_times, window_size, target)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.make_targets" title="greenguard.make_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_targets</span></code></a>(target_times, window_size, target)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -393,15 +411,6 @@
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="greenguard.load_demo">
-<code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">load_demo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loader.html#load_demo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.load_demo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the demo included in the GreenGuard project.</p>
-<p>The first time that this function is executed, the data will be downloaded
-and cached inside the <cite>greenguard/demo</cite> folder.
-Subsequent calls will load the cached data instead of downloading it again.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="greenguard.extract_readings">
 <code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">extract_readings</code><span class="sig-paren">(</span><em class="sig-param">readings_path</em>, <em class="sig-param">target_times</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">window_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/data.html#extract_readings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.extract_readings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract raw readings data for the given target_times.</p>
@@ -449,7 +458,7 @@ when loading the data.</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.data.html" class="btn btn-neutral float-right" title="greenguard.data module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.loaders.html" class="btn btn-neutral float-right" title="greenguard.loaders package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../readme.html" class="btn btn-neutral float-left" title="GreenGuard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

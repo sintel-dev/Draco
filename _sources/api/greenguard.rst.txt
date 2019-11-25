@@ -1,6 +1,13 @@
 greenguard package
 ==================
 
+Subpackages
+-----------
+
+.. toctree::
+
+   greenguard.loaders
+
 Submodules
 ----------
 
@@ -8,7 +15,6 @@ Submodules
 
    greenguard.data
    greenguard.db
-   greenguard.loader
    greenguard.pipeline
    greenguard.utils
 
