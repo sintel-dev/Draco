@@ -17,11 +17,12 @@ except IOError:
 
 install_requires = [
     'baytune>=0.2.3,<0.3',
-    'mlblocks>=0.3.4.dev1,<0.4',
-    'mlprimitives>=0.2.3.dev0,<0.3',
+    'mlblocks>=0.3.4,<0.4',
+    'mlprimitives>=0.2.3,<0.3',
     'numpy>=1.15.4,<1.17',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.20.1,<0.21',
+    'dask>=2.6.0,<3'
 ]
 
 setup_requires = [
