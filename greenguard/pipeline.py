@@ -43,6 +43,7 @@ class GreenGuardPipeline(object):
     _tuner = None
     _pipeline = None
     _splits = None
+    _static = None
 
     def _get_cv(self, stratify, cv_splits, shuffle, random_state):
         if stratify:
@@ -57,6 +58,8 @@ class GreenGuardPipeline(object):
         for index, block_name in enumerate(self._pipeline.blocks.keys()):
             if tunable_hyperparams[block_name]:
                 return index + 1
+
+        return 0
 
     def __init__(self, template, metric, cost=False, hyperparameters=None, stratify=True,
                  cv_splits=5, shuffle=True, random_state=0, preprocessing=0):
@@ -74,7 +77,7 @@ class GreenGuardPipeline(object):
         self._static = self._count_static_steps()
         self._preprocessing = preprocessing
 
-        if self._preprocessing >= self._static:
+        if self._preprocessing and (self._preprocessing >= self._static):
             raise ValueError('Preprocessing cannot be bigger than static')
 
         if hyperparameters:
