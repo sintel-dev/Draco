@@ -3,7 +3,7 @@
 
 """Tests for `greenguard.pipeline` module."""
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from greenguard.pipeline import GreenGuardPipeline
 
