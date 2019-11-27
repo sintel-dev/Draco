@@ -139,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -238,18 +239,18 @@
 <span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">pymongo</span> <span class="k">import</span> <span class="n">MongoClient</span>
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
 
-<span class="kn">from</span> <span class="nn">greenguard.utils</span> <span class="k">import</span> <span class="n">remove_dots</span><span class="p">,</span> <span class="n">restore_dots</span>
+<span class="kn">from</span> <span class="nn">greenguard.utils</span> <span class="kn">import</span> <span class="n">remove_dots</span><span class="p">,</span> <span class="n">restore_dots</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MongoDB"><a class="viewcode-back" href="../../api/greenguard.db.html#greenguard.db.MongoDB">[docs]</a><span class="k">class</span> <span class="nc">MongoDB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>

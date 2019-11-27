@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.utils &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard.metrics &mdash; GreenGuard 0.1.1-dev documentation</title>
   
 
   
@@ -218,7 +218,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>greenguard.utils</li>
+      <li>greenguard.metrics</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -233,62 +233,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for greenguard.utils</h1><div class="highlight"><pre>
+  <h1>Source code for greenguard.metrics</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-
-
-<div class="viewcode-block" id="clone_pipeline"><a class="viewcode-back" href="../../api/greenguard.utils.html#greenguard.utils.clone_pipeline">[docs]</a><span class="k">def</span> <span class="nf">clone_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">MLPipeline</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="walk"><a class="viewcode-back" href="../../api/greenguard.utils.html#greenguard.utils.walk">[docs]</a><span class="k">def</span> <span class="nf">walk</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">document</span>
-
-    <span class="n">new_doc</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">document</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">walk</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">walk</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
-
-        <span class="n">new_key</span><span class="p">,</span> <span class="n">new_value</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="n">new_doc</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span>
-
-    <span class="k">return</span> <span class="n">new_doc</span></div>
+<div class="viewcode-block" id="f1_macro"><a class="viewcode-back" href="../../api/greenguard.metrics.html#greenguard.metrics.f1_macro">[docs]</a><span class="k">def</span> <span class="nf">f1_macro</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="remove_dots"><a class="viewcode-back" href="../../api/greenguard.utils.html#greenguard.utils.remove_dots">[docs]</a><span class="k">def</span> <span class="nf">remove_dots</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">walk</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">),</span> <span class="n">value</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="restore_dots"><a class="viewcode-back" href="../../api/greenguard.utils.html#greenguard.utils.restore_dots">[docs]</a><span class="k">def</span> <span class="nf">restore_dots</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">walk</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">),</span> <span class="n">value</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="logging_setup"><a class="viewcode-back" href="../../api/greenguard.utils.html#greenguard.utils.logging_setup">[docs]</a><span class="k">def</span> <span class="nf">logging_setup</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">logger_name</span><span class="p">)</span>
-    <span class="n">log_level</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">verbosity</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
-    <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(process)d</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(module)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
-    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_level</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">if</span> <span class="n">logfile</span><span class="p">:</span>
-        <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">logfile</span><span class="p">)</span>
-        <span class="n">file_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-        <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
-        <span class="n">console_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_level</span><span class="p">)</span>
-        <span class="n">console_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span></div>
+<span class="n">METRICS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">accuracy_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;f1_macro&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f1_macro</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;r2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">r2_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;mse&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mean_squared_error</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="s1">&#39;mae&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 
            </div>

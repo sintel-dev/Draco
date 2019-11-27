@@ -141,6 +141,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -261,6 +262,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -301,7 +303,7 @@
 </table>
 <dl class="class">
 <dt id="greenguard.GreenGuardPipeline">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">hyperparameters=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">hyperparameters=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p><strong>Methods</strong></p>
 <table class="longtable docutils align-default">
@@ -310,7 +312,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cross_validate" title="greenguard.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>(pipeline, X, y, readings)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cross_validate" title="greenguard.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>([X, y, readings, params])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.fit" title="greenguard.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y, readings)</p></td>
@@ -331,7 +333,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.set_hyperparameters" title="greenguard.GreenGuardPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(X, y, readings[, iterations])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([X, y, readings, iterations])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -350,7 +352,7 @@
 </table>
 <dl class="method">
 <dt id="greenguard.GreenGuardPipeline.cross_validate">
-<code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">pipeline</em>, <em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -400,7 +402,7 @@
 
 <dl class="method">
 <dt id="greenguard.GreenGuardPipeline.tune">
-<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">readings</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

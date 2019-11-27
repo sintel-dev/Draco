@@ -141,6 +141,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -624,30 +625,30 @@ and then make predictions from it.</p>
 </div>
 <p>The returned objects are:</p>
 <p><code class="docutils literal notranslate"><span class="pre">X</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with the <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table data without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">turbine_id</span>  <span class="k">timestamp</span>
-<span class="mi">0</span>          <span class="n">T1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
-<span class="mi">1</span>          <span class="n">T1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">02</span>
-<span class="mi">2</span>          <span class="n">T1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">03</span>
-<span class="mi">3</span>          <span class="n">T1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">04</span>
-<span class="mi">4</span>          <span class="n">T1</span> <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">05</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   turbine_id  timestamp
+0          T1 2013-01-01
+1          T1 2013-01-02
+2          T1 2013-01-03
+3          T1 2013-01-04
+4          T1 2013-01-05
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">y</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.Series</span></code> with the <code class="docutils literal notranslate"><span class="pre">target</span></code> column from the <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">1</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">2</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">3</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">4</span>    <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
-<span class="n">Name</span><span class="p">:</span> <span class="n">target</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>0    0.0
+1    0.0
+2    0.0
+3    0.0
+4    0.0
+Name: target, dtype: float64
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">readings</span></code>: A <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing the time series data in the format explained above.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   <span class="n">turbine_id</span>  <span class="n">signal_id</span>  <span class="k">timestamp</span>  <span class="n">value</span>
-<span class="mi">0</span>  <span class="n">T1</span>          <span class="n">S1</span>        <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">817</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">1</span>  <span class="n">T1</span>          <span class="n">S2</span>        <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">805</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">2</span>  <span class="n">T1</span>          <span class="n">S3</span>        <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">786</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">3</span>  <span class="n">T1</span>          <span class="n">S4</span>        <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">809</span><span class="p">.</span><span class="mi">0</span>
-<span class="mi">4</span>  <span class="n">T1</span>          <span class="n">S5</span>        <span class="mi">2013</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>  <span class="mi">755</span><span class="p">.</span><span class="mi">0</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>   turbine_id  signal_id  timestamp  value
+0  T1          S1        2013-01-01  817.0
+1  T1          S2        2013-01-01  805.0
+2  T1          S3        2013-01-01  786.0
+3  T1          S4        2013-01-01  809.0
+4  T1          S5        2013-01-01  755.0
 </pre></div>
 </div>
 </div>
@@ -674,8 +675,8 @@ function.</p>
 </div>
 <p>The returned <code class="docutils literal notranslate"><span class="pre">pipeline</span></code> variable will be <code class="docutils literal notranslate"><span class="pre">dict</span></code> containing the names of all the pipelines
 available and their paths:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;greenguard_classification&#39;</span>
-<span class="s1">&#39;greenguard_regression&#39;</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&#39;greenguard_classification&#39;
+&#39;greenguard_regression&#39;
 </pre></div>
 </div>
 </div>
@@ -817,7 +818,7 @@ class and create an instance passing:</p>
 inside the <code class="docutils literal notranslate"><span class="pre">my_dataset</span></code> folder, and for which the target table has a different name:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.loader</span> <span class="kn">import</span> <span class="n">GreenGuardLoader</span>
 
-<span class="n">loader</span> <span class="o">=</span> <span class="n">GreenGuardLoader</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">GreenGuardLoader</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;my_dataset&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">gzip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -829,7 +830,7 @@ inside the <code class="docutils literal notranslate"><span class="pre">my_datas
 </div>
 <p>Optionally, if the dataset contains only data to make predictions and the <code class="docutils literal notranslate"><span class="pre">target</span></code> column
 does not exist, we can pass it the argument <code class="docutils literal notranslate"><span class="pre">False</span></code> to skip it:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

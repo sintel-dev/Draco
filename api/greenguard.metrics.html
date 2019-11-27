@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.loaders.csv module &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard.metrics module &mdash; GreenGuard 0.1.1-dev documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.data module" href="greenguard.data.html" />
-    <link rel="prev" title="greenguard.loaders package" href="greenguard.loaders.html" /> 
+    <link rel="next" title="greenguard.pipeline module" href="greenguard.pipeline.html" />
+    <link rel="prev" title="greenguard.db module" href="greenguard.db.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -130,18 +130,18 @@
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="greenguard.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="greenguard.loaders.html">greenguard.loaders package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="greenguard.loaders.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="greenguard.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.loaders.html">greenguard.loaders package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="greenguard.loaders.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="greenguard.loaders.html#module-greenguard.loaders">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -220,16 +220,14 @@
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
-          <li><a href="greenguard.loaders.html">greenguard.loaders package</a> &raquo;</li>
-        
-      <li>greenguard.loaders.csv module</li>
+      <li>greenguard.metrics module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.loaders.csv.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.metrics.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -243,42 +241,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-greenguard.loaders.csv">
-<span id="greenguard-loaders-csv-module"></span><h1>greenguard.loaders.csv module<a class="headerlink" href="#module-greenguard.loaders.csv" title="Permalink to this headline">¶</a></h1>
-<p><strong>Classes</strong></p>
+  <div class="section" id="module-greenguard.metrics">
+<span id="greenguard-metrics-module"></span><h1>greenguard.metrics module<a class="headerlink" href="#module-greenguard.metrics" title="Permalink to this headline">¶</a></h1>
+<p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loaders.csv.CSVLoader" title="greenguard.loaders.csv.CSVLoader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSVLoader</span></code></a>([readings_path, rule, aggregation])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.metrics.f1_macro" title="greenguard.metrics.f1_macro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f1_macro</span></code></a>(exp, obs)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt id="greenguard.loaders.csv.CSVLoader">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.loaders.csv.</code><code class="sig-name descname">CSVLoader</code><span class="sig-paren">(</span><em class="sig-param">readings_path='.'</em>, <em class="sig-param">rule=None</em>, <em class="sig-param">aggregation='mean'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loaders/csv.html#CSVLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loaders.csv.CSVLoader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loaders.csv.CSVLoader.load" title="greenguard.loaders.csv.CSVLoader.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(target_times, window_size[, signals, debug])</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="greenguard.loaders.csv.CSVLoader.load">
-<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">window_size</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loaders/csv.html#CSVLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loaders.csv.CSVLoader.load" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="greenguard.metrics.f1_macro">
+<code class="sig-prename descclassname">greenguard.metrics.</code><code class="sig-name descname">f1_macro</code><span class="sig-paren">(</span><em class="sig-param">exp</em>, <em class="sig-param">obs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/metrics.html#f1_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.metrics.f1_macro" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
 
 </div>
 
@@ -290,10 +270,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.data.html" class="btn btn-neutral float-right" title="greenguard.data module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.pipeline.html" class="btn btn-neutral float-right" title="greenguard.pipeline module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="greenguard.loaders.html" class="btn btn-neutral float-left" title="greenguard.loaders package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="greenguard.db.html" class="btn btn-neutral float-left" title="greenguard.db module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -139,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -235,20 +236,19 @@
   <h1>Source code for greenguard.pipeline</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">import</span> <span class="nn">cloudpickle</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">btb</span> <span class="k">import</span> <span class="n">HyperParameter</span>
-<span class="kn">from</span> <span class="nn">btb.tuning</span> <span class="k">import</span> <span class="n">GP</span>
-<span class="kn">from</span> <span class="nn">mlblocks</span> <span class="k">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="k">import</span> <span class="n">NotFittedError</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">btb</span> <span class="kn">import</span> <span class="n">HyperParameter</span>
+<span class="kn">from</span> <span class="nn">btb.tuning</span> <span class="kn">import</span> <span class="n">GP</span>
+<span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+
+<span class="kn">from</span> <span class="nn">greenguard.metrics</span> <span class="kn">import</span> <span class="n">METRICS</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -267,20 +267,6 @@
     <span class="k">return</span> <span class="n">pipelines</span></div>
 
 
-<div class="viewcode-block" id="f1_macro"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.f1_macro">[docs]</a><span class="k">def</span> <span class="nf">f1_macro</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span></div>
-
-
-<span class="n">METRICS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">accuracy_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-    <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-    <span class="s1">&#39;f1_macro&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f1_macro</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-    <span class="s1">&#39;r2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">r2_score</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-    <span class="s1">&#39;mse&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mean_squared_error</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-    <span class="s1">&#39;mae&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<span class="p">}</span>
-
-
 <div class="viewcode-block" id="GreenGuardPipeline"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline">[docs]</a><span class="k">class</span> <span class="nc">GreenGuardPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="n">template</span> <span class="o">=</span> <span class="kc">None</span>
@@ -292,6 +278,8 @@
     <span class="n">_cost</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">_tuner</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_pipeline</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_splits</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_static</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_get_cv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stratify</span><span class="p">,</span> <span class="n">cv_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">stratify</span><span class="p">:</span>
@@ -301,23 +289,16 @@
 
         <span class="k">return</span> <span class="n">cv_class</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">cv_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_load_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">template</span><span class="p">):</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PIPELINES_DIR</span><span class="p">,</span> <span class="n">template</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_count_static_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tunable_hyperparams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">tunable_hyperparams</span><span class="p">[</span><span class="n">block_name</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">template_file</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">template_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">_load_mlpipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
-
-        <span class="k">return</span> <span class="n">MLPipeline</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">cv_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_cv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv</span><span class="p">(</span><span class="n">stratify</span><span class="p">,</span> <span class="n">cv_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>
 
@@ -327,7 +308,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span> <span class="o">=</span> <span class="n">metric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span> <span class="o">=</span> <span class="n">cost</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_mlpipeline</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count_static_steps</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">=</span> <span class="n">preprocessing</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Preprocessing cannot be bigger than static&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
@@ -349,38 +336,51 @@
 
         <span class="k">return</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span>
 
-    <span class="k">def</span> <span class="nf">_get_tunables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">tunables</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">tunable_keys</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_details</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
-                <span class="n">param_type</span> <span class="o">=</span> <span class="n">param_details</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
-                <span class="n">param_type</span> <span class="o">=</span> <span class="s1">&#39;string&#39;</span> <span class="k">if</span> <span class="n">param_type</span> <span class="o">==</span> <span class="s1">&#39;str&#39;</span> <span class="k">else</span> <span class="n">param_type</span>
+    <span class="k">def</span> <span class="nf">_generate_splits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">:</span>
+            <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Running </span><span class="si">%s</span><span class="s1"> preprocessing steps&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">)</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;readings&#39;</span><span class="p">:</span> <span class="n">readings</span>
+            <span class="p">}</span>
 
-                <span class="k">if</span> <span class="n">param_type</span> <span class="o">==</span> <span class="s1">&#39;bool&#39;</span><span class="p">:</span>
-                    <span class="n">param_range</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">param_range</span> <span class="o">=</span> <span class="n">param_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">param_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;values&#39;</span><span class="p">)</span>
-
-                <span class="n">value</span> <span class="o">=</span> <span class="n">HyperParameter</span><span class="p">(</span><span class="n">param_type</span><span class="p">,</span> <span class="n">param_range</span><span class="p">)</span>
-                <span class="n">tunables</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-                <span class="n">tunable_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">tunables</span><span class="p">,</span> <span class="n">tunable_keys</span>
-
-<div class="viewcode-block" id="GreenGuardPipeline.cross_validate"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.cross_validate">[docs]</a>    <span class="k">def</span> <span class="nf">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
-
-        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">splits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Scoring fold </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">)</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Running static steps for fold </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">)</span>
             <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
             <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
 
-            <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
+            <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
+            <span class="n">fit</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                               <span class="n">start_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">,</span> <span class="o">**</span><span class="n">context</span><span class="p">)</span>
+            <span class="n">predict</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                       <span class="n">start_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">,</span> <span class="o">**</span><span class="n">context</span><span class="p">)</span>
 
-            <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
+            <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fold</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">splits</span>
+
+<div class="viewcode-block" id="GreenGuardPipeline.cross_validate"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.cross_validate">[docs]</a>    <span class="k">def</span> <span class="nf">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running static steps before cross validation&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">y_test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Scoring fold </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">start_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">,</span> <span class="o">**</span><span class="n">fit</span><span class="p">)</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">start_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">,</span> <span class="o">**</span><span class="n">predict</span><span class="p">)</span>
+
             <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Fold fold </span><span class="si">%s</span><span class="s1"> score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
@@ -389,7 +389,6 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_to_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
-
         <span class="n">params_tree</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">hyperparameter</span><span class="p">),</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
@@ -418,6 +417,26 @@
 
         <span class="k">return</span> <span class="n">param_tuples</span>
 
+    <span class="k">def</span> <span class="nf">_get_tunables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tunables</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tunable_keys</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_details</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+                <span class="n">param_type</span> <span class="o">=</span> <span class="n">param_details</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
+                <span class="n">param_type</span> <span class="o">=</span> <span class="s1">&#39;string&#39;</span> <span class="k">if</span> <span class="n">param_type</span> <span class="o">==</span> <span class="s1">&#39;str&#39;</span> <span class="k">else</span> <span class="n">param_type</span>
+
+                <span class="k">if</span> <span class="n">param_type</span> <span class="o">==</span> <span class="s1">&#39;bool&#39;</span><span class="p">:</span>
+                    <span class="n">param_range</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">param_range</span> <span class="o">=</span> <span class="n">param_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;range&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">param_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;values&#39;</span><span class="p">)</span>
+
+                <span class="n">value</span> <span class="o">=</span> <span class="n">HyperParameter</span><span class="p">(</span><span class="n">param_type</span><span class="p">,</span> <span class="n">param_range</span><span class="p">)</span>
+                <span class="n">tunables</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+                <span class="n">tunable_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tunables</span><span class="p">,</span> <span class="n">tunable_keys</span>
+
     <span class="k">def</span> <span class="nf">_get_tuner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tunables</span><span class="p">,</span> <span class="n">tunable_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tunables</span><span class="p">()</span>
         <span class="n">tuner</span> <span class="o">=</span> <span class="n">GP</span><span class="p">(</span><span class="n">tunables</span><span class="p">)</span>
@@ -428,10 +447,11 @@
 
         <span class="k">return</span> <span class="n">tuner</span>
 
-<div class="viewcode-block" id="GreenGuardPipeline.tune"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.tune"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Scoring the default pipeline&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Default Pipeline score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tuner</span><span class="p">()</span>
@@ -442,11 +462,8 @@
             <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span><span class="o">.</span><span class="n">propose</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">param_dicts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dicts</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
-            <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clone_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">)</span>
-            <span class="n">candidate</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">param_dicts</span><span class="p">)</span>
-
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">param_dicts</span><span class="p">)</span>
 
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Pipeline </span><span class="si">%s</span><span class="s1"> score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
 
@@ -462,14 +479,14 @@
                                  <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">failed</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GreenGuardPipeline.save"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pickle_file</span><span class="p">:</span>

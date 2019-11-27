@@ -139,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/greenguard.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -244,7 +245,7 @@
 
 <div class="viewcode-block" id="CSVLoader"><a class="viewcode-back" href="../../../api/greenguard.loaders.csv.html#greenguard.loaders.csv.CSVLoader">[docs]</a><span class="k">class</span> <span class="nc">CSVLoader</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">readings_path</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aggregation</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">readings_path</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aggregation</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_readings_path</span> <span class="o">=</span> <span class="n">readings_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rule</span> <span class="o">=</span> <span class="n">rule</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_aggregation</span> <span class="o">=</span> <span class="n">aggregation</span>

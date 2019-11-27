@@ -15,6 +15,7 @@ Submodules
 
    greenguard.data
    greenguard.db
+   greenguard.metrics
    greenguard.pipeline
    greenguard.utils
 
