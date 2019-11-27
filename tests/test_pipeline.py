@@ -3,7 +3,7 @@
 
 """Tests for `greenguard.pipeline` module."""
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from greenguard.pipeline import GreenGuardPipeline
 
@@ -11,37 +11,29 @@ from greenguard.pipeline import GreenGuardPipeline
 class TestGreenGuardPipeline(TestCase):
     """Tests for `TimeSeriesClassifier`."""
 
-    @patch('greenguard.pipeline.MLPipeline.from_dict')
-    def test_fit(self, from_dict_mock):
+    @patch('greenguard.pipeline.MLPipeline')
+    def test_fit(self, pipeline_class_mock):
         """fit prepare the pipeline to make predictions based on the given data."""
-
-        # Setup
-        pipeline_mock = Mock()
-        from_dict_mock.return_value = pipeline_mock
-
         # Run
-        instance = GreenGuardPipeline(dict(), 'accuracy')
+        instance = GreenGuardPipeline('pipeline_name', 'accuracy')
         instance.fit('an_X', 'a_y', 'readings')
 
         # Asserts
-        from_dict_mock.assert_called_once_with(dict())
+        pipeline_mock = pipeline_class_mock.return_value
+        pipeline_class_mock.assert_called_once_with('pipeline_name')
         assert instance._pipeline == pipeline_mock
 
-        pipeline_mock.fit.assert_called_once_with(X='an_X', y='a_y', readings='readings')
+        pipeline_mock.fit.assert_called_once_with('an_X', 'a_y', readings='readings')
 
         assert instance.fitted
 
-    @patch('greenguard.pipeline.MLPipeline.from_dict')
-    def test_predict(self, from_dict_mock):
+    @patch('greenguard.pipeline.MLPipeline')
+    def test_predict(self, pipeline_mock):
         """predict produces results using the pipeline."""
-        # Setup
-        pipeline_mock = Mock()
-        from_dict_mock.return_value = pipeline_mock
-
         # Run
-        instance = GreenGuardPipeline(dict(), 'accuracy')
+        instance = GreenGuardPipeline('pipeline_name', 'accuracy')
         instance.fitted = True
         instance.predict('an_X', 'readings')
 
         # Asserts
-        pipeline_mock.predict.assert_called_once_with(X='an_X', readings='readings')
+        pipeline_mock.return_value.predict.assert_called_once_with('an_X', readings='readings')

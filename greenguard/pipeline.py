@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
 import os
 from collections import defaultdict
@@ -11,9 +10,9 @@ from btb import HyperParameter
 from btb.tuning import GP
 from mlblocks import MLPipeline
 from sklearn.exceptions import NotFittedError
-from sklearn.metrics import (
-    accuracy_score, f1_score, mean_absolute_error, mean_squared_error, r2_score)
 from sklearn.model_selection import KFold, StratifiedKFold
+
+from greenguard.metrics import METRICS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -32,20 +31,6 @@ def get_pipelines():
     return pipelines
 
 
-def f1_macro(exp, obs):
-    return f1_score(exp, obs, average='macro')
-
-
-METRICS = {
-    'accuracy': (accuracy_score, False),
-    'f1': (f1_score, False),
-    'f1_macro': (f1_macro, False),
-    'r2': (r2_score, False),
-    'mse': (mean_squared_error, True),
-    'mae': (mean_absolute_error, True)
-}
-
-
 class GreenGuardPipeline(object):
 
     template = None
@@ -57,6 +42,8 @@ class GreenGuardPipeline(object):
     _cost = False
     _tuner = None
     _pipeline = None
+    _splits = None
+    _static = None
 
     def _get_cv(self, stratify, cv_splits, shuffle, random_state):
         if stratify:
@@ -66,23 +53,16 @@ class GreenGuardPipeline(object):
 
         return cv_class(n_splits=cv_splits, shuffle=shuffle, random_state=random_state)
 
-    def _load_template(self, template):
-        if not os.path.isfile(template):
-            template = os.path.join(PIPELINES_DIR, template + '.json')
+    def _count_static_steps(self):
+        tunable_hyperparams = self._pipeline.get_tunable_hyperparameters()
+        for index, block_name in enumerate(self._pipeline.blocks.keys()):
+            if tunable_hyperparams[block_name]:
+                return index + 1
 
-        with open(template, 'r') as template_file:
-            return json.load(template_file)
+        return 0
 
-    def _load_mlpipeline(self, template):
-        if not isinstance(template, dict):
-            template = self._load_template(template)
-
-        self.template = template
-
-        return MLPipeline.from_dict(template)
-
-    def __init__(self, template, metric, cost=False, hyperparameters=None,
-                 stratify=True, cv_splits=5, shuffle=True, random_state=0):
+    def __init__(self, template, metric, cost=False, hyperparameters=None, stratify=True,
+                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0):
 
         self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)
 
@@ -92,7 +72,13 @@ class GreenGuardPipeline(object):
         self._metric = metric
         self._cost = cost
 
-        self._pipeline = self._load_mlpipeline(template)
+        self.template = template
+        self._pipeline = MLPipeline(template)
+        self._static = self._count_static_steps()
+        self._preprocessing = preprocessing
+
+        if self._preprocessing and (self._preprocessing >= self._static):
+            raise ValueError('Preprocessing cannot be bigger than static')
 
         if hyperparameters:
             self._pipeline.set_hyperparameters(hyperparameters)
@@ -114,38 +100,51 @@ class GreenGuardPipeline(object):
 
         return score > self.cv_score
 
-    def _get_tunables(self):
-        tunables = []
-        tunable_keys = []
-        for block_name, params in self._pipeline.get_tunable_hyperparameters().items():
-            for param_name, param_details in params.items():
-                key = (block_name, param_name)
-                param_type = param_details['type']
-                param_type = 'string' if param_type == 'str' else param_type
+    def _generate_splits(self, X, y, readings):
+        if self._preprocessing:
+            pipeline = MLPipeline(self.template)
+            LOGGER.debug('Running %s preprocessing steps', self._preprocessing)
+            context = pipeline.fit(X=X, y=y, readings=readings, output_=self._preprocessing - 1)
+            del context['X']
+            del context['y']
+        else:
+            context = {
+                'readings': readings
+            }
 
-                if param_type == 'bool':
-                    param_range = [True, False]
-                else:
-                    param_range = param_details.get('range') or param_details.get('values')
-
-                value = HyperParameter(param_type, param_range)
-                tunables.append((key, value))
-                tunable_keys.append(key)
-
-        return tunables, tunable_keys
-
-    def cross_validate(self, pipeline, X, y, readings):
-
-        scores = []
+        splits = list()
         for fold, (train_index, test_index) in enumerate(self._cv.split(X, y)):
-            LOGGER.debug('Scoring fold %s', fold)
+            LOGGER.debug('Running static steps for fold %s', fold)
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
-            pipeline = self._clone_pipeline(pipeline)
-            pipeline.fit(X=X_train, y=y_train, readings=readings)
+            pipeline = MLPipeline(self.template)
+            fit = pipeline.fit(X_train, y_train, output_=self._static - 1,
+                               start_=self._preprocessing, **context)
+            predict = pipeline.predict(X_test, output_=self._static - 1,
+                                       start_=self._preprocessing, **context)
 
-            predictions = pipeline.predict(X=X_test, readings=readings)
+            splits.append((fold, pipeline, fit, predict, y_test))
+
+        return splits
+
+    def cross_validate(self, X=None, y=None, readings=None, params=None):
+        if self._splits is None:
+            LOGGER.info('Running static steps before cross validation')
+            self._splits = self._generate_splits(X, y, readings)
+
+        scores = []
+        for fold, pipeline, fit, predict, y_test in self._splits:
+            LOGGER.debug('Scoring fold %s', fold)
+
+            if params:
+                pipeline.set_hyperparameters(params)
+            else:
+                pipeline.set_hyperparameters(self._pipeline.get_hyperparameters())
+
+            pipeline.fit(start_=self._static, **fit)
+            predictions = pipeline.predict(start_=self._static, **predict)
+
             score = self._metric(y_test, predictions)
 
             LOGGER.debug('Fold fold %s score: %s', fold, score)
@@ -154,7 +153,6 @@ class GreenGuardPipeline(object):
         return np.mean(scores)
 
     def _to_dicts(self, hyperparameters):
-
         params_tree = defaultdict(dict)
         for (block, hyperparameter), value in hyperparameters.items():
             if isinstance(value, np.integer):
@@ -183,6 +181,26 @@ class GreenGuardPipeline(object):
 
         return param_tuples
 
+    def _get_tunables(self):
+        tunables = []
+        tunable_keys = []
+        for block_name, params in self._pipeline.get_tunable_hyperparameters().items():
+            for param_name, param_details in params.items():
+                key = (block_name, param_name)
+                param_type = param_details['type']
+                param_type = 'string' if param_type == 'str' else param_type
+
+                if param_type == 'bool':
+                    param_range = [True, False]
+                else:
+                    param_range = param_details.get('range') or param_details.get('values')
+
+                value = HyperParameter(param_type, param_range)
+                tunables.append((key, value))
+                tunable_keys.append(key)
+
+        return tunables, tunable_keys
+
     def _get_tuner(self):
         tunables, tunable_keys = self._get_tunables()
         tuner = GP(tunables)
@@ -193,10 +211,11 @@ class GreenGuardPipeline(object):
 
         return tuner
 
-    def tune(self, X, y, readings, iterations=10):
+    def tune(self, X=None, y=None, readings=None, iterations=10):
         if not self._tuner:
             LOGGER.info('Scoring the default pipeline')
-            self.cv_score = self.cross_validate(self._pipeline, X, y, readings)
+            self.cv_score = self.cross_validate(X, y, readings)
+
             LOGGER.info('Default Pipeline score: %s', self.cv_score)
 
             self._tuner = self._get_tuner()
@@ -207,11 +226,8 @@ class GreenGuardPipeline(object):
             params = self._tuner.propose(1)
             param_dicts = self._to_dicts(params)
 
-            candidate = self._clone_pipeline(self._pipeline)
-            candidate.set_hyperparameters(param_dicts)
-
             try:
-                score = self.cross_validate(candidate, X, y, readings)
+                score = self.cross_validate(params=param_dicts)
 
                 LOGGER.info('Pipeline %s score: %s', i + 1, score)
 
@@ -227,14 +243,14 @@ class GreenGuardPipeline(object):
                                  i + 1, failed)
 
     def fit(self, X, y, readings):
-        self._pipeline.fit(X=X, y=y, readings=readings)
+        self._pipeline.fit(X, y, readings=readings)
         self.fitted = True
 
     def predict(self, X, readings):
         if not self.fitted:
             raise NotFittedError()
 
-        return self._pipeline.predict(X=X, readings=readings)
+        return self._pipeline.predict(X, readings=readings)
 
     def save(self, path):
         with open(path, 'wb') as pickle_file:
