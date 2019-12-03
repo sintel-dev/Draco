@@ -9,10 +9,11 @@ LOGGER = logging.getLogger(__name__)
 
 class CSVLoader:
 
-    def __init__(self, readings_path='.', rule=None, aggregation='mean'):
+    def __init__(self, readings_path='.', rule=None, aggregation='mean', unstack=True):
         self._readings_path = readings_path
         self._rule = rule
         self._aggregation = aggregation
+        self._unstack = unstack
 
     @dask.delayed
     def __filter_by_signal(self, readings, signals):
@@ -84,12 +85,25 @@ class CSVLoader:
             if ((min_csv <= filename) & (filename <= max_csv)).any():
                 yield os.path.join(turbine_path, filename)
 
+    @staticmethod
+    def _join_names(names):
+        """Join the names of a multi-level index with an underscore."""
+
+        levels = (str(name) for name in names if name != '')
+        return '_'.join(levels)
+
     @dask.delayed
     def __resample(self, readings):
         LOGGER.info('Resampling: %s - %s', self._rule, self._aggregation)
-        grouped = readings.groupby(('turbine_id', 'signal_id'))
+        grouped = readings.groupby(['turbine_id', 'signal_id'])
         dfr = grouped.resample(rule=self._rule, on='timestamp')
-        return dfr.agg(self._aggregation).reset_index()
+        agg = dfr.agg(self._aggregation)
+        if self._unstack:
+            agg = agg.unstack(level='signal_id').reset_index()
+            agg.columns = agg.columns.map(self._join_names)
+            return agg
+        else:
+            return agg.reset_index()
 
     def _load_turbine(self, turbine_id, timestamps, signals=None):
         if 'turbine_id' in timestamps:
