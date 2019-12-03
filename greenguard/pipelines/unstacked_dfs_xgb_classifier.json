@@ -1,8 +1,8 @@
 {
     "primitives": [
         "featuretools.EntitySet.entity_from_dataframe",
-        "featuretools.EntitySet.normalize_entity",
-        "featuretools.EntitySet.normalize_entity",
+        "featuretools.EntitySet.entity_from_dataframe",
+        "featuretools.EntitySet.add_relationship",
         "featuretools.dfs",
         "mlprimitives.custom.feature_extraction.CategoricalEncoder",
         "xgboost.XGBClassifier"
@@ -14,17 +14,16 @@
             "make_index": true,
             "time_index": "timestamp"
         },
-        "featuretools.EntitySet.normalize_entity#1": {
-            "base_entity_id": "readings",
-            "new_entity_id": "turbines",
+        "featuretools.EntitySet.entity_from_dataframe#2": {
+            "entity_id": "turbines",
             "index": "turbine_id",
-            "make_time_index": false
+            "make_index": false
         },
-        "featuretools.EntitySet.normalize_entity#2": {
-            "base_entity_id": "readings",
-            "new_entity_id": "signals",
-            "index": "signal_id",
-            "make_time_index": false
+        "featuretools.EntitySet.add_relationship#1": {
+            "parent": "turbines",
+            "parent_column": "turbine_id",
+            "child": "readings",
+            "child_column": "turbine_id"
         },
         "featuretools.dfs#1": {
             "target_entity": "turbines",
@@ -41,6 +40,9 @@
     "input_names": {
         "featuretools.EntitySet.entity_from_dataframe#1": {
             "dataframe": "readings"
+        },
+        "featuretools.EntitySet.entity_from_dataframe#2": {
+            "dataframe": "turbines"
         }
     }
 }
