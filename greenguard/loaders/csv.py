@@ -119,10 +119,11 @@ class CSVLoader:
             file_readings = self.__filter_by_timestamp(file_readings, timestamps)
             readings.append(file_readings)
 
-        readings = self.__consolidate(readings, turbine_id)
+        if readings:
+            readings = self.__consolidate(readings, turbine_id)
 
-        if self._rule:
-            readings = self.__resample(readings)
+            if self._rule:
+                readings = self.__resample(readings)
 
         return readings
 
@@ -154,7 +155,7 @@ class CSVLoader:
 
         dask_scheduler = 'single-threaded' if debug else None
         computed = dask.compute(*readings, scheduler=dask_scheduler)
-        readings = pd.concat(computed)
+        readings = pd.concat(c for c in computed if len(c))
 
         LOGGER.info('Loaded %s turbine readings', len(readings))
 
