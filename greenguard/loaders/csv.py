@@ -63,7 +63,7 @@ class CSVLoader:
 
     @dask.delayed
     def __consolidate(self, readings, turbine_id):
-        readings = pd.concat(readings)
+        readings = pd.concat(readings, ignore_index=True)
         try:
             readings['value'] = readings['value'].astype(float)
         except ValueError:
@@ -155,7 +155,7 @@ class CSVLoader:
 
         dask_scheduler = 'single-threaded' if debug else None
         computed = dask.compute(*readings, scheduler=dask_scheduler)
-        readings = pd.concat(c for c in computed if len(c))
+        readings = pd.concat((c for c in computed if len(c)), ignore_index=True, sort=False)
 
         LOGGER.info('Loaded %s turbine readings', len(readings))
 
