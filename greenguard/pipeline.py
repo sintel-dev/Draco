@@ -126,9 +126,6 @@ class GreenGuardPipeline(object):
         if self._preprocessing and (self._preprocessing > self._static):
             raise ValueError('Preprocessing cannot be bigger than static')
 
-    def _get_steps(self, start, end):
-        pass
-
     def __repr__(self):
         return (
             "GreenGuardPipeline({})\n"
