@@ -303,7 +303,7 @@
 </table>
 <dl class="class">
 <dt id="greenguard.GreenGuardPipeline">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">hyperparameters=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p><strong>Methods</strong></p>
 <table class="longtable docutils align-default">
@@ -333,7 +333,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.set_hyperparameters" title="greenguard.GreenGuardPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([X, y, readings, iterations])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.set_init_params" title="greenguard.GreenGuardPipeline.set_init_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_init_params</span></code></a>(init_params)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([X, y, readings, iterations])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -395,9 +398,19 @@
 <code class="sig-name descname">set_hyperparameters</code><span class="sig-paren">(</span><em class="sig-param">hyperparameters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.set_hyperparameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.set_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="greenguard.GreenGuardPipeline.set_init_params">
+<code class="sig-name descname">set_init_params</code><span class="sig-paren">(</span><em class="sig-param">init_params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.set_init_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.set_init_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="greenguard.GreenGuardPipeline.template">
 <code class="sig-name descname">template</code><em class="property"> = None</em><a class="headerlink" href="#greenguard.GreenGuardPipeline.template" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.GreenGuardPipeline.template_name">
+<code class="sig-name descname">template_name</code><em class="property"> = None</em><a class="headerlink" href="#greenguard.GreenGuardPipeline.template_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

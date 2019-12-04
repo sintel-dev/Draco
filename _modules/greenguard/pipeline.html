@@ -239,12 +239,14 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">cloudpickle</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">btb</span> <span class="kn">import</span> <span class="n">HyperParameter</span>
 <span class="kn">from</span> <span class="nn">btb.tuning</span> <span class="kn">import</span> <span class="n">GP</span>
 <span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<span class="kn">from</span> <span class="nn">mlblocks.discovery</span> <span class="kn">import</span> <span class="n">load_pipeline</span>
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
 
@@ -270,6 +272,7 @@
 <div class="viewcode-block" id="GreenGuardPipeline"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline">[docs]</a><span class="k">class</span> <span class="nc">GreenGuardPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="n">template</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">fitted</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">cv_score</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -293,11 +296,33 @@
         <span class="n">tunable_hyperparams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="k">if</span> <span class="n">tunable_hyperparams</span><span class="p">[</span><span class="n">block_name</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">return</span> <span class="n">index</span>
 
         <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">_build_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_update_params</span><span class="p">(</span><span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;#&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;#1&#39;</span>
+
+            <span class="n">block_params</span> <span class="o">=</span> <span class="n">old</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">block_params</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="GreenGuardPipeline.set_init_params"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.set_init_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_init_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
+        <span class="n">template_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;init_params&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_params</span><span class="p">(</span><span class="n">template_params</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_pipeline</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">cv_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_cv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv</span><span class="p">(</span><span class="n">stratify</span><span class="p">,</span> <span class="n">cv_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>
@@ -308,23 +333,54 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span> <span class="o">=</span> <span class="n">metric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span> <span class="o">=</span> <span class="n">cost</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span> <span class="o">=</span> <span class="n">template</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
+
+        <span class="c1"># Make sure to have block number in all init_params names</span>
+        <span class="n">template_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;init_params&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">template_params</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="s1">&#39;#&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">template_params</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;#1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">init_params</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_init_params</span><span class="p">(</span><span class="n">init_params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build_pipeline</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count_static_steps</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">=</span> <span class="n">preprocessing</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">primitives</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tunable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">:]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Preprocessing cannot be bigger than static&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;GreenGuardPipeline(</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  preprocessing:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  static:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  tunable:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">,</span>
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing</span><span class="p">),</span>
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static</span><span class="p">),</span>
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tunable</span><span class="p">),</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="GreenGuardPipeline.get_hyperparameters"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GreenGuardPipeline.set_hyperparameters"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.set_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_pipeline</span><span class="p">()</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_clone_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">):</span>
@@ -386,7 +442,11 @@
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Fold fold </span><span class="si">%s</span><span class="s1"> score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fold</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
             <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span></div>
+        <span class="n">cv_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="n">cv_score</span>
+
+        <span class="k">return</span> <span class="n">cv_score</span></div>
 
     <span class="k">def</span> <span class="nf">_to_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
         <span class="n">params_tree</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
