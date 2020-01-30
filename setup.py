@@ -16,9 +16,9 @@ except IOError:
     history = ''
 
 install_requires = [
-    'baytune>=0.2.3,<0.3',
     'mlblocks>=0.3.4,<0.4',
-    'mlprimitives>=0.2.3,<0.3',
+    'mlprimitives>=0.2.4,<0.3',
+    'baytune>=0.2.3,<0.3',
     'numpy>=1.15.4,<1.17',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.20.1,<0.21',
@@ -76,7 +76,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
@@ -98,7 +97,7 @@ setup(
     long_description_content_type='text/markdown',
     name='greenguard',
     packages=find_packages(include=['greenguard', 'greenguard.*']),
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,

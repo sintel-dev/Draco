@@ -10,11 +10,11 @@
         "pandas.DataFrame.set",
         "pandas.DataFrame.set",
         "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
-        "keras.Sequential.LSTMTimeSeriesClassifier"
+        "keras.Sequential.DoubleLSTMTimeSeriesClassifier"
     ],
     "init_params": {
         "pandas.DataFrame.resample#1": {
-            "rule": "3600s",
+            "rule": "600s",
             "on": "timestamp",
             "groupby": [
                 "turbine_id",
@@ -50,17 +50,13 @@
             "key": "timestamp"
         },
         "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
-            "window_size": 72,
+            "window_size": 144,
             "cutoff_time": "cutoff_time",
             "time_index": "timestamp"
         },
-        "keras.Sequential.LSTMTimeSeriesClassifier": {
+        "keras.Sequential.DoubleLSTMTimeSeriesClassifier": {
             "epochs": 35,
-            "verbose": true,
-            "input_shape": [
-                72,
-                97
-            ]
+            "verbose": false
         }
     },
     "input_names": {
