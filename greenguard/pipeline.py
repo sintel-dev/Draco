@@ -22,18 +22,103 @@ LOGGER = logging.getLogger(__name__)
 PIPELINES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'pipelines'))
 
 
-def get_pipelines():
+def get_pipelines(pattern='', path=False):
+    """Get the list of available pipelines.
+
+    Optionally filter the names using a patter or obtain
+    the paths to the pipelines alongside their name.
+
+    Args:
+        pattern (str):
+            Pattern to search for in the pipeline names
+        path (bool):
+            Whether to return a dictionary containing the pipeline
+            paths instead of only a list with the names.
+
+    Return:
+        list or dict:
+            List of available and matching pipeline names.
+            If `path=True`, return a dict containing the pipeline
+            names as keys and their absolute paths as values.
+    """
     pipelines = dict()
     for filename in os.listdir(PIPELINES_DIR):
-        if filename.endswith('.json'):
+        if filename.endswith('.json') and pattern in filename:
             name = os.path.basename(filename)[:-len('.json')]
-            path = os.path.join(PIPELINES_DIR, filename)
-            pipelines[name] = path
+            pipeline_path = os.path.join(PIPELINES_DIR, filename)
+            pipelines[name] = pipeline_path
+
+    if not path:
+        pipelines = list(pipelines)
 
     return pipelines
 
 
 class GreenGuardPipeline(object):
+    """Main Machine Learning component in the GreenGuard project.
+
+    The ``GreenGuardPipeline`` represents the abstraction of a Machine
+    Learning pipeline architecture specialized on the GreenGuard data
+    format.
+
+    In order to use it, an MLBlocks pipeline template needs to be given,
+    alongside information about how to evaluate its performance using
+    cross validation.
+
+    Attributes:
+        template (MLPipeline):
+            MLPipeline instance used as the template for tuning.
+        template_name:
+            Name of the template being used.
+        fitted (bool):
+            Whether this GreenGuardPipeline has already been fitted or not.
+        steps (list):
+            List of primitives that compose this template.
+        preprocessing (list):
+            List of preprocessing steps. These steps have no learning stage
+            and are executed only once on the complete training dataset, before
+            partitioning it for cross validation.
+        static (list):
+            List of static steps. These are all the steps in the pipeline that
+            come after the preprocessing ones but have no hyperparameters.
+            These are executed on each cross validation split only once, when
+            the data is partitioned, and their output is cached to be reused
+            later on at every tuning iteration.
+        tunable (list):
+            List of steps that have hyperparameters and will be tuned during
+            the tuning loop.
+
+    Args:
+        template (str or MLPipeline):
+            Template to use. If a ``str`` is given, load the corresponding
+            ``MLPipeline``.
+        metric (str or function):
+            Metric to use. If an ``str`` is give it must be one of the metrics
+            defined in the ``greenguard.metrics.METRICS`` dictionary.
+        cost (bool):
+            Whether the metric is a cost function (the lower the better) or not.
+            Defaults to ``False``.
+        init_params (dict):
+            Initial parameters to pass to the underlying MLPipeline if something
+            other than the defaults need to be used.
+            Defaults to ``None``.
+        stratify (bool):
+            Whether to stratify the data when partitioning for cross validation.
+            Defaults to ``True``.
+        cv_splits (int):
+            Number of cross validation folds to use. Defaults to ``5``.
+        shuffle (bool):
+            Whether to shuffle the data when partitioning for cross validation.
+            Defaults to ``True``.
+        random_state (int or RandomState):
+            random state to use for the cross validation partitioning.
+            Defaults to ``0``.
+        preprocessing (int):
+            Number of steps to execute during the preprocessing stage.
+            The number of preprocessing steps cannot be higher than the
+            number of static steps in the given template.
+            Defaults to ``0``.
+    """
 
     template = None
     template_name = None
@@ -82,6 +167,12 @@ class GreenGuardPipeline(object):
                 block_params[param] = value
 
     def set_init_params(self, init_params):
+        """Set new init params for the template and pipeline.
+
+        Args:
+            init_params (dict):
+                New init_params to use.
+        """
         template_params = self.template['init_params']
         self._update_params(template_params, init_params)
         self._build_pipeline()
@@ -140,9 +231,23 @@ class GreenGuardPipeline(object):
         )
 
     def get_hyperparameters(self):
+        """Get the current hyperparameters.
+
+        Returns:
+            dict:
+                Current hyperparameters.
+        """
         return deepcopy(self._hyperparameters)
 
     def set_hyperparameters(self, hyperparameters):
+        """Set new hyperparameters for this pipeline instance.
+
+        The template ``init_params`` remain unmodified.
+
+        Args:
+            hyperparameters (dict):
+                New hyperparameters to use.
+        """
         self._update_params(self._hyperparameters, hyperparameters)
         self._build_pipeline()
 
@@ -185,6 +290,35 @@ class GreenGuardPipeline(object):
         return splits
 
     def cross_validate(self, X=None, y=None, readings=None, params=None):
+        """Compute cross validation score using the given data.
+
+        If the splits have not been previously computed, compute them now.
+        During this computation, the data is partitioned using the indicated
+        cross validation parameters and later on processed using the
+        pipeline static steps.
+
+        The results of the fit and produce executions are cached and reused
+        in subsequent calls to this method.
+
+        Args:
+            X (pandas.DataFrame):
+                ``target_times`` data, without the ``target`` column.
+                Only needed if the splits have not been previously computed.
+            y (pandas.Series or numpy.ndarray):
+                ``target`` vector corresponding to the passed ``target_times``.
+                Only needed if the splits have not been previously computed.
+            readings (pandas.DataFrame):
+                ``readings`` table. Only needed if the splits have not been
+                previously computed.
+            params (dict):
+                hyperparameter values to use.
+
+        Returns:
+            float:
+                Computed cross validation score. This score is the average
+                of the scores obtained accross all the cross validation folds.
+        """
+
         if self._splits is None:
             LOGGER.info('Running static steps before cross validation')
             self._splits = self._generate_splits(X, y, readings)
@@ -272,6 +406,21 @@ class GreenGuardPipeline(object):
         return tuner
 
     def tune(self, X=None, y=None, readings=None, iterations=10):
+        """Tune this pipeline for the indicated number of iterations.
+
+        Args:
+            X (pandas.DataFrame):
+                ``target_times`` data, without the ``target`` column.
+                Only needed if the splits have not been previously computed.
+            y (pandas.Series or numpy.ndarray):
+                ``target`` vector corresponding to the passed ``target_times``.
+                Only needed if the splits have not been previously computed.
+            readings (pandas.DataFrame):
+                ``readings`` table. Only needed if the splits have not been
+                previously computed.
+            iterations (int):
+                Number of iterations to perform.
+        """
         if not self._tuner:
             LOGGER.info('Scoring the default pipeline')
             self.cv_score = self.cross_validate(X, y, readings)
@@ -303,20 +452,59 @@ class GreenGuardPipeline(object):
                                  i + 1, failed)
 
     def fit(self, X, y, readings):
+        """Fit this pipeline to the given data.
+
+        Args:
+            X (pandas.DataFrame):
+                ``target_times`` data, without the ``target`` column.
+            y (pandas.Series or numpy.ndarray):
+                ``target`` vector corresponding to the passed ``target_times``.
+            readings (pandas.DataFrame):
+                ``readings`` table.
+        """
         self._pipeline.fit(X, y, readings=readings)
         self.fitted = True
 
     def predict(self, X, readings):
+        """Make predictions using this pipeline.
+
+        Args:
+            X (pandas.DataFrame):
+                ``target_times`` data, containing the ``turbine_id`` and
+                the ``cutoff_time`` column.
+            readings (pandas.DataFrame):
+                ``readings`` table.
+
+        Returns:
+            numpy.ndarray:
+                Vector of predictions.
+        """
         if not self.fitted:
             raise NotFittedError()
 
         return self._pipeline.predict(X, readings=readings)
 
     def save(self, path):
+        """Serialize and save this pipeline using cloudpickle.
+
+        Args:
+            path (str):
+                Path to the file where the pipeline will be saved.
+        """
         with open(path, 'wb') as pickle_file:
             cloudpickle.dump(self, pickle_file)
 
     @classmethod
     def load(cls, path):
+        """Load a previously saved pipeline from a file.
+
+        Args:
+            path (str):
+                Path to the file where the pipeline is saved.
+
+        Returns:
+            GreenGuardPipeline:
+                Loaded GreenGuardPipeline instance.
+        """
         with open(path, 'rb') as pickle_file:
             return cloudpickle.load(pickle_file)
