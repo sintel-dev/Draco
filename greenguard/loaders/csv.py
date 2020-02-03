@@ -36,7 +36,7 @@ class CSVLoader:
             Only used when resampling. Defaults to ``False``.
     """
 
-    DEFAULT_DATETIME_FMT = '%Y-%m-%dT%M:%H:%S'
+    DEFAULT_DATETIME_FMT = '%m/%d/%y %M:%H:%S'
     DEFAULT_FILENAME_FMT = '%Y-%m-.csv'
 
     def __init__(self, readings_path='.', rule=None, aggregation='mean', unstack=False,

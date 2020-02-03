@@ -18,5 +18,4 @@ MLBLOCKS_PIPELINES = os.path.join(_BASE_PATH, 'pipelines')
 __all__ = (
     'GreenGuardPipeline',
     'get_pipelines',
-    'load_demo'
 )

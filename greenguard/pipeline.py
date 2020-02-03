@@ -405,15 +405,13 @@ class GreenGuardPipeline(object):
 
         return tuner
 
-    def tune(self, X=None, y=None, readings=None, iterations=10):
+    def tune(self, target_times=None, readings=None, iterations=10):
         """Tune this pipeline for the indicated number of iterations.
 
         Args:
-            X (pandas.DataFrame):
-                ``target_times`` data, without the ``target`` column.
-                Only needed if the splits have not been previously computed.
-            y (pandas.Series or numpy.ndarray):
-                ``target`` vector corresponding to the passed ``target_times``.
+            target_times (pandas.DataFrame):
+                ``target_times`` table, containing the ``turbine_id``, ``cutoff_time``
+                and ``target`` columns.
                 Only needed if the splits have not been previously computed.
             readings (pandas.DataFrame):
                 ``readings`` table. Only needed if the splits have not been
@@ -423,6 +421,8 @@ class GreenGuardPipeline(object):
         """
         if not self._tuner:
             LOGGER.info('Scoring the default pipeline')
+            X = target_times[['turbine_id', 'cutoff_time']]
+            y = target_times['target']
             self.cv_score = self.cross_validate(X, y, readings)
 
             LOGGER.info('Default Pipeline score: %s', self.cv_score)
@@ -451,27 +451,28 @@ class GreenGuardPipeline(object):
                 LOGGER.exception("Caught an exception scoring pipeline %s with params:\n%s",
                                  i + 1, failed)
 
-    def fit(self, X, y, readings):
+    def fit(self, target_times, readings):
         """Fit this pipeline to the given data.
 
         Args:
-            X (pandas.DataFrame):
-                ``target_times`` data, without the ``target`` column.
-            y (pandas.Series or numpy.ndarray):
-                ``target`` vector corresponding to the passed ``target_times``.
+            target_times (pandas.DataFrame):
+                ``target_times`` table, containing the ``turbine_id``, ``cutoff_time``
+                and ``target`` columns.
             readings (pandas.DataFrame):
                 ``readings`` table.
         """
+        X = target_times[['turbine_id', 'cutoff_time']]
+        y = target_times['target']
         self._pipeline.fit(X, y, readings=readings)
         self.fitted = True
 
-    def predict(self, X, readings):
+    def predict(self, target_times, readings):
         """Make predictions using this pipeline.
 
         Args:
-            X (pandas.DataFrame):
-                ``target_times`` data, containing the ``turbine_id`` and
-                the ``cutoff_time`` column.
+            target_times (pandas.DataFrame):
+                ``target_times`` table, containing the ``turbine_id``, ``cutoff_time``
+                and ``target`` columns.
             readings (pandas.DataFrame):
                 ``readings`` table.
 
@@ -482,6 +483,7 @@ class GreenGuardPipeline(object):
         if not self.fitted:
             raise NotFittedError()
 
+        X = target_times[['turbine_id', 'cutoff_time']]
         return self._pipeline.predict(X, readings=readings)
 
     def save(self, path):

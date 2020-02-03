@@ -5,39 +5,47 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from mlblocks.discovery import find_pipelines, load_pipeline
+import pandas as pd
 
 from greenguard.pipeline import GreenGuardPipeline
 
 
 class TestGreenGuardPipeline(TestCase):
-    """Tests for `TimeSeriesClassifier`."""
 
-    PIPELINE_NAME = find_pipelines()[0]
+    def _get_data(self):
+        target_times = pd.DataFrame({
+            'turbine_id': ['T001'],
+            'cutoff_time': [pd.Timestamp('2010-01-01')],
+            'target': [1]
+        })
+        readings = pd.DataFrame({
+            'turbine_id': ['T001'],
+            'timestamp': [pd.Timestamp('2010-01-01')],
+            'signal_id': ['S1'],
+            'value': [0.1]
+        })
+        return target_times, readings
 
     @patch('greenguard.pipeline.MLPipeline')
-    def test_fit(self, pipeline_class_mock):
-        """fit prepare the pipeline to make predictions based on the given data."""
+    @patch('greenguard.pipeline.load_pipeline')
+    def test_fit(self, load_pipeline_mock, mlpipeline_mock):
+        load_pipeline_mock.return_value = dict()
+
         # Run
-        instance = GreenGuardPipeline(self.PIPELINE_NAME, 'accuracy')
-        instance.fit('an_X', 'a_y', 'readings')
+        instance = GreenGuardPipeline('a_pipeline', 'accuracy')
+        target_times, readings = self._get_data()
+        instance.fit(target_times, readings)
 
         # Asserts
-        pipeline_mock = pipeline_class_mock.return_value
-        pipeline_class_mock.assert_called_once_with(load_pipeline(self.PIPELINE_NAME))
-        assert instance._pipeline == pipeline_mock
-
-        pipeline_mock.fit.assert_called_once_with('an_X', 'a_y', readings='readings')
-
         assert instance.fitted
 
     @patch('greenguard.pipeline.MLPipeline')
-    def test_predict(self, pipeline_mock):
-        """predict produces results using the pipeline."""
-        # Run
-        instance = GreenGuardPipeline(self.PIPELINE_NAME, 'accuracy')
-        instance.fitted = True
-        instance.predict('an_X', 'readings')
+    @patch('greenguard.pipeline.load_pipeline')
+    def test_predict(self, load_pipeline_mock, mlpipeline_mock):
+        load_pipeline_mock.return_value = dict()
 
-        # Asserts
-        pipeline_mock.return_value.predict.assert_called_once_with('an_X', readings='readings')
+        # Run
+        instance = GreenGuardPipeline('a_pipeline', 'accuracy')
+        instance.fitted = True
+        target_times, readings = self._get_data()
+        instance.predict(target_times, readings)
