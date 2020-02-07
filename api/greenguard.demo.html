@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.db module &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard.demo module &mdash; GreenGuard 0.1.1-dev documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.demo module" href="greenguard.demo.html" />
-    <link rel="prev" title="greenguard.loaders.csv module" href="greenguard.loaders.csv.html" /> 
+    <link rel="next" title="greenguard.metrics module" href="greenguard.metrics.html" />
+    <link rel="prev" title="greenguard.db module" href="greenguard.db.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -115,8 +115,8 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.db module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.targets.html">greenguard.targets module</a></li>
@@ -197,14 +197,14 @@
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
-      <li>greenguard.db module</li>
+      <li>greenguard.demo module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.db.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.demo.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -218,57 +218,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-greenguard.db">
-<span id="greenguard-db-module"></span><h1>greenguard.db module<a class="headerlink" href="#module-greenguard.db" title="Permalink to this headline">¶</a></h1>
-<p><strong>Classes</strong></p>
+  <div class="section" id="module-greenguard.demo">
+<span id="greenguard-demo-module"></span><h1>greenguard.demo module<a class="headerlink" href="#module-greenguard.demo" title="Permalink to this headline">¶</a></h1>
+<p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.db.MongoDB" title="greenguard.db.MongoDB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MongoDB</span></code></a>([database, config])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.demo.generate_raw_readings" title="greenguard.demo.generate_raw_readings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_raw_readings</span></code></a>([output_path])</p></td>
+<td><p>Generate raw readings based on the demo data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.demo.load_demo" title="greenguard.demo.load_demo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_demo</span></code></a>([load_readings])</p></td>
+<td><p>Load the demo included in the GreenGuard project.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt id="greenguard.db.MongoDB">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.db.</code><code class="sig-name descname">MongoDB</code><span class="sig-paren">(</span><em class="sig-param">database=None</em>, <em class="sig-param">config=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/db.html#MongoDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.db.MongoDB" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.db.MongoDB.insert_pipeline" title="greenguard.db.MongoDB.insert_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_pipeline</span></code></a>(candidate, score, dataset, …)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.db.MongoDB.insert_template" title="greenguard.db.MongoDB.insert_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_template</span></code></a>(template)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.db.MongoDB.load_template" title="greenguard.db.MongoDB.load_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_template</span></code></a>(template_name)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="greenguard.db.MongoDB.insert_pipeline">
-<code class="sig-name descname">insert_pipeline</code><span class="sig-paren">(</span><em class="sig-param">candidate</em>, <em class="sig-param">score</em>, <em class="sig-param">dataset</em>, <em class="sig-param">table</em>, <em class="sig-param">column</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/db.html#MongoDB.insert_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.db.MongoDB.insert_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="function">
+<dt id="greenguard.demo.generate_raw_readings">
+<code class="sig-prename descclassname">greenguard.demo.</code><code class="sig-name descname">generate_raw_readings</code><span class="sig-paren">(</span><em class="sig-param">output_path='demo'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/demo.html#generate_raw_readings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.demo.generate_raw_readings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate raw readings based on the demo data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path where the readings will be generated.</p>
+</dd>
+</dl>
+</dd></dl>
 
-<dl class="method">
-<dt id="greenguard.db.MongoDB.insert_template">
-<code class="sig-name descname">insert_template</code><span class="sig-paren">(</span><em class="sig-param">template</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/db.html#MongoDB.insert_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.db.MongoDB.insert_template" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="greenguard.db.MongoDB.load_template">
-<code class="sig-name descname">load_template</code><span class="sig-paren">(</span><em class="sig-param">template_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/db.html#MongoDB.load_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.db.MongoDB.load_template" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<dl class="function">
+<dt id="greenguard.demo.load_demo">
+<code class="sig-prename descclassname">greenguard.demo.</code><code class="sig-name descname">load_demo</code><span class="sig-paren">(</span><em class="sig-param">load_readings=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/demo.html#load_demo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.demo.load_demo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the demo included in the GreenGuard project.</p>
+<p>The first time that this function is executed, the data will be downloaded
+and cached inside the <cite>greenguard/demo</cite> folder.
+Subsequent calls will load the cached data instead of downloading it again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>target_times and readings tables</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[pandas.DataFrame]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -281,10 +273,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.demo.html" class="btn btn-neutral float-right" title="greenguard.demo module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.metrics.html" class="btn btn-neutral float-right" title="greenguard.metrics module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="greenguard.loaders.csv.html" class="btn btn-neutral float-left" title="greenguard.loaders.csv module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="greenguard.db.html" class="btn btn-neutral float-left" title="greenguard.db module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

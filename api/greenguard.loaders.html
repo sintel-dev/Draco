@@ -85,44 +85,20 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#demo-dataset">Demo Dataset</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#concepts">Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#primitive">Primitive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#template">Template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#pipeline">Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#tuning">Tuning</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardpipeline">GreenGuardPipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardloader">GreenGuardLoader</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#csv-format">CSV Format</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#split-the-data">2. Split the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-a-pipeline">3. Finding a Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#save-and-load-the-pipeline">6. Save and load the pipeline</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#use-your-own-dataset">Use your own Dataset</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#prepare-the-data">1. Prepare the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#create-a-greenguardloader">2. Create a GreenGuardLoader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#call-the-loader-load-method">3. Call the loader.load method.</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#docker-usage">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-split-the-demo-data">1. Load and split the demo data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#exploring-the-available-pipelines">2. Exploring the available Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">3. Fitting the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#make-predictions">4. Make predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
 </ul>
 </li>
@@ -139,10 +115,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.targets.html">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
@@ -253,22 +230,110 @@
 </div>
 <div class="section" id="module-greenguard.loaders">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-greenguard.loaders" title="Permalink to this headline">¶</a></h2>
-<p><strong>Functions</strong></p>
+<p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loaders.select_valid_targets" title="greenguard.loaders.select_valid_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_valid_targets</span></code></a>(target_times, readings, …)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loaders.CSVLoader" title="greenguard.loaders.CSVLoader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSVLoader</span></code></a>([readings_path, rule, …])</p></td>
+<td><p>Load the required readings from CSV files.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="function">
-<dt id="greenguard.loaders.select_valid_targets">
-<code class="sig-prename descclassname">greenguard.loaders.</code><code class="sig-name descname">select_valid_targets</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">window_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loaders.html#select_valid_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loaders.select_valid_targets" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="greenguard.loaders.CSVLoader">
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.loaders.</code><code class="sig-name descname">CSVLoader</code><span class="sig-paren">(</span><em class="sig-param">readings_path='.'</em>, <em class="sig-param">rule=None</em>, <em class="sig-param">aggregation='mean'</em>, <em class="sig-param">unstack=False</em>, <em class="sig-param">datetime_fmt='%m/%d/%y %M:%H:%S'</em>, <em class="sig-param">filename_fmt='%Y-%m-.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loaders/csv.html#CSVLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loaders.CSVLoader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Load the required readings from CSV files.</p>
+<p>The CSVLoader class is responsible for analyzing the target_times table
+and then load the required readings from CSV files.</p>
+<p>Also, optionally, it can perform a resampling aggregation while loading
+the data, reducing the amount of memory requirements.</p>
+<p>The CSVLoader class uses Dask to parallelize all the IO and resampling
+computation and reduce loading times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>readings_path</strong> (<em>str</em>) – Path to the readings folder, where a folder exist for each turbine.</p></li>
+<li><p><strong>rule</strong> (<em>str</em>) – Resampling rule, as expected by <code class="docutils literal notranslate"><span class="pre">DataFrame.resmple</span></code>. The rule is a
+string representation of a TimeDelta, which includes a number and a
+unit. For example: <code class="docutils literal notranslate"><span class="pre">3d</span></code>, <code class="docutils literal notranslate"><span class="pre">1w</span></code>, <code class="docutils literal notranslate"><span class="pre">6h</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, resampling is disabled.</p></li>
+<li><p><strong>aggregation</strong> (<em>str</em>) – Name of the aggregation to perform during the resampling.</p></li>
+<li><p><strong>unstack</strong> (<em>bool</em>) – Whether to unstack the resampled data, generating one column per signal.
+Only used when resampling. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Attributes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loaders.CSVLoader.DEFAULT_DATETIME_FMT" title="greenguard.loaders.CSVLoader.DEFAULT_DATETIME_FMT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_DATETIME_FMT</span></code></a></p></td>
+<td><p>str(object=’’) -&gt; str</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.loaders.CSVLoader.DEFAULT_FILENAME_FMT" title="greenguard.loaders.CSVLoader.DEFAULT_FILENAME_FMT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_FILENAME_FMT</span></code></a></p></td>
+<td><p>str(object=’’) -&gt; str</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.loaders.CSVLoader.load" title="greenguard.loaders.CSVLoader.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(target_times, window_size[, signals, …])</p></td>
+<td><p>Load the readings needed for the given target_times and window_size.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="greenguard.loaders.CSVLoader.DEFAULT_DATETIME_FMT">
+<code class="sig-name descname">DEFAULT_DATETIME_FMT</code><em class="property"> = '%m/%d/%y %M:%H:%S'</em><a class="headerlink" href="#greenguard.loaders.CSVLoader.DEFAULT_DATETIME_FMT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.loaders.CSVLoader.DEFAULT_FILENAME_FMT">
+<code class="sig-name descname">DEFAULT_FILENAME_FMT</code><em class="property"> = '%Y-%m-.csv'</em><a class="headerlink" href="#greenguard.loaders.CSVLoader.DEFAULT_FILENAME_FMT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="greenguard.loaders.CSVLoader.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">window_size</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">debug=False</em>, <em class="sig-param">select_valid=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/loaders/csv.html#CSVLoader.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.loaders.CSVLoader.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the readings needed for the given target_times and window_size.</p>
+<p>Optionally filter the signals that are loaded and discard the rest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_times</strong> (<em>str</em><em> or </em><em>pandas.DataFrame</em>) – target_times <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> or path to the corresponding CSV file.
+The table must have three volumns, <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>, <code class="docutils literal notranslate"><span class="pre">target</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>.</p></li>
+<li><p><strong>window_size</strong> (<em>str</em>) – Amount of data to load before each cutoff time, specified as a string
+representation of a TimeDelta, which includes a number and a
+unit. For example: <code class="docutils literal notranslate"><span class="pre">3d</span></code>, <code class="docutils literal notranslate"><span class="pre">1w</span></code>, <code class="docutils literal notranslate"><span class="pre">6h</span></code>.</p></li>
+<li><p><strong>signals</strong> (<em>list</em><em> or </em><em>pandas.DataFrame</em>) – List of signal names or table that has a <code class="docutils literal notranslate"><span class="pre">signal_id</span></code> column to
+use as the signal names list.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Force single thread execution for easy debugging. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of readings for the target times, including the columns <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>,
+<code class="docutils literal notranslate"><span class="pre">signal_id</span></code>, <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 </div>

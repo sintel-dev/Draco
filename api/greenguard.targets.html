@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.data module &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard.targets module &mdash; GreenGuard 0.1.1-dev documentation</title>
   
 
   
@@ -37,8 +37,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.db module" href="greenguard.db.html" />
-    <link rel="prev" title="greenguard.loaders.csv module" href="greenguard.loaders.csv.html" /> 
+    <link rel="next" title="greenguard.utils module" href="greenguard.utils.html" />
+    <link rel="prev" title="greenguard.pipeline module" href="greenguard.pipeline.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,44 +85,20 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#demo-dataset">Demo Dataset</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#concepts">Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#primitive">Primitive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#template">Template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#pipeline">Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#tuning">Tuning</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardpipeline">GreenGuardPipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardloader">GreenGuardLoader</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#csv-format">CSV Format</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#split-the-data">2. Split the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-a-pipeline">3. Finding a Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#save-and-load-the-pipeline">6. Save and load the pipeline</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#use-your-own-dataset">Use your own Dataset</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#prepare-the-data">1. Prepare the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#create-a-greenguardloader">2. Create a GreenGuardLoader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#call-the-loader-load-method">3. Call the loader.load method.</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#docker-usage">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-split-the-demo-data">1. Load and split the demo data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#exploring-the-available-pipelines">2. Exploring the available Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">3. Fitting the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#make-predictions">4. Make predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
 </ul>
 </li>
@@ -139,10 +115,11 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
@@ -220,14 +197,14 @@
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
-      <li>greenguard.data module</li>
+      <li>greenguard.targets module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.data.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.targets.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -241,28 +218,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-greenguard.data">
-<span id="greenguard-data-module"></span><h1>greenguard.data module<a class="headerlink" href="#module-greenguard.data" title="Permalink to this headline">¶</a></h1>
-<p>Data module.</p>
-<p>This module contains functions to work directly with GreenGuard data in raw format.</p>
-<p>This raw format has the following characteristics:</p>
-<blockquote>
-<div><ul>
-<li><p>All the data from all the turbines is inside a single folder.</p></li>
-<li><p>Inside the data folder, a folder exists for each turbine.
-This folders are named exactly like each turbine id, and inside it one or more
-CSV files can be found. The names of these files is not relevant.</p></li>
-<li><p>Each CSV file will have the the following columns:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>timestamp: timestemp of the reading.</p></li>
-<li><p>signal: name or id of the signal.</p></li>
-<li><p>value: value of the reading.</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
+  <div class="section" id="module-greenguard.targets">
+<span id="greenguard-targets-module"></span><h1>greenguard.targets module<a class="headerlink" href="#module-greenguard.targets" title="Permalink to this headline">¶</a></h1>
+<p>Targets module.</p>
+<p>This module contains functions to work with target_times.</p>
 <p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -270,50 +229,50 @@ CSV files can be found. The names of these files is not relevant.</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.data.extract_readings" title="greenguard.data.extract_readings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_readings</span></code></a>(readings_path, target_times)</p></td>
-<td><p>Extract raw readings data for the given target_times.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.data.make_targets" title="greenguard.data.make_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_targets</span></code></a>(target_times, window_size, target)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.targets.make_target_times" title="greenguard.targets.make_target_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_target_times</span></code></a>(failure_dates, step[, …])</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.targets.make_targets" title="greenguard.targets.make_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_targets</span></code></a>(target_times, window_size, target)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.targets.select_valid_targets" title="greenguard.targets.select_valid_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_valid_targets</span></code></a>(target_times, readings, …)</p></td>
+<td><p>Filter out target_times without enough data for this window_size.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt id="greenguard.data.extract_readings">
-<code class="sig-prename descclassname">greenguard.data.</code><code class="sig-name descname">extract_readings</code><span class="sig-paren">(</span><em class="sig-param">readings_path</em>, <em class="sig-param">target_times</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">window_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/data.html#extract_readings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.data.extract_readings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract raw readings data for the given target_times.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table is examined to decide from which turbines found
-in the <code class="docutils literal notranslate"><span class="pre">reading_pathp</span></code> which data to load.</p>
-<p>And the output is a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><cite>turbine_id</cite>: Unique identifier of the turbine which this reading comes from.</p></li>
-<li><p><cite>signal_id</cite>: Unique identifier of the signal which this reading comes from.</p></li>
-<li><p><cite>timestamp</cite>: Time where the reading took place, as an ISO formatted datetime.</p></li>
-<li><p><cite>value</cite>: Numeric value of this reading.</p></li>
-</ul>
-</div></blockquote>
+<dt id="greenguard.targets.make_target_times">
+<code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">make_target_times</code><span class="sig-paren">(</span><em class="sig-param">failure_dates</em>, <em class="sig-param">step</em>, <em class="sig-param">start=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">forecast_window=0</em>, <em class="sig-param">prediction_window=0</em>, <em class="sig-param">before=0</em>, <em class="sig-param">after=0</em>, <em class="sig-param">offset=0</em>, <em class="sig-param">max_true=None</em>, <em class="sig-param">max_false=None</em>, <em class="sig-param">shuffle=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#make_target_times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.make_target_times" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.targets.make_targets">
+<code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">make_targets</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">window_size</em>, <em class="sig-param">target</em>, <em class="sig-param">new_targets=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#make_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.make_targets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.targets.select_valid_targets">
+<code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">select_valid_targets</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">window_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#select_valid_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.select_valid_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter out target_times without enough data for this window_size.</p>
+<p>The table_times table is scanned and checked against the readings table
+considering the window_size. All the target times entries that do not
+have enough data are dropped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>readings_path</strong> (<em>str</em>) – Path to the folder containing all the readings data.</p></li>
-<li><p><strong>target_times</strong> (<em>pd.DataFrame</em><em> or </em><em>str</em>) – target_times DataFrame or path to the target_times CSV file.</p></li>
-<li><p><strong>signals</strong> (<em>list</em>) – List of signals to load from the readings files. If not given, load
-all the signals available.</p></li>
-<li><p><strong>window_size</strong> (<em>str</em>) – Rule indicating how long back before the cutoff times we have to go
-when loading the data.</p></li>
+<li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – Target times table, with at least turbined_id and cutoff_time fields.</p></li>
+<li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – Readings table, with at least turbine_id, signal_id, and timestamp ields.</p></li>
+<li><p><strong>window_size</strong> (<em>str</em><em> or </em><em>pandas.TimeDelta</em>) – TimeDelta specification that indicates the lenght of the training window.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pandas.DataFrame</p>
+<dd class="field-even"><p>New target_times table without the invalid targets.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="function">
-<dt id="greenguard.data.make_targets">
-<code class="sig-prename descclassname">greenguard.data.</code><code class="sig-name descname">make_targets</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">window_size</em>, <em class="sig-param">target</em>, <em class="sig-param">new_targets=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/data.html#make_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.data.make_targets" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </div>
 
@@ -325,10 +284,10 @@ when loading the data.</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.db.html" class="btn btn-neutral float-right" title="greenguard.db module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.utils.html" class="btn btn-neutral float-right" title="greenguard.utils module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="greenguard.loaders.csv.html" class="btn btn-neutral float-left" title="greenguard.loaders.csv module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="greenguard.pipeline.html" class="btn btn-neutral float-left" title="greenguard.pipeline module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

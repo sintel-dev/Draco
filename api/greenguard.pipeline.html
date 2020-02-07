@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.utils module" href="greenguard.utils.html" />
+    <link rel="next" title="greenguard.targets module" href="greenguard.targets.html" />
     <link rel="prev" title="greenguard.metrics module" href="greenguard.metrics.html" /> 
 </head>
 
@@ -85,44 +85,20 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#demo-dataset">Demo Dataset</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#concepts">Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#primitive">Primitive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#template">Template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#pipeline">Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#tuning">Tuning</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#current-tasks-and-pipelines">Current tasks and pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardpipeline">GreenGuardPipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#greenguardloader">GreenGuardLoader</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#csv-format">CSV Format</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-explore-the-data">1. Load and explore the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#split-the-data">2. Split the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-a-pipeline">3. Finding a Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#finding-the-best-pipeline">3. Finding the best Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">4. Fitting the pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#use-the-fitted-pipeline">5. Use the fitted pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#save-and-load-the-pipeline">6. Save and load the pipeline</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#use-your-own-dataset">Use your own Dataset</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#prepare-the-data">1. Prepare the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#create-a-greenguardloader">2. Create a GreenGuardLoader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#call-the-loader-load-method">3. Call the loader.load method.</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#docker-usage">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-and-split-the-demo-data">1. Load and split the demo data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#exploring-the-available-pipelines">2. Exploring the available Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#fitting-the-pipeline">3. Fitting the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#make-predictions">4. Make predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
 </ul>
 </li>
@@ -139,10 +115,11 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="greenguard.data.html">greenguard.data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.targets.html">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
@@ -251,7 +228,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline" title="greenguard.pipeline.GreenGuardPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code></a>(template, metric[, cost, …])</p></td>
-<td><p></p></td>
+<td><p>Main Machine Learning component in the GreenGuard project.</p></td>
 </tr>
 </tbody>
 </table>
@@ -262,8 +239,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.get_pipelines" title="greenguard.pipeline.get_pipelines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.get_pipelines" title="greenguard.pipeline.get_pipelines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines</span></code></a>([pattern, path, unstacked])</p></td>
+<td><p>Get the list of available pipelines.</p></td>
 </tr>
 </tbody>
 </table>
@@ -271,6 +248,13 @@
 <dt id="greenguard.pipeline.GreenGuardPipeline">
 <em class="property">class </em><code class="sig-prename descclassname">greenguard.pipeline.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main Machine Learning component in the GreenGuard project.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> represents the abstraction of a Machine
+Learning pipeline architecture specialized on the GreenGuard data
+format.</p>
+<p>In order to use it, an MLBlocks pipeline template needs to be given,
+alongside information about how to evaluate its performance using
+cross validation.</p>
 <p><strong>Methods</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -279,31 +263,31 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.cross_validate" title="greenguard.pipeline.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>([X, y, readings, params])</p></td>
-<td><p></p></td>
+<td><p>Compute cross validation score using the given data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="greenguard.pipeline.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y, readings)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="greenguard.pipeline.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(target_times, readings)</p></td>
+<td><p>Fit this pipeline to the given data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.get_hyperparameters" title="greenguard.pipeline.GreenGuardPipeline.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Get the current hyperparameters.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.load" title="greenguard.pipeline.GreenGuardPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
-<td><p></p></td>
+<td><p>Load a previously saved pipeline from a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="greenguard.pipeline.GreenGuardPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X, readings)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="greenguard.pipeline.GreenGuardPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(target_times, readings)</p></td>
+<td><p>Make predictions using this pipeline.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.save" title="greenguard.pipeline.GreenGuardPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
-<td><p></p></td>
+<td><p>Serialize and save this pipeline using cloudpickle.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.set_hyperparameters" title="greenguard.pipeline.GreenGuardPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
-<td><p></p></td>
+<td><p>Set new hyperparameters for this pipeline instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.set_init_params" title="greenguard.pipeline.GreenGuardPipeline.set_init_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_init_params</span></code></a>(init_params)</p></td>
-<td><p></p></td>
+<td><p>Set new init params for the template and pipeline.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="greenguard.pipeline.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([X, y, readings, iterations])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="greenguard.pipeline.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([target_times, readings, iterations])</p></td>
+<td><p>Tune this pipeline for the indicated number of iterations.</p></td>
 </tr>
 </tbody>
 </table>
@@ -319,10 +303,142 @@
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.template">
+<code class="sig-name descname">template</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.template" title="Permalink to this definition">¶</a></dt>
+<dd><p>MLPipeline instance used as the template for tuning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>MLPipeline</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.template_name">
+<code class="sig-name descname">template_name</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.template_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the template being used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.fitted">
+<code class="sig-name descname">fitted</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.fitted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this GreenGuardPipeline has already been fitted or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.steps">
+<code class="sig-name descname">steps</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of primitives that compose this template.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.preprocessing">
+<code class="sig-name descname">preprocessing</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.preprocessing" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of preprocessing steps. These steps have no learning stage
+and are executed only once on the complete training dataset, before
+partitioning it for cross validation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.static">
+<code class="sig-name descname">static</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.static" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of static steps. These are all the steps in the pipeline that
+come after the preprocessing ones but have no hyperparameters.
+These are executed on each cross validation split only once, when
+the data is partitioned, and their output is cached to be reused
+later on at every tuning iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="greenguard.pipeline.GreenGuardPipeline.tunable">
+<code class="sig-name descname">tunable</code><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.tunable" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of steps that have hyperparameters and will be tuned during
+the tuning loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> (<em>str</em><em> or </em><em>MLPipeline</em>) – Template to use. If a <code class="docutils literal notranslate"><span class="pre">str</span></code> is given, load the corresponding
+<code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code>.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em> or </em><em>function</em>) – Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics
+defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary.</p></li>
+<li><p><strong>cost</strong> (<em>bool</em>) – Whether the metric is a cost function (the lower the better) or not.
+Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>init_params</strong> (<em>dict</em>) – Initial parameters to pass to the underlying MLPipeline if something
+other than the defaults need to be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>stratify</strong> (<em>bool</em>) – Whether to stratify the data when partitioning for cross validation.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>cv_splits</strong> (<em>int</em>) – Number of cross validation folds to use. Defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><strong>shuffle</strong> (<em>bool</em>) – Whether to shuffle the data when partitioning for cross validation.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em> or </em><em>RandomState</em>) – random state to use for the cross validation partitioning.
+Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>preprocessing</strong> (<em>int</em>) – Number of steps to execute during the preprocessing stage.
+The number of preprocessing steps cannot be higher than the
+number of static steps in the given template.
+Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.cross_validate">
 <code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compute cross validation score using the given data.</p>
+<p>If the splits have not been previously computed, compute them now.
+During this computation, the data is partitioned using the indicated
+cross validation parameters and later on processed using the
+pipeline static steps.</p>
+<p>The results of the fit and produce executions are cached and reused
+in subsequent calls to this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">target_times</span></code> data, without the <code class="docutils literal notranslate"><span class="pre">target</span></code> column.
+Only needed if the splits have not been previously computed.</p></li>
+<li><p><strong>y</strong> (<em>pandas.Series</em><em> or </em><em>numpy.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">target</span></code> vector corresponding to the passed <code class="docutils literal notranslate"><span class="pre">target_times</span></code>.
+Only needed if the splits have not been previously computed.</p></li>
+<li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table. Only needed if the splits have not been
+previously computed.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – hyperparameter values to use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Computed cross validation score. This score is the average
+of the scores obtained accross all the cross validation folds.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="greenguard.pipeline.GreenGuardPipeline.cv_score">
@@ -331,65 +447,166 @@
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit this pipeline to the given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table, containing the <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>, <code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>
+and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns.</p></li>
+<li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
-<dt id="greenguard.pipeline.GreenGuardPipeline.fitted">
-<code class="sig-name descname">fitted</code><em class="property"> = False</em><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.fitted" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">fitted</code><em class="property"> = False</em></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.get_hyperparameters">
 <code class="sig-name descname">get_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.get_hyperparameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.get_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the current hyperparameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Current hyperparameters.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.load">
 <em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.load" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load a previously saved pipeline from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the file where the pipeline is saved.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Loaded GreenGuardPipeline instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="greenguard.html#greenguard.GreenGuardPipeline" title="greenguard.GreenGuardPipeline">GreenGuardPipeline</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions using this pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table, containing the <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>, <code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>
+and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns.</p></li>
+<li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vector of predictions.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.save">
 <code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Serialize and save this pipeline using cloudpickle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the file where the pipeline will be saved.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.set_hyperparameters">
 <code class="sig-name descname">set_hyperparameters</code><span class="sig-paren">(</span><em class="sig-param">hyperparameters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.set_hyperparameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.set_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set new hyperparameters for this pipeline instance.</p>
+<p>The template <code class="docutils literal notranslate"><span class="pre">init_params</span></code> remain unmodified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hyperparameters</strong> (<em>dict</em>) – New hyperparameters to use.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.set_init_params">
 <code class="sig-name descname">set_init_params</code><span class="sig-paren">(</span><em class="sig-param">init_params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.set_init_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.set_init_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set new init params for the template and pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>init_params</strong> (<em>dict</em>) – New init_params to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">template</code><em class="property"> = None</em></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="greenguard.pipeline.GreenGuardPipeline.template">
-<code class="sig-name descname">template</code><em class="property"> = None</em><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.template" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="greenguard.pipeline.GreenGuardPipeline.template_name">
-<code class="sig-name descname">template_name</code><em class="property"> = None</em><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.template_name" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-name descname">template_name</code><em class="property"> = None</em></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.tune">
-<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tune this pipeline for the indicated number of iterations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table, containing the <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>, <code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>
+and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns.
+Only needed if the splits have not been previously computed.</p></li>
+<li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table. Only needed if the splits have not been
+previously computed.</p></li>
+<li><p><strong>iterations</strong> (<em>int</em>) – Number of iterations to perform.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="greenguard.pipeline.get_pipelines">
-<code class="sig-prename descclassname">greenguard.pipeline.</code><code class="sig-name descname">get_pipelines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#get_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.get_pipelines" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">greenguard.pipeline.</code><code class="sig-name descname">get_pipelines</code><span class="sig-paren">(</span><em class="sig-param">pattern=''</em>, <em class="sig-param">path=False</em>, <em class="sig-param">unstacked=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#get_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.get_pipelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of available pipelines.</p>
+<p>Optionally filter the names using a patter or obtain
+the paths to the pipelines alongside their name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Pattern to search for in the pipeline names</p></li>
+<li><p><strong>path</strong> (<em>bool</em>) – Whether to return a dictionary containing the pipeline
+paths instead of only a list with the names.</p></li>
+<li><p><strong>unstacked</strong> (<em>bool</em>) – Whether to load the pipelines that expect the readings
+to be already unstacked by signal_id. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of available and matching pipeline names.
+If <cite>path=True</cite>, return a dict containing the pipeline
+names as keys and their absolute paths as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list or dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 
@@ -401,7 +618,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.utils.html" class="btn btn-neutral float-right" title="greenguard.utils module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.targets.html" class="btn btn-neutral float-right" title="greenguard.targets module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="greenguard.metrics.html" class="btn btn-neutral float-left" title="greenguard.metrics module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

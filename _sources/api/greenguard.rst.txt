@@ -13,10 +13,11 @@ Submodules
 
 .. toctree::
 
-   greenguard.data
    greenguard.db
+   greenguard.demo
    greenguard.metrics
    greenguard.pipeline
+   greenguard.targets
    greenguard.utils
 
 Module contents

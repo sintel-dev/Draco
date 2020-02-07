@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>greenguard.targets &mdash; GreenGuard 0.1.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/GreenGuard.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> GreenGuard
+          
+
+          
+            
+            <img src="../../_static/GreenGuard-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">GreenGuard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#requirements">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#target-times">Target Times</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#csv-format">CSV Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#load-and-split-the-demo-data">1. Load and split the demo data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#exploring-the-available-pipelines">2. Exploring the available Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#fitting-the-pipeline">3. Fitting the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#make-predictions">4. Make predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#what-s-next">What’s next?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/greenguard.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.loaders.html">greenguard.loaders package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/greenguard.loaders.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/greenguard.loaders.html#module-greenguard.loaders">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.db.html">greenguard.db module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.demo.html">greenguard.demo module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.metrics.html">greenguard.metrics module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.targets.html">greenguard.targets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.utils.html">greenguard.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#module-greenguard">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#release-workflow">Release Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#release-candidates">Release Candidates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GreenGuard</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>greenguard.targets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for greenguard.targets</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Targets module.</span>
+
+<span class="sd">This module contains functions to work with target_times.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">trange</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="make_targets"><a class="viewcode-back" href="../../api/greenguard.targets.html#greenguard.targets.make_targets">[docs]</a><span class="k">def</span> <span class="nf">make_targets</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">new_targets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">target_times</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cutoff_times</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">cutoff_time</span>
+    <span class="n">window_size</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">original_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">)</span>
+    <span class="n">current_size</span> <span class="o">=</span> <span class="n">original_size</span>
+    <span class="n">new_targets</span> <span class="o">=</span> <span class="n">new_targets</span> <span class="ow">or</span> <span class="n">current_size</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">trange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cutoff_times</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">cutoff_times</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">next_time</span> <span class="o">=</span> <span class="n">cutoff_times</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="p">(</span><span class="n">window_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">next_time</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">span_start</span> <span class="o">=</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">window_size</span>
+        <span class="n">span_end</span> <span class="o">=</span> <span class="n">next_time</span> <span class="o">-</span> <span class="n">window_size</span>
+        <span class="n">span_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">span_end</span> <span class="o">-</span> <span class="n">span_start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+        <span class="n">delay</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">span_length</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+        <span class="n">cutoff_time</span> <span class="o">=</span> <span class="n">span_start</span> <span class="o">+</span> <span class="n">delay</span>
+
+        <span class="n">target_times</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span>
+            <span class="s1">&#39;turbine_id&#39;</span><span class="p">:</span> <span class="n">target_times</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">turbine_id</span><span class="p">,</span>
+            <span class="s1">&#39;cutoff_time&#39;</span><span class="p">:</span> <span class="n">cutoff_time</span><span class="p">,</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">target</span>
+        <span class="p">}),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">current_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">current_size</span> <span class="o">==</span> <span class="n">original_size</span> <span class="o">+</span> <span class="n">new_targets</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">target_times</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">current_size</span> <span class="o">==</span> <span class="n">original_size</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;There is no space left between to add more targets.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">target_times</span>
+
+    <span class="n">new_targets</span> <span class="o">=</span> <span class="n">new_targets</span> <span class="o">-</span> <span class="p">(</span><span class="n">current_size</span> <span class="o">-</span> <span class="n">original_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">make_targets</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">new_targets</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_to_timedelta</span><span class="p">(</span><span class="n">specification</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">specification</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">specification</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">specification</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">specification</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="make_target_times"><a class="viewcode-back" href="../../api/greenguard.targets.html#greenguard.targets.make_target_times">[docs]</a><span class="k">def</span> <span class="nf">make_target_times</span><span class="p">(</span><span class="n">failure_dates</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forecast_window</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                      <span class="n">prediction_window</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_true</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">max_false</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="ow">or</span> <span class="n">failure_dates</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="ow">or</span> <span class="n">failure_dates</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+    <span class="n">forecast_window</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">forecast_window</span><span class="p">)</span>
+    <span class="n">prediction_window</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">prediction_window</span><span class="p">)</span>
+    <span class="n">before</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">before</span><span class="p">)</span>
+    <span class="n">after</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">after</span><span class="p">)</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">_to_timedelta</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+
+    <span class="n">target_times</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">turbines</span> <span class="o">=</span> <span class="n">failure_dates</span><span class="o">.</span><span class="n">turbine_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">failures</span> <span class="o">=</span> <span class="n">failure_dates</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">turbine</span> <span class="ow">in</span> <span class="n">turbines</span><span class="p">:</span>
+        <span class="n">turbine_failures</span> <span class="o">=</span> <span class="n">failures</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">turbine</span><span class="p">]</span>
+
+        <span class="n">min_failure_date</span> <span class="o">=</span> <span class="n">turbine_failures</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">before</span>
+        <span class="n">last_failure_date</span> <span class="o">=</span> <span class="n">turbine_failures</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">after</span>
+        <span class="n">turbine_targets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">min_failure_date</span> <span class="o">&lt;</span> <span class="n">last_failure_date</span><span class="p">:</span>
+            <span class="n">max_failure_date</span> <span class="o">=</span> <span class="n">min_failure_date</span> <span class="o">+</span> <span class="n">prediction_window</span>
+            <span class="n">day_failures</span> <span class="o">=</span> <span class="n">turbine_failures</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">min_failure_date</span><span class="p">:</span><span class="n">max_failure_date</span><span class="p">]</span>
+
+            <span class="n">min_failure_date</span> <span class="o">=</span> <span class="n">min_failure_date</span> <span class="o">+</span> <span class="n">offset</span>
+
+            <span class="n">turbine_targets</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;turbine_id&#39;</span><span class="p">:</span> <span class="n">turbine</span><span class="p">,</span>
+                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">day_failures</span><span class="p">))),</span>
+                <span class="s1">&#39;cutoff_time&#39;</span><span class="p">:</span> <span class="n">min_failure_date</span> <span class="o">-</span> <span class="n">forecast_window</span>
+            <span class="p">})</span>
+
+        <span class="n">turbine_targets</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">turbine_targets</span><span class="p">)</span>
+        <span class="n">failed</span> <span class="o">=</span> <span class="n">turbine_targets</span><span class="p">[</span><span class="n">turbine_targets</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">target_times</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
+
+        <span class="n">non_failed</span> <span class="o">=</span> <span class="n">turbine_targets</span><span class="p">[</span><span class="n">turbine_targets</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">non_failed</span> <span class="o">=</span> <span class="n">non_failed</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">max_false</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_failed</span><span class="p">)))</span>
+
+        <span class="n">target_times</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">non_failed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
+        <span class="n">target_times</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">target_times</span></div>
+
+
+<span class="k">def</span> <span class="nf">_valid_targets</span><span class="p">(</span><span class="n">timestamps</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_function</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">cutoff_time</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">times</span> <span class="o">=</span> <span class="n">timestamps</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">turbine_id</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">times</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cutoff</span> <span class="o">&lt;</span> <span class="n">times</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">apply_function</span>
+
+
+<div class="viewcode-block" id="select_valid_targets"><a class="viewcode-back" href="../../api/greenguard.targets.html#greenguard.targets.select_valid_targets">[docs]</a><span class="k">def</span> <span class="nf">select_valid_targets</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">window_size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter out target_times without enough data for this window_size.</span>
+
+<span class="sd">    The table_times table is scanned and checked against the readings table</span>
+<span class="sd">    considering the window_size. All the target times entries that do not</span>
+<span class="sd">    have enough data are dropped.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target_times (pandas.DataFrame):</span>
+<span class="sd">            Target times table, with at least turbined_id and cutoff_time fields.</span>
+<span class="sd">        readings (pandas.DataFrame):</span>
+<span class="sd">            Readings table, with at least turbine_id, signal_id, and timestamp ields.</span>
+<span class="sd">        window_size (str or pandas.TimeDelta):</span>
+<span class="sd">            TimeDelta specification that indicates the lenght of the training window.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame:</span>
+<span class="sd">            New target_times table without the invalid targets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">timestamps</span> <span class="o">=</span> <span class="n">readings</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])</span>
+    <span class="n">timestamps</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">window_size</span><span class="p">)</span>
+
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_valid_targets</span><span class="p">(</span><span class="n">timestamps</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">valid_targets</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Dropped </span><span class="si">%s</span><span class="s1"> invalid targets&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_targets</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">valid_targets</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
