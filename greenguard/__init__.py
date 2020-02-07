@@ -8,7 +8,6 @@ __version__ = '0.1.1-dev'
 
 import os
 
-from greenguard.demo import load_demo
 from greenguard.pipeline import GreenGuardPipeline, get_pipelines
 
 _BASE_PATH = os.path.abspath(os.path.dirname(__file__))
