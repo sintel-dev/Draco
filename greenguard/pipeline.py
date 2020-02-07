@@ -22,7 +22,7 @@ LOGGER = logging.getLogger(__name__)
 PIPELINES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'pipelines'))
 
 
-def get_pipelines(pattern='', path=False):
+def get_pipelines(pattern='', path=False, unstacked=False):
     """Get the list of available pipelines.
 
     Optionally filter the names using a patter or obtain
@@ -34,6 +34,9 @@ def get_pipelines(pattern='', path=False):
         path (bool):
             Whether to return a dictionary containing the pipeline
             paths instead of only a list with the names.
+        unstacked (bool):
+            Whether to load the pipelines that expect the readings
+            to be already unstacked by signal_id. Defaults to ``False``.
 
     Return:
         list or dict:
@@ -42,7 +45,11 @@ def get_pipelines(pattern='', path=False):
             names as keys and their absolute paths as values.
     """
     pipelines = dict()
-    for filename in os.listdir(PIPELINES_DIR):
+    pipelines_dir = PIPELINES_DIR
+    if unstacked:
+        pipelines_dir = os.path.join(pipelines_dir, 'unstacked')
+
+    for filename in os.listdir(pipelines_dir):
         if filename.endswith('.json') and pattern in filename:
             name = os.path.basename(filename)[:-len('.json')]
             pipeline_path = os.path.join(PIPELINES_DIR, filename)
