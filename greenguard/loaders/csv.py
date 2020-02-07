@@ -4,16 +4,49 @@ import os
 import dask
 import pandas as pd
 
+from greenguard.targets import select_valid_targets
+
 LOGGER = logging.getLogger(__name__)
 
 
 class CSVLoader:
+    """Load the required readings from CSV files.
 
-    def __init__(self, readings_path='.', rule=None, aggregation='mean', unstack=True):
+    The CSVLoader class is responsible for analyzing the target_times table
+    and then load the required readings from CSV files.
+
+    Also, optionally, it can perform a resampling aggregation while loading
+    the data, reducing the amount of memory requirements.
+
+    The CSVLoader class uses Dask to parallelize all the IO and resampling
+    computation and reduce loading times.
+
+    Args:
+        readings_path (str):
+            Path to the readings folder, where a folder exist for each turbine.
+        rule (str):
+            Resampling rule, as expected by ``DataFrame.resmple``. The rule is a
+            string representation of a TimeDelta, which includes a number and a
+            unit. For example: ``3d``, ``1w``, ``6h``.
+            If ``None``, resampling is disabled.
+        aggregation (str):
+            Name of the aggregation to perform during the resampling.
+        unstack (bool):
+            Whether to unstack the resampled data, generating one column per signal.
+            Only used when resampling. Defaults to ``False``.
+    """
+
+    DEFAULT_DATETIME_FMT = '%m/%d/%y %M:%H:%S'
+    DEFAULT_FILENAME_FMT = '%Y-%m-.csv'
+
+    def __init__(self, readings_path='.', rule=None, aggregation='mean', unstack=False,
+                 datetime_fmt=DEFAULT_DATETIME_FMT, filename_fmt=DEFAULT_FILENAME_FMT):
         self._readings_path = readings_path
         self._rule = rule
         self._aggregation = aggregation
         self._unstack = unstack
+        self._datetime_fmt = datetime_fmt
+        self._filename_fmt = filename_fmt
 
     @dask.delayed
     def __filter_by_signal(self, readings, signals):
@@ -28,7 +61,7 @@ class CSVLoader:
     @dask.delayed
     def __filter_by_timestamp(self, readings, timestamps):
         LOGGER.debug('Parsing timestamps')
-        readings_ts = pd.to_datetime(readings['timestamp'], format='%m/%d/%y %H:%M:%S')
+        readings_ts = pd.to_datetime(readings['timestamp'], format=self._datetime_fmt)
         readings['timestamp'] = readings_ts
 
         LOGGER.debug('Filtering by timestamp')
@@ -76,10 +109,9 @@ class CSVLoader:
 
         return readings
 
-    @staticmethod
-    def _get_filenames(turbine_path, timestamps):
-        min_csv = timestamps.start.dt.strftime('%Y-%m-.csv')
-        max_csv = timestamps.stop.dt.strftime('%Y-%m-.csv')
+    def _get_filenames(self, turbine_path, timestamps):
+        min_csv = timestamps.start.dt.strftime(self._filename_fmt)
+        max_csv = timestamps.stop.dt.strftime(self._filename_fmt)
 
         for filename in sorted(os.listdir(turbine_path)):
             if ((min_csv <= filename) & (filename <= max_csv)).any():
@@ -138,7 +170,31 @@ class CSVLoader:
             'stop': cutoff_times,
         })
 
-    def load(self, target_times, window_size, signals=None, debug=False):
+    def load(self, target_times, window_size, signals=None, debug=False, select_valid=True):
+        """Load the readings needed for the given target_times and window_size.
+
+        Optionally filter the signals that are loaded and discard the rest.
+
+        Args:
+            target_times (str or pandas.DataFrame):
+                target_times ``DataFrame`` or path to the corresponding CSV file.
+                The table must have three volumns, ``turbine_id``, ``target`` and
+                ``cutoff_time``.
+            window_size (str):
+                Amount of data to load before each cutoff time, specified as a string
+                representation of a TimeDelta, which includes a number and a
+                unit. For example: ``3d``, ``1w``, ``6h``.
+            signals (list or pandas.DataFrame):
+                List of signal names or table that has a ``signal_id`` column to
+                use as the signal names list.
+            debug (bool):
+                Force single thread execution for easy debugging. Defaults to ``False``.
+
+        Returns:
+            pandas.DataFrame:
+                Table of readings for the target times, including the columns ``turbine_id``,
+                ``signal_id``, ``timestamp`` and ``value``.
+        """
         if isinstance(target_times, str):
             target_times = pd.read_csv(target_times)
             target_times['cutoff_time'] = pd.to_datetime(target_times['cutoff_time'])
@@ -155,8 +211,18 @@ class CSVLoader:
 
         dask_scheduler = 'single-threaded' if debug else None
         computed = dask.compute(*readings, scheduler=dask_scheduler)
-        readings = pd.concat((c for c in computed if len(c)), ignore_index=True, sort=False)
+
+        found_readings = [c for c in computed if len(c)]
+        if not found_readings:
+            msg = 'No readings found for the given target times in {}'.format(self._readings_path)
+            raise ValueError(msg)
+
+        readings = pd.concat(found_readings, ignore_index=True, sort=False)
 
         LOGGER.info('Loaded %s turbine readings', len(readings))
+
+        if select_valid:
+            target_times = select_valid_targets(target_times, readings, window_size)
+            return target_times, readings
 
         return readings

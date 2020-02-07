@@ -10,7 +10,7 @@
     ],
     "init_params": {
         "pandas.DataFrame.resample#1": {
-            "rule": "1h",
+            "rule": "600s",
             "on": "timestamp",
             "groupby": [
                 "turbine_id",
@@ -46,7 +46,7 @@
             "copy": true,
             "verbose": true,
             "n_jobs": 1,
-            "training_window": "3d"
+            "training_window": "1d"
         }
     },
     "input_names": {

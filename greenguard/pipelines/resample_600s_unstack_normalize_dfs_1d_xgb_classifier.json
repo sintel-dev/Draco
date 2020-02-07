@@ -1,0 +1,69 @@
+{
+    "primitives": [
+        "pandas.DataFrame.resample",
+        "pandas.DataFrame.unstack",
+        "featuretools.EntitySet.entity_from_dataframe",
+        "featuretools.EntitySet.normalize_entity",
+        "featuretools.dfs",
+        "mlprimitives.custom.feature_extraction.CategoricalEncoder",
+        "xgboost.XGBClassifier"
+    ],
+    "init_params": {
+        "pandas.DataFrame.resample#1": {
+            "rule": "600s",
+            "on": "timestamp",
+            "groupby": [
+                "turbine_id",
+                "signal_id"
+            ],
+            "aggregation": "mean",
+            "reset_index": false
+        },
+        "pandas.DataFrame.unstack#1": {
+            "level": "signal_id",
+            "reset_index": true
+        },
+        "featuretools.EntitySet.entity_from_dataframe#1": {
+            "entity_id": "readings",
+            "index": "reading_id",
+            "make_index": true,
+            "time_index": "timestamp"
+        },
+        "featuretools.EntitySet.normalize_entity#1": {
+            "base_entity_id": "readings",
+            "new_entity_id": "turbines",
+            "index": "turbine_id",
+            "make_time_index": false
+        },
+        "featuretools.dfs#1": {
+            "target_entity": "turbines",
+            "index": "turbine_id",
+            "time_index": "cutoff_time",
+            "encode": false,
+            "max_depth": -1,
+            "copy": true,
+            "verbose": true,
+            "n_jobs": 1,
+            "training_window": "1d"
+        }
+    },
+    "input_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        },
+        "featuretools.EntitySet.entity_from_dataframe#1": {
+            "dataframe": "readings"
+        }
+    },
+    "output_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        }
+    }
+}
