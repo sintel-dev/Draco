@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="greenguard package" href="api/greenguard.html" />
+    <link rel="next" title="Concepts" href="advanced_usage/concepts.html" />
     <link rel="prev" title="GreenGuard" href="index.html" /> 
 </head>
 
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#data-format">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#turbines">Turbines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#csv-format">CSV Format</a></li>
 </ul>
 </li>
@@ -100,6 +101,36 @@
 <li class="toctree-l2"><a class="reference internal" href="#make-predictions">4. Make predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#what-s-next">What’s next?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advanced_usage/concepts.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#primitive">Primitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#template">Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#pipeline">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#tuning">Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#greenguardpipeline">GreenGuardPipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_usage/csv.html">CSV Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/csv.html#raw-data-format">Raw Data Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_usage/docker.html">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#distributing-as-a-file">Distributing as a file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -272,7 +303,7 @@ the following command:</p>
 </div>
 <div class="section" id="data-format">
 <h1>Data Format<a class="headerlink" href="#data-format" title="Permalink to this headline">¶</a></h1>
-<p>The input expected by the <strong>GreenGuard</strong> system consists of the following two elements,
+<p>The minimum input expected by the <strong>GreenGuard</strong> system consists of the following two elements,
 which need to be passed as <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> objects:</p>
 <div class="section" id="target-times">
 <h2>Target Times<a class="headerlink" href="#target-times" title="Permalink to this headline">¶</a></h2>
@@ -419,13 +450,54 @@ only to make predictions and not to fit any pipeline.</p></li>
 </tbody>
 </table>
 </div>
+<div class="section" id="turbines">
+<h2>Turbines<a class="headerlink" href="#turbines" title="Permalink to this headline">¶</a></h2>
+<p>Optionally, a third table can be added containing metadata about the turbines.
+The only requirement for this table is to have a <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code> field, and it can have
+an arbitraty number of additional fields.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>turbine_id</p></th>
+<th class="head"><p>manufacturer</p></th>
+<th class="head"><p>…</p></th>
+<th class="head"><p>…</p></th>
+<th class="head"><p>…</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>T1</p></td>
+<td><p>Siemens</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>T2</p></td>
+<td><p>Siemens</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="csv-format">
 <h2>CSV Format<a class="headerlink" href="#csv-format" title="Permalink to this headline">¶</a></h2>
 <p>A part from the in-memory data format explained above, which is limited by the memory
 allocation capabilities of the system where it is run, <strong>GreenGuard</strong> is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
-<a class="reference external" href="https://D3-AI.github.io/GreenGuard/">project documentation site</a>.</p>
+<a class="reference external" href="https://d3-ai.github.io/GreenGuard/advanced_usage/csv.html">project documentation site</a>.</p>
 </div>
 </div>
 <div class="section" id="quickstart">
@@ -548,7 +620,8 @@ using any suitable metric.</p>
 <div class="section" id="what-s-next">
 <h2>What’s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
 <p>For more details about <strong>GreenGuard</strong> and all its possibilities and features, please check the
-<a class="reference external" href="https://D3-AI.github.io/GreenGuard/">project documentation site</a>!</p>
+<a class="reference external" href="https://D3-AI.github.io/GreenGuard/">project documentation site</a>
+Also do not forget to have a look at the <a class="reference external" href="https://github.com/D3-AI/GreenGuard/tree/master/notebooks">notebook tutorials</a>!</p>
 </div>
 </div>
 
@@ -560,7 +633,7 @@ using any suitable metric.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api/greenguard.html" class="btn btn-neutral float-right" title="greenguard package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="advanced_usage/concepts.html" class="btn btn-neutral float-right" title="Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="GreenGuard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

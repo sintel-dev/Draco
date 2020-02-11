@@ -88,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html#data-format">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#turbines">Turbines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#csv-format">CSV Format</a></li>
 </ul>
 </li>
@@ -98,6 +99,36 @@
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#make-predictions">4. Make predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../readme.html#what-s-next">What’s next?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/concepts.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/concepts.html#primitive">Primitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/concepts.html#template">Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/concepts.html#pipeline">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/concepts.html#tuning">Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/concepts.html#greenguardpipeline">GreenGuardPipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/csv.html">CSV Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/csv.html#raw-data-format">Raw Data Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/docker.html">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/docker.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/docker.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/docker.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/docker.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/docker.html#distributing-as-a-file">Distributing as a file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/docker.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/docker.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/docker.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -481,16 +512,18 @@
 
         <span class="k">return</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span>
 
-    <span class="k">def</span> <span class="nf">_generate_splits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_generate_splits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">:</span>
             <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Running </span><span class="si">%s</span><span class="s1"> preprocessing steps&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span><span class="p">)</span>
-            <span class="n">context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span>
+                                   <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">del</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
             <span class="k">del</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;readings&#39;</span><span class="p">:</span> <span class="n">readings</span>
+                <span class="s1">&#39;readings&#39;</span><span class="p">:</span> <span class="n">readings</span><span class="p">,</span>
+                <span class="s1">&#39;turbines&#39;</span><span class="p">:</span> <span class="n">turbines</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="n">splits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -509,7 +542,7 @@
 
         <span class="k">return</span> <span class="n">splits</span>
 
-<div class="viewcode-block" id="GreenGuardPipeline.cross_validate"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.cross_validate">[docs]</a>    <span class="k">def</span> <span class="nf">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.cross_validate"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.cross_validate">[docs]</a>    <span class="k">def</span> <span class="nf">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute cross validation score using the given data.</span>
 
 <span class="sd">        If the splits have not been previously computed, compute them now.</span>
@@ -530,6 +563,9 @@
 <span class="sd">            readings (pandas.DataFrame):</span>
 <span class="sd">                ``readings`` table. Only needed if the splits have not been</span>
 <span class="sd">                previously computed.</span>
+<span class="sd">            turbines (pandas.DataFrame):</span>
+<span class="sd">                ``turbines`` table. Only needed if the splits have not been</span>
+<span class="sd">                previously computed.</span>
 <span class="sd">            params (dict):</span>
 <span class="sd">                hyperparameter values to use.</span>
 
@@ -541,7 +577,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running static steps before cross validation&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="p">)</span>
 
         <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">y_test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_splits</span><span class="p">:</span>
@@ -625,7 +661,7 @@
 
         <span class="k">return</span> <span class="n">tuner</span>
 
-<div class="viewcode-block" id="GreenGuardPipeline.tune"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.tune"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tune this pipeline for the indicated number of iterations.</span>
 
 <span class="sd">        Args:</span>
@@ -636,6 +672,9 @@
 <span class="sd">            readings (pandas.DataFrame):</span>
 <span class="sd">                ``readings`` table. Only needed if the splits have not been</span>
 <span class="sd">                previously computed.</span>
+<span class="sd">            turbines (pandas.DataFrame):</span>
+<span class="sd">                ``turbines`` table. Only needed if the splits have not been</span>
+<span class="sd">                previously computed.</span>
 <span class="sd">            iterations (int):</span>
 <span class="sd">                Number of iterations to perform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -643,7 +682,7 @@
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Scoring the default pipeline&#39;</span><span class="p">)</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">]]</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="p">)</span>
 
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Default Pipeline score: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_score</span><span class="p">)</span>
 
@@ -671,7 +710,7 @@
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Caught an exception scoring pipeline </span><span class="si">%s</span><span class="s2"> with params:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                                  <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">failed</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit this pipeline to the given data.</span>
 
 <span class="sd">        Args:</span>
@@ -680,13 +719,15 @@
 <span class="sd">                and ``target`` columns.</span>
 <span class="sd">            readings (pandas.DataFrame):</span>
 <span class="sd">                ``readings`` table.</span>
+<span class="sd">            turbines (pandas.DataFrame):</span>
+<span class="sd">                ``turbines`` table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">]]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Make predictions using this pipeline.</span>
 
 <span class="sd">        Args:</span>
@@ -695,6 +736,8 @@
 <span class="sd">                and ``target`` columns.</span>
 <span class="sd">            readings (pandas.DataFrame):</span>
 <span class="sd">                ``readings`` table.</span>
+<span class="sd">            turbines (pandas.DataFrame):</span>
+<span class="sd">                ``turbines`` table.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            numpy.ndarray:</span>
@@ -704,7 +747,7 @@
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">()</span>
 
         <span class="n">X</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">]]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GreenGuardPipeline.save"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Serialize and save this pipeline using cloudpickle.</span>

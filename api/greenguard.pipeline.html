@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#turbines">Turbines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#csv-format">CSV Format</a></li>
 </ul>
 </li>
@@ -100,6 +101,36 @@
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#make-predictions">4. Make predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/concepts.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/concepts.html#primitive">Primitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/concepts.html#template">Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/concepts.html#pipeline">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/concepts.html#tuning">Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/concepts.html#greenguardpipeline">GreenGuardPipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/csv.html">CSV Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/csv.html#raw-data-format">Raw Data Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/docker.html">Docker Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/docker.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/docker.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/docker.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/docker.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/docker.html#distributing-as-a-file">Distributing as a file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/docker.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/docker.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/docker.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -262,10 +293,10 @@ cross validation.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.cross_validate" title="greenguard.pipeline.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>([X, y, readings, params])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.cross_validate" title="greenguard.pipeline.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>([X, y, readings, turbines, …])</p></td>
 <td><p>Compute cross validation score using the given data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="greenguard.pipeline.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(target_times, readings)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="greenguard.pipeline.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(target_times, readings[, turbines])</p></td>
 <td><p>Fit this pipeline to the given data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.get_hyperparameters" title="greenguard.pipeline.GreenGuardPipeline.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a>()</p></td>
@@ -274,7 +305,7 @@ cross validation.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.load" title="greenguard.pipeline.GreenGuardPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
 <td><p>Load a previously saved pipeline from a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="greenguard.pipeline.GreenGuardPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(target_times, readings)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="greenguard.pipeline.GreenGuardPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(target_times, readings[, turbines])</p></td>
 <td><p>Make predictions using this pipeline.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.save" title="greenguard.pipeline.GreenGuardPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
@@ -286,7 +317,7 @@ cross validation.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.set_init_params" title="greenguard.pipeline.GreenGuardPipeline.set_init_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_init_params</span></code></a>(init_params)</p></td>
 <td><p>Set new init params for the template and pipeline.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="greenguard.pipeline.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([target_times, readings, iterations])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="greenguard.pipeline.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([target_times, readings, turbines, …])</p></td>
 <td><p>Tune this pipeline for the indicated number of iterations.</p></td>
 </tr>
 </tbody>
@@ -410,7 +441,7 @@ Defaults to <code class="docutils literal notranslate"><span class="pre">0</span
 </dl>
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.cross_validate">
-<code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">turbines=None</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute cross validation score using the given data.</p>
 <p>If the splits have not been previously computed, compute them now.
 During this computation, the data is partitioned using the indicated
@@ -426,6 +457,8 @@ Only needed if the splits have not been previously computed.</p></li>
 <li><p><strong>y</strong> (<em>pandas.Series</em><em> or </em><em>numpy.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">target</span></code> vector corresponding to the passed <code class="docutils literal notranslate"><span class="pre">target_times</span></code>.
 Only needed if the splits have not been previously computed.</p></li>
 <li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table. Only needed if the splits have not been
+previously computed.</p></li>
+<li><p><strong>turbines</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table. Only needed if the splits have not been
 previously computed.</p></li>
 <li><p><strong>params</strong> (<em>dict</em>) – hyperparameter values to use.</p></li>
 </ul>
@@ -447,7 +480,7 @@ of the scores obtained accross all the cross validation folds.</p>
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">turbines=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit this pipeline to the given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -455,6 +488,7 @@ of the scores obtained accross all the cross validation folds.</p>
 <li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table, containing the <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>, <code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>
 and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns.</p></li>
 <li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table.</p></li>
+<li><p><strong>turbines</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table.</p></li>
 </ul>
 </dd>
 </dl>
@@ -498,7 +532,7 @@ and <code class="docutils literal notranslate"><span class="pre">target</span></
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">turbines=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make predictions using this pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -506,6 +540,7 @@ and <code class="docutils literal notranslate"><span class="pre">target</span></
 <li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">target_times</span></code> table, containing the <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>, <code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>
 and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns.</p></li>
 <li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table.</p></li>
+<li><p><strong>turbines</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -563,7 +598,7 @@ and <code class="docutils literal notranslate"><span class="pre">target</span></
 
 <dl class="method">
 <dt id="greenguard.pipeline.GreenGuardPipeline.tune">
-<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">turbines=None</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.pipeline.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tune this pipeline for the indicated number of iterations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -572,6 +607,8 @@ and <code class="docutils literal notranslate"><span class="pre">target</span></
 and <code class="docutils literal notranslate"><span class="pre">target</span></code> columns.
 Only needed if the splits have not been previously computed.</p></li>
 <li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">readings</span></code> table. Only needed if the splits have not been
+previously computed.</p></li>
+<li><p><strong>turbines</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table. Only needed if the splits have not been
 previously computed.</p></li>
 <li><p><strong>iterations</strong> (<em>int</em>) – Number of iterations to perform.</p></li>
 </ul>
