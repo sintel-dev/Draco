@@ -65,7 +65,7 @@ If you want to install from source or contribute to the project please read the
 
 # Data Format
 
-The input expected by the **GreenGuard** system consists of the following two elements,
+The minimum input expected by the **GreenGuard** system consists of the following two elements,
 which need to be passed as `pandas.DataFrame` objects:
 
 ## Target Times
@@ -109,13 +109,24 @@ A table containing the signal data from the different sensors, with the followin
 | 10 | T1           | S2          | 2001-01-03 00:00:00 |      11 |
 | 11 | T1           | S2          | 2001-01-03 12:00:00 |      12 |
 
+## Turbines
+
+Optionally, a third table can be added containing metadata about the turbines.
+The only requirement for this table is to have a `turbine_id` field, and it can have
+an arbitraty number of additional fields.
+
+|    | turbine_id   | manufacturer   | ...   | ...   | ...   |
+|----|--------------|----------------|-------|-------|-------|
+|  0 | T1           | Siemens        | ...   | ...   | ...   |
+|  1 | T2           | Siemens        | ...   | ...   | ...   |
+
 ## CSV Format
 
 A part from the in-memory data format explained above, which is limited by the memory
 allocation capabilities of the system where it is run, **GreenGuard** is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
-[project documentation site](https://D3-AI.github.io/GreenGuard/).
+[project documentation site](https://d3-ai.github.io/GreenGuard/advanced_usage/csv.html).
 
 # Quickstart
 
@@ -260,4 +271,6 @@ f1_score(test_targets, predictions)
 ## What's next?
 
 For more details about **GreenGuard** and all its possibilities and features, please check the
-[project documentation site](https://D3-AI.github.io/GreenGuard/)!
+[project documentation site](https://D3-AI.github.io/GreenGuard/)
+Also do not forget to have a look at the [notebook tutorials](
+https://github.com/D3-AI/GreenGuard/tree/master/notebooks)!
