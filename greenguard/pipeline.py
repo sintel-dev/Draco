@@ -184,7 +184,7 @@ class GreenGuardPipeline(object):
         self._update_params(template_params, init_params)
         self._build_pipeline()
 
-    def __init__(self, template, metric, cost=False, init_params=None, stratify=True,
+    def __init__(self, template, metric='accuracy', cost=False, init_params=None, stratify=True,
                  cv_splits=5, shuffle=True, random_state=0, preprocessing=0):
 
         self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)

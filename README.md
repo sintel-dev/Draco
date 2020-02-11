@@ -15,7 +15,9 @@ AutoML for Renewable Energy Industries.
 [![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
 [![Travis CI Shield](https://travis-ci.org/D3-AI/GreenGuard.svg?branch=master)](https://travis-ci.org/D3-AI/GreenGuard)
 [![Downloads](https://pepy.tech/badge/greenguard)](https://pepy.tech/project/greenguard)
+<!--
 [![Coverage Status](https://codecov.io/gh/D3-AI/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/D3-AI/GreenGuard)
+-->
 
 # GreenGuard
 
@@ -138,7 +140,7 @@ The first step is to load the demo data.
 
 For this, we will import and call the `greenguard.demo.load_demo` function without any arguments:
 
-```python
+```python3
 from greenguard.demo import load_demo
 
 target_times, readings = load_demo()
@@ -175,7 +177,7 @@ In this case, we will split them using the [train_test_split function from sciki
 https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html),
 but it can be done with any other suitable tool.
 
-```python
+```python3
 from sklearn.model_selection import train_test_split
 
 train, test = train_test_split(target_times, test_size=0.25, random_state=0)
@@ -189,7 +191,7 @@ the `train` and `test` inputs.
 Additionally, if we want to calculate a goodness-of-fit score later on, we can separate the
 testing target values from the `test` table by popping them from it:
 
-```python
+```python3
 test_targets = test.pop('target')
 ```
 
@@ -200,7 +202,7 @@ Once we have the data ready, we need to find a suitable pipeline.
 The list of available GreenGuard Pipelines can be obtained using the `greenguard.get_pipelines`
 function.
 
-```python
+```python3
 from greenguard import get_pipelines
 
 pipelines = get_pipelines()
@@ -222,7 +224,7 @@ available in the GreenGuard system:
 For the rest of this tutorial, we will select and use the pipeline
 `resample_600s_unstack_normalize_dfs_1d_xgb_classifier` as our template.
 
-```python
+```python3
 pipeline_name = 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier'
 ```
 
@@ -234,7 +236,7 @@ fit it.
 For this, we will create an instance of a `GreenGuardPipeline` object passing the name
 of the pipeline that we want to use:
 
-```python
+```python3
 from greenguard.pipeline import GreenGuardPipeline
 
 pipeline = GreenGuardPipeline(pipeline_name)
@@ -243,7 +245,7 @@ pipeline = GreenGuardPipeline(pipeline_name)
 And then we can directly fit it to our data by calling its `fit` method and passing in the
 training `target_times` and the complete `readings` table:
 
-```python
+```python3
 pipeline.fit(train, readings)
 ```
 
@@ -253,7 +255,7 @@ After fitting the pipeline, we are ready to make predictions on new data by call
 `pipeline.predict` method passing the testing `target_times` and, again, the complete
 `readings` table.
 
-```python
+```python3
 predictions = pipeline.predict(test, readings)
 ```
 
@@ -262,7 +264,7 @@ predictions = pipeline.predict(test, readings)
 Finally, after making predictions we can evaluate how good the prediction was
 using any suitable metric.
 
-```python
+```python3
 from sklearn.metrics import f1_score
 
 f1_score(test_targets, predictions)
