@@ -32,6 +32,7 @@ setup_requires = [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
+    'rundoc>=0.4.3'
 ]
 
 development_requires = [

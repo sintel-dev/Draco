@@ -106,6 +106,10 @@ fix-lint: ## fix lint issues using autoflake, autopep8, and isort
 test: ## run tests quickly with the default Python
 	python -m pytest --basetemp=${ENVTMPDIR} --cov=greenguard
 
+.PHONY: test-readme
+test-readme: ## run the readme snippets
+	rundoc run --single-session python3 -t python3 README.md
+
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
 	tox -r
