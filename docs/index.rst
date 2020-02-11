@@ -7,6 +7,14 @@
    Overview <readme>
 
 .. toctree::
+   :caption: Advanced Usage
+   :hidden:
+
+   advanced_usage/concepts
+   advanced_usage/csv
+   advanced_usage/docker
+
+.. toctree::
    :caption: Resources
    :hidden:
 

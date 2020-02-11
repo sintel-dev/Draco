@@ -268,16 +268,18 @@ class GreenGuardPipeline(object):
 
         return score > self.cv_score
 
-    def _generate_splits(self, X, y, readings):
+    def _generate_splits(self, X, y, readings, turbines=None):
         if self._preprocessing:
             pipeline = MLPipeline(self.template)
             LOGGER.debug('Running %s preprocessing steps', self._preprocessing)
-            context = pipeline.fit(X=X, y=y, readings=readings, output_=self._preprocessing - 1)
+            context = pipeline.fit(X=X, y=y, readings=readings,
+                                   turbines=turbines, output_=self._preprocessing - 1)
             del context['X']
             del context['y']
         else:
             context = {
-                'readings': readings
+                'readings': readings,
+                'turbines': turbines,
             }
 
         splits = list()
@@ -296,7 +298,7 @@ class GreenGuardPipeline(object):
 
         return splits
 
-    def cross_validate(self, X=None, y=None, readings=None, params=None):
+    def cross_validate(self, X=None, y=None, readings=None, turbines=None, params=None):
         """Compute cross validation score using the given data.
 
         If the splits have not been previously computed, compute them now.
@@ -317,6 +319,9 @@ class GreenGuardPipeline(object):
             readings (pandas.DataFrame):
                 ``readings`` table. Only needed if the splits have not been
                 previously computed.
+            turbines (pandas.DataFrame):
+                ``turbines`` table. Only needed if the splits have not been
+                previously computed.
             params (dict):
                 hyperparameter values to use.
 
@@ -328,7 +333,7 @@ class GreenGuardPipeline(object):
 
         if self._splits is None:
             LOGGER.info('Running static steps before cross validation')
-            self._splits = self._generate_splits(X, y, readings)
+            self._splits = self._generate_splits(X, y, readings, turbines)
 
         scores = []
         for fold, pipeline, fit, predict, y_test in self._splits:
@@ -412,7 +417,7 @@ class GreenGuardPipeline(object):
 
         return tuner
 
-    def tune(self, target_times=None, readings=None, iterations=10):
+    def tune(self, target_times=None, readings=None, turbines=None, iterations=10):
         """Tune this pipeline for the indicated number of iterations.
 
         Args:
@@ -423,6 +428,9 @@ class GreenGuardPipeline(object):
             readings (pandas.DataFrame):
                 ``readings`` table. Only needed if the splits have not been
                 previously computed.
+            turbines (pandas.DataFrame):
+                ``turbines`` table. Only needed if the splits have not been
+                previously computed.
             iterations (int):
                 Number of iterations to perform.
         """
@@ -430,7 +438,7 @@ class GreenGuardPipeline(object):
             LOGGER.info('Scoring the default pipeline')
             X = target_times[['turbine_id', 'cutoff_time']]
             y = target_times['target']
-            self.cv_score = self.cross_validate(X, y, readings)
+            self.cv_score = self.cross_validate(X, y, readings, turbines)
 
             LOGGER.info('Default Pipeline score: %s', self.cv_score)
 
@@ -458,7 +466,7 @@ class GreenGuardPipeline(object):
                 LOGGER.exception("Caught an exception scoring pipeline %s with params:\n%s",
                                  i + 1, failed)
 
-    def fit(self, target_times, readings):
+    def fit(self, target_times, readings, turbines=None):
         """Fit this pipeline to the given data.
 
         Args:
@@ -467,13 +475,15 @@ class GreenGuardPipeline(object):
                 and ``target`` columns.
             readings (pandas.DataFrame):
                 ``readings`` table.
+            turbines (pandas.DataFrame):
+                ``turbines`` table.
         """
         X = target_times[['turbine_id', 'cutoff_time']]
         y = target_times['target']
-        self._pipeline.fit(X, y, readings=readings)
+        self._pipeline.fit(X, y, readings=readings, turbines=turbines)
         self.fitted = True
 
-    def predict(self, target_times, readings):
+    def predict(self, target_times, readings, turbines=None):
         """Make predictions using this pipeline.
 
         Args:
@@ -482,6 +492,8 @@ class GreenGuardPipeline(object):
                 and ``target`` columns.
             readings (pandas.DataFrame):
                 ``readings`` table.
+            turbines (pandas.DataFrame):
+                ``turbines`` table.
 
         Returns:
             numpy.ndarray:
@@ -491,7 +503,7 @@ class GreenGuardPipeline(object):
             raise NotFittedError()
 
         X = target_times[['turbine_id', 'cutoff_time']]
-        return self._pipeline.predict(X, readings=readings)
+        return self._pipeline.predict(X, readings=readings, turbines=turbines)
 
     def save(self, path):
         """Serialize and save this pipeline using cloudpickle.

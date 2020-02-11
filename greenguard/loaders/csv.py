@@ -103,7 +103,7 @@ class CSVLoader:
             signals = readings[readings['value'].str.isnumeric()].signal_id.unique()
             raise ValueError('Signals contain non-numerical values: {}'.format(signals))
 
-        readings['turbine_id'] = turbine_id
+        readings.insert(0, 'turbine_id', turbine_id)
 
         LOGGER.info('Loaded %s readings from turbine %s', len(readings), turbine_id)
 

@@ -106,6 +106,7 @@ ENV/
 .*.swp
 
 greenguard/demo/
+notebooks/
 notebooks-private/
 scripts/
 dask-worker-space/
