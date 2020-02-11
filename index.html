@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GreenGuard &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>GreenGuard &mdash; GreenGuard 0.2.0.dev1 documentation</title>
   
 
   
@@ -177,7 +177,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="history.html#id1">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id1">0.2.0 - 2020-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id2">0.1.0</a></li>
 </ul>
 </li>
 </ul>
@@ -256,7 +257,9 @@ AutoML for Renewable Energy Industries.
 </p><a class="reference external image-reference" href="https://pypi.python.org/pypi/greenguard"><img alt="PyPI Shield" src="https://img.shields.io/pypi/v/greenguard.svg" /></a>
 <a class="reference external image-reference" href="https://travis-ci.org/D3-AI/GreenGuard"><img alt="Travis CI Shield" src="https://travis-ci.org/D3-AI/GreenGuard.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://pepy.tech/project/greenguard"><img alt="Downloads" src="https://pepy.tech/badge/greenguard" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/D3-AI/GreenGuard"><img alt="Coverage Status" src="https://codecov.io/gh/D3-AI/GreenGuard/branch/master/graph/badge.svg" /></a>
+<p><span class="raw-html-m2r"><!--
+[![Coverage Status](https://codecov.io/gh/D3-AI/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/D3-AI/GreenGuard)
+--></span></p>
 <div class="section" id="greenguard">
 <h1>GreenGuard<a class="headerlink" href="#greenguard" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
@@ -506,7 +509,7 @@ of data which it can work with. Further details about this format can be found i
 <h2>1. Load and split the demo data<a class="headerlink" href="#load-and-split-the-demo-data" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to load the demo data.</p>
 <p>For this, we will import and call the <code class="docutils literal notranslate"><span class="pre">greenguard.demo.load_demo</span></code> function without any arguments:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.demo</span> <span class="kn">import</span> <span class="n">load_demo</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.demo</span> <span class="kn">import</span> <span class="n">load_demo</span>
 
 <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span> <span class="o">=</span> <span class="n">load_demo</span><span class="p">()</span>
 </pre></div>
@@ -538,7 +541,7 @@ of data which it can work with. Further details about this format can be found i
 Pipeline, we will have split them in 2 partitions for training and testing.</p>
 <p>In this case, we will split them using the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">train_test_split function from scikit-learn</a>,
 but it can be done with any other suitable tool.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
@@ -549,7 +552,7 @@ This is because the pipelines will later on take care of selecting the parts of 
 the <code class="docutils literal notranslate"><span class="pre">train</span></code> and <code class="docutils literal notranslate"><span class="pre">test</span></code> inputs.</p>
 <p>Additionally, if we want to calculate a goodness-of-fit score later on, we can separate the
 testing target values from the <code class="docutils literal notranslate"><span class="pre">test</span></code> table by popping them from it:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_targets</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_targets</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -558,7 +561,7 @@ testing target values from the <code class="docutils literal notranslate"><span 
 <p>Once we have the data ready, we need to find a suitable pipeline.</p>
 <p>The list of available GreenGuard Pipelines can be obtained using the <code class="docutils literal notranslate"><span class="pre">greenguard.get_pipelines</span></code>
 function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard</span> <span class="kn">import</span> <span class="n">get_pipelines</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard</span> <span class="kn">import</span> <span class="n">get_pipelines</span>
 
 <span class="n">pipelines</span> <span class="o">=</span> <span class="n">get_pipelines</span><span class="p">()</span>
 </pre></div>
@@ -576,7 +579,7 @@ available in the GreenGuard system:</p>
 </div>
 <p>For the rest of this tutorial, we will select and use the pipeline
 <code class="docutils literal notranslate"><span class="pre">resample_600s_unstack_normalize_dfs_1d_xgb_classifier</span></code> as our template.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_name</span> <span class="o">=</span> <span class="s1">&#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline_name</span> <span class="o">=</span> <span class="s1">&#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -586,14 +589,14 @@ available in the GreenGuard system:</p>
 fit it.</p>
 <p>For this, we will create an instance of a <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> object passing the name
 of the pipeline that we want to use:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span>
 
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">GreenGuardPipeline</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And then we can directly fit it to our data by calling its <code class="docutils literal notranslate"><span class="pre">fit</span></code> method and passing in the
 training <code class="docutils literal notranslate"><span class="pre">target_times</span></code> and the complete <code class="docutils literal notranslate"><span class="pre">readings</span></code> table:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -602,7 +605,7 @@ training <code class="docutils literal notranslate"><span class="pre">target_tim
 <p>After fitting the pipeline, we are ready to make predictions on new data by calling the
 <code class="docutils literal notranslate"><span class="pre">pipeline.predict</span></code> method passing the testing <code class="docutils literal notranslate"><span class="pre">target_times</span></code> and, again, the complete
 <code class="docutils literal notranslate"><span class="pre">readings</span></code> table.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -610,7 +613,7 @@ training <code class="docutils literal notranslate"><span class="pre">target_tim
 <h2>5. Evaluate the goodness-of-fit<a class="headerlink" href="#evaluate-the-goodness-of-fit" title="Permalink to this headline">¶</a></h2>
 <p>Finally, after making predictions we can evaluate how good the prediction was
 using any suitable metric.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
 
 <span class="n">f1_score</span><span class="p">(</span><span class="n">test_targets</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>

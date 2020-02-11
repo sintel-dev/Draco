@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard package &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard package &mdash; GreenGuard 0.2.0.dev1 documentation</title>
   
 
   
@@ -178,7 +178,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../history.html#id1">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../history.html#id1">0.2.0 - 2020-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../history.html#id2">0.1.0</a></li>
 </ul>
 </li>
 </ul>
@@ -287,7 +288,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline" title="greenguard.GreenGuardPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code></a>(template, metric[, cost, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline" title="greenguard.GreenGuardPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code></a>(template[, metric, cost, …])</p></td>
 <td><p>Main Machine Learning component in the GreenGuard project.</p></td>
 </tr>
 </tbody>
@@ -306,7 +307,7 @@
 </table>
 <dl class="class">
 <dt id="greenguard.GreenGuardPipeline">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric='accuracy'</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main Machine Learning component in the GreenGuard project.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> represents the abstraction of a Machine

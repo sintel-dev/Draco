@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.pipeline &mdash; GreenGuard 0.1.1-dev documentation</title>
+  <title>greenguard.pipeline &mdash; GreenGuard 0.2.0.dev1 documentation</title>
   
 
   
@@ -176,7 +176,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../history.html#id1">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../history.html#id1">0.2.0 - 2020-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../history.html#id2">0.1.0</a></li>
 </ul>
 </li>
 </ul>
@@ -428,7 +429,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_params</span><span class="p">(</span><span class="n">template_params</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_build_pipeline</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">cv_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_cv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv</span><span class="p">(</span><span class="n">stratify</span><span class="p">,</span> <span class="n">cv_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>
