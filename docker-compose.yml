@@ -1,9 +1,11 @@
 version: '3'
 services:
-  greenguard:
+  jupyter:
     build:
       context: .
+      args:
+        - UID=${UID:-1000}
     ports:
     - "8888:8888"
     volumes:
-    - .:/greenguard
+    - .:/app

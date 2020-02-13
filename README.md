@@ -43,7 +43,9 @@ The salient aspects of this customized project are:
 * A robust continuous integration and testing infrastructure.
 * A ``learning database`` recording all past outcomes --> tasks, pipelines, outcomes.
 
-# Requirements
+# Install
+
+## Requirements
 
 **GreenGuard** has been developed and runs on Python 3.6 and 3.7.
 
@@ -51,7 +53,7 @@ Also, although it is not strictly required, the usage of a [virtualenv](
 https://virtualenv.pypa.io/en/latest/) is highly recommended in order to avoid interfering
 with other software installed in the system where you are trying to run **GreenGuard**.
 
-# Install
+## Download and Install
 
 **GreenGuard** can be installed locally using [pip](https://pip.pypa.io/en/stable/) with
 the following command:
@@ -64,6 +66,29 @@ This will pull and install the latest stable release from [PyPi](https://pypi.or
 
 If you want to install from source or contribute to the project please read the
 [Contributing Guide](https://d3-ai.github.io/GreenGuard/contributing.html#get-started).
+
+## Docker usage
+
+Alternatively, **GreenGuard** is prepared to be run inside a docker environment using
+`docker-compose`.
+
+For this, make sure to have both [docker](https://docs.docker.com/install/) and [docker-compose](
+https://docs.docker.com/compose/install/) installed on your system and then follow these steps:
+
+1. Clone this repository and go into the `GreenGuard` folder:
+
+```bash
+git clone git@github.com:D3-AI/GreenGuard.git
+cd GreenGuard
+```
+
+2. Start a Jupyter Notebook inside a docker container.
+
+```bash
+docker-compose up --build
+```
+
+3. Point your browser at http://127.0.0.1:8888
 
 # Data Format
 
