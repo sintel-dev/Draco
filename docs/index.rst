@@ -1,4 +1,4 @@
-.. mdinclude:: readme.rst
+.. include:: readme.rst
 
 .. toctree::
    :hidden:
@@ -10,12 +10,15 @@
    :caption: Advanced Usage
    :hidden:
 
-   API Reference <api/greenguard>
+   advanced_usage/concepts
+   advanced_usage/csv
+   advanced_usage/docker
 
 .. toctree::
-   :caption: Development Notes
+   :caption: Resources
    :hidden:
 
+   API Reference <api/greenguard>
    contributing
    authors
    history

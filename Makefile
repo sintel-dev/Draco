@@ -104,11 +104,15 @@ fix-lint: ## fix lint issues using autoflake, autopep8, and isort
 
 .PHONY: test
 test: ## run tests quickly with the default Python
-	python -m pytest
+	python -m pytest --basetemp=${ENVTMPDIR} --cov=greenguard
+
+.PHONY: test-readme
+test-readme: ## run the readme snippets
+	rundoc run --single-session python3 -t python3 README.md
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
-	tox
+	tox -r
 
 .PHONY: coverage
 coverage: ## check code coverage quickly with the default Python
@@ -122,7 +126,7 @@ coverage: ## check code coverage quickly with the default Python
 
 .PHONY: docs
 docs: clean-docs ## generate Sphinx HTML documentation, including API docs
-	sphinx-apidoc --module-first --separate -T -o docs/api/ greenguard
+	sphinx-apidoc --separate --no-toc -o docs/api/ greenguard
 	$(MAKE) -C docs html
 
 .PHONY: view-docs
@@ -152,7 +156,7 @@ publish: dist ## package and upload a release
 
 .PHONY: bumpversion-release
 bumpversion-release: ## Merge master to stable and bumpversion release
-	git checkout stable
+	git checkout stable || git checkout -b stable
 	git merge --no-ff master -m"make release-tag: Merge branch 'master' into stable"
 	bumpversion release
 	git push --tags origin stable
@@ -172,22 +176,33 @@ bumpversion-minor: ## Bump the version the next minor skipping the release
 bumpversion-major: ## Bump the version the next major skipping the release
 	bumpversion --no-tag major
 
-CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-CHANGELOG_LINES := $(shell git diff HEAD..stable HISTORY.md 2>/dev/null | wc -l)
+.PHONY: bumpversion-candidate
+bumpversion-candidate: ## Bump the version to the next candidate
+	bumpversion candidate --no-tag
 
-.PHONY: check-release
-check-release: ## Check if the release can be made
+CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
+CHANGELOG_LINES := $(shell git diff HEAD..origin/stable HISTORY.md 2>&1 | wc -l)
+
+.PHONY: check-master
+check-master: ## Check if we are in master branch
 ifneq ($(CURRENT_BRANCH),master)
 	$(error Please make the release from master branch\n)
 endif
+
+.PHONY: check-history
+check-history: ## Check if HISTORY.md has been modified
 ifeq ($(CHANGELOG_LINES),0)
 	$(error Please insert the release notes in HISTORY.md before releasing)
-else
-	@echo "A new release can be made"
 endif
+
+.PHONY: check-release
+check-release: check-master check-history ## Check if the release can be made
 
 .PHONY: release
 release: check-release bumpversion-release publish bumpversion-patch
+
+.PHONY: release-candidate
+release-candidate: check-master publish bumpversion-candidate
 
 .PHONY: release-minor
 release-minor: check-release bumpversion-minor release
@@ -203,8 +218,8 @@ docker-jupyter-clean: ## Remove the greenguard-jupyter docker image
 	docker rmi -f greenguard-jupyter
 
 .PHONY: docker-jupyter-build
-docker-jupyter-build: docker-jupyter-clean ## Build the greenguard-jupyter docker image using repo2docker
-	docker build -f docker/greenguard-jupyter.Dockerfile -t greenguard-jupyter .
+docker-jupyter-build:  ## Build the greenguard-jupyter docker image using repo2docker
+	docker build -t greenguard-jupyter .
 
 .PHONY: docker-jupyter-save
 docker-jupyter-save: docker-jupyter-build  ## Build the greenguard-jupyter image and save it as greenguard-jupyter.tar
@@ -216,11 +231,11 @@ docker-jupyter-load: ## Load the greenguard-jupyter image from greenguard-jupyte
 
 .PHONY: docker-jupyter-run
 docker-jupyter-run: ## Run the greenguard-jupyter image in editable mode
-	docker run --rm -v $(shell pwd):/app -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+	docker run --rm -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
 
 .PHONY: docker-jupyter-start
 docker-jupyter-start: ## Start the greenguard-jupyter image as a daemon
-	docker run --rm -d -v $(shell pwd):/app -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+	docker run --rm -d -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
 
 .PHONY: docker-jupyter-stop
 docker-jupyter-stop: ## Stop the greenguard-jupyter daemon

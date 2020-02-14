@@ -3,45 +3,49 @@
 
 """Tests for `greenguard.pipeline` module."""
 from unittest import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import patch
+
+import pandas as pd
 
 from greenguard.pipeline import GreenGuardPipeline
 
 
 class TestGreenGuardPipeline(TestCase):
-    """Tests for `TimeSeriesClassifier`."""
 
-    @patch('greenguard.pipeline.MLPipeline.from_dict')
-    def test_fit(self, from_dict_mock):
-        """fit prepare the pipeline to make predictions based on the given data."""
+    def _get_data(self):
+        target_times = pd.DataFrame({
+            'turbine_id': ['T001'],
+            'cutoff_time': [pd.Timestamp('2010-01-01')],
+            'target': [1]
+        })
+        readings = pd.DataFrame({
+            'turbine_id': ['T001'],
+            'timestamp': [pd.Timestamp('2010-01-01')],
+            'signal_id': ['S1'],
+            'value': [0.1]
+        })
+        return target_times, readings
 
-        # Setup
-        pipeline_mock = Mock()
-        from_dict_mock.return_value = pipeline_mock
+    @patch('greenguard.pipeline.MLPipeline')
+    @patch('greenguard.pipeline.load_pipeline')
+    def test_fit(self, load_pipeline_mock, mlpipeline_mock):
+        load_pipeline_mock.return_value = dict()
 
         # Run
-        instance = GreenGuardPipeline(dict(), 'accuracy')
-        instance.fit('an_X', 'a_y', {'some': 'tables'})
+        instance = GreenGuardPipeline('a_pipeline', 'accuracy')
+        target_times, readings = self._get_data()
+        instance.fit(target_times, readings)
 
         # Asserts
-        from_dict_mock.assert_called_once_with(dict())
-        assert instance._pipeline == pipeline_mock
-
-        pipeline_mock.fit.assert_called_once_with('an_X', 'a_y', entityset=None, some='tables')
-
         assert instance.fitted
 
-    @patch('greenguard.pipeline.MLPipeline.from_dict')
-    def test_predict(self, from_dict_mock):
-        """predict produces results using the pipeline."""
-        # Setup
-        pipeline_mock = Mock()
-        from_dict_mock.return_value = pipeline_mock
+    @patch('greenguard.pipeline.MLPipeline')
+    @patch('greenguard.pipeline.load_pipeline')
+    def test_predict(self, load_pipeline_mock, mlpipeline_mock):
+        load_pipeline_mock.return_value = dict()
 
         # Run
-        instance = GreenGuardPipeline(dict(), 'accuracy')
+        instance = GreenGuardPipeline('a_pipeline', 'accuracy')
         instance.fitted = True
-        instance.predict('an_X', {'some': 'tables'})
-
-        # Asserts
-        pipeline_mock.predict.assert_called_once_with('an_X', entityset=None, some='tables')
+        target_times, readings = self._get_data()
+        instance.predict(target_times, readings)

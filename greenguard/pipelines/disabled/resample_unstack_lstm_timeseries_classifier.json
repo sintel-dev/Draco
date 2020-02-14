@@ -1,0 +1,123 @@
+{
+    "primitives": [
+        "pandas.DataFrame.resample",
+        "pandas.DataFrame.unstack",
+        "pandas.DataFrame.pop",
+        "pandas.DataFrame.pop",
+        "sklearn.impute.SimpleImputer",
+        "sklearn.preprocessing.MinMaxScaler",
+        "pandas.DataFrame",
+        "pandas.DataFrame.set",
+        "pandas.DataFrame.set",
+        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
+        "keras.Sequential.LSTMTimeSeriesClassifier"
+    ],
+    "init_params": {
+        "pandas.DataFrame.resample#1": {
+            "rule": "600s",
+            "on": "timestamp",
+            "groupby": [
+                "turbine_id",
+                "signal_id"
+            ],
+            "aggregation": "mean",
+            "reset_index": false
+        },
+        "pandas.DataFrame.unstack#1": {
+            "level": "signal_id",
+            "reset_index": true
+        },
+        "pandas.DataFrame.pop#1": {
+            "item": "turbine_id"
+        },
+        "pandas.DataFrame.pop#2": {
+            "item": "timestamp"
+        },
+        "sklearn.preprocessing.MinMaxScaler#1": {
+            "feature_range": [
+                -1,
+                1
+            ]
+        },
+        "pandas.DataFrame#1": {
+            "index": null,
+            "columns": null
+        },
+        "pandas.DataFrame.set#1": {
+            "key": "turbine_id"
+        },
+        "pandas.DataFrame.set#2": {
+            "key": "timestamp"
+        },
+        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
+            "window_size": 144,
+            "cutoff_time": "cutoff_time",
+            "time_index": "timestamp"
+        },
+        "keras.Sequential.LSTMTimeSeriesClassifier": {
+            "epochs": 35,
+            "verbose": true,
+            "input_shape": [
+                144,
+                26
+            ]
+        }
+    },
+    "input_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.pop#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.pop#2": {
+            "X": "readings"
+        },
+        "sklearn.impute.SimpleImputer#1": {
+            "X": "readings"
+        },
+        "sklearn.preprocessing.MinMaxScaler#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.set#1": {
+            "X": "readings",
+            "value": "turbine_id"
+        },
+        "pandas.DataFrame.set#2": {
+            "X": "readings",
+            "value": "timestamp"
+        },
+        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
+            "timeseries": "readings"
+        }
+    },
+    "output_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.pop#1": {
+            "item": "turbine_id"
+        },
+        "pandas.DataFrame.pop#2": {
+            "item": "timestamp"
+        },
+        "sklearn.impute.SimpleImputer#1": {
+            "X": "readings"
+        },
+        "sklearn.preprocessing.MinMaxScaler#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame#1": {
+            "X": "readings"
+        }
+    }
+}

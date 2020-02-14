@@ -16,12 +16,13 @@ except IOError:
     history = ''
 
 install_requires = [
+    'mlblocks>=0.3.4,<0.4',
+    'mlprimitives>=0.2.4,<0.3',
     'baytune>=0.2.3,<0.3',
-    'mlblocks>=0.3.0,<0.4',
-    'mlprimitives>=0.1.8,<0.2',
     'numpy>=1.15.4,<1.17',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.20.1,<0.21',
+    'dask>=2.6.0,<3'
 ]
 
 setup_requires = [
@@ -29,34 +30,38 @@ setup_requires = [
 ]
 
 tests_require = [
-    'coverage>=4.5.1',
     'pytest>=3.4.2',
-    'tox>=2.9.1'
+    'pytest-cov>=2.6.0',
+    'rundoc>=0.4.3'
 ]
 
 development_requires = [
     # general
     'bumpversion>=0.5.3',
-    'pip>=10.0.0',
+    'pip>=9.0.1',
     'watchdog>=0.8.3',
 
     # docs
     'm2r>=0.2.0',
-    'Sphinx>=1.7.1',
+    'Sphinx>=1.7.1,<2.4',
     'sphinx_rtd_theme>=0.2.4',
-    'recommonmark>=0.4.0',
+    'autodocsumm>=0.1.10',
 
     # style check
-    'flake8>=3.5.0',
+    'flake8>=3.7.7',
     'isort>=4.3.4',
 
     # fix style issues
-    'autoflake>=1.1',
-    'autopep8>=1.3.5',
+    'autoflake>=1.2',
+    'autopep8>=1.4.3',
 
     # distribute on PyPI
     'twine>=1.10.0',
     'wheel>=0.30.0',
+
+    # Advanced testing
+    'coverage>=4.5.1',
+    'tox>=2.9.1',
 
     # Jupyter
     'jupyter>=1.0.0',
@@ -76,17 +81,19 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description=(
-        "The GreenGuard project is a collection of end-to-end solutions for machine"
-        " learning tasks commonly found in monitoring wind energy production systems."
-    ),
+    description="AutoML for Renewable Energy Industries.",
+    entry_points={
+        'mlblocks': [
+            'pipelines=greenguard:MLBLOCKS_PIPELINES'
+        ],
+    },
     extras_require={
         'test': tests_require,
         'dev': development_requires + tests_require,
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='wind machine learning green guard',
+    keywords='wind machine learning greenguard',
     license="MIT license",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
@@ -97,6 +104,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/D3-AI/GreenGuard',
-    version='0.1.0',
+    version='0.2.0.dev1',
     zip_safe=False,
 )

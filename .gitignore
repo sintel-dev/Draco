@@ -64,6 +64,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/api/
 
 # PyBuilder
 target/
@@ -101,7 +102,11 @@ ENV/
 # mypy
 .mypy_cache/
 
-# vim
+# Vim
 .*.swp
 
 greenguard/demo/
+notebooks/
+notebooks-private/
+scripts/
+dask-worker-space/
