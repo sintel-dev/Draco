@@ -84,8 +84,12 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">GreenGuard</a></li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#overview">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#requirements">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#install">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#download-and-install">Download and Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#docker-usage">Docker usage</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#data-format">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#readings">Readings</a></li>
@@ -286,14 +290,16 @@ vetted through testing across multiple publicly available datasets for the same 
 <li><p>A <code class="docutils literal notranslate"><span class="pre">learning</span> <span class="pre">database</span></code> recording all past outcomes –&gt; tasks, pipelines, outcomes.</p></li>
 </ul>
 </div>
+<div class="section" id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="requirements">
-<h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h1>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p><strong>GreenGuard</strong> has been developed and runs on Python 3.6 and 3.7.</p>
 <p>Also, although it is not strictly required, the usage of a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a> is highly recommended in order to avoid interfering
 with other software installed in the system where you are trying to run <strong>GreenGuard</strong>.</p>
 </div>
-<div class="section" id="install">
-<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="download-and-install">
+<h2>Download and Install<a class="headerlink" href="#download-and-install" title="Permalink to this headline">¶</a></h2>
 <p><strong>GreenGuard</strong> can be installed locally using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> with
 the following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install greenguard
@@ -302,6 +308,29 @@ the following command:</p>
 <p>This will pull and install the latest stable release from <a class="reference external" href="https://pypi.org/">PyPi</a>.</p>
 <p>If you want to install from source or contribute to the project please read the
 <a class="reference external" href="https://d3-ai.github.io/GreenGuard/contributing.html#get-started">Contributing Guide</a>.</p>
+</div>
+<div class="section" id="docker-usage">
+<h2>Docker usage<a class="headerlink" href="#docker-usage" title="Permalink to this headline">¶</a></h2>
+<p>Alternatively, <strong>GreenGuard</strong> is prepared to be run inside a docker environment using
+<code class="docutils literal notranslate"><span class="pre">docker-compose</span></code>.</p>
+<p>For this, make sure to have both <a class="reference external" href="https://docs.docker.com/install/">docker</a> and <a class="reference external" href="https://docs.docker.com/compose/install/">docker-compose</a> installed on your system and then follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Clone this repository and go into the <code class="docutils literal notranslate"><span class="pre">GreenGuard</span></code> folder:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:D3-AI/GreenGuard.git
+<span class="nb">cd</span> GreenGuard
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Start a Jupyter Notebook inside a docker container.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose up --build
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Point your browser at <a class="reference external" href="http://127.0.0.1:8888">http://127.0.0.1:8888</a></p></li>
+</ol>
+</div>
 </div>
 <div class="section" id="data-format">
 <h1>Data Format<a class="headerlink" href="#data-format" title="Permalink to this headline">¶</a></h1>
