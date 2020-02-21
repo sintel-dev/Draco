@@ -224,6 +224,8 @@ class GreenGuardPipeline(object):
         if self._preprocessing and (self._preprocessing > self._static):
             raise ValueError('Preprocessing cannot be bigger than static')
 
+        self.iterations = 0
+
     def __repr__(self):
         return (
             "GreenGuardPipeline({})\n"
@@ -444,7 +446,7 @@ class GreenGuardPipeline(object):
 
             self._tuner = self._get_tuner()
 
-        for i in range(iterations):
+        for i in range(self.iterations, self.iterations + iterations):
             LOGGER.info('Scoring pipeline %s', i + 1)
 
             params = self._tuner.propose(1)
