@@ -1,6 +1,7 @@
 version: '3'
 services:
   jupyter:
+    network_mode: host
     build:
       context: .
       args:

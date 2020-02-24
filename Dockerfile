@@ -7,8 +7,11 @@ RUN adduser jupyter --uid $UID --disabled-password --system
 
 RUN mkdir /app
 COPY setup.py /app
-RUN pip install -e /app && pip install jupyter
+RUN mkdir /app/greenguard
+COPY greenguard/__init__.py /app/greenguard
+RUN pip install -e /app jupyter
 
+RUN rm -r /app/greenguard
 COPY greenguard /app/greenguard
 COPY notebooks /app/notebooks
 
