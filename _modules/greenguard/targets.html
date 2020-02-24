@@ -368,12 +368,12 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">return</span> <span class="n">times</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">cutoff</span> <span class="o">&lt;</span> <span class="n">times</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">times</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">cutoff</span> <span class="o">&lt;=</span> <span class="n">times</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">apply_function</span>
 
 
-<div class="viewcode-block" id="select_valid_targets"><a class="viewcode-back" href="../../api/greenguard.targets.html#greenguard.targets.select_valid_targets">[docs]</a><span class="k">def</span> <span class="nf">select_valid_targets</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">window_size</span><span class="p">):</span>
+<div class="viewcode-block" id="select_valid_targets"><a class="viewcode-back" href="../../api/greenguard.targets.html#greenguard.targets.select_valid_targets">[docs]</a><span class="k">def</span> <span class="nf">select_valid_targets</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Filter out target_times without enough data for this window_size.</span>
 
 <span class="sd">    The table_times table is scanned and checked against the readings table</span>
@@ -387,6 +387,9 @@
 <span class="sd">            Readings table, with at least turbine_id, signal_id, and timestamp ields.</span>
 <span class="sd">        window_size (str or pandas.TimeDelta):</span>
 <span class="sd">            TimeDelta specification that indicates the lenght of the training window.</span>
+<span class="sd">        rule (str or pandas.TimeDelta):</span>
+<span class="sd">            Resampling rule specification. If given, add that to the max timestamp</span>
+<span class="sd">            to ensure the period is completely covered.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        pandas.DataFrame:</span>
@@ -396,12 +399,32 @@
     <span class="n">timestamps</span> <span class="o">=</span> <span class="n">readings</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])</span>
     <span class="n">timestamps</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">window_size</span><span class="p">)</span>
 
-    <span class="n">valid</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_valid_targets</span><span class="p">(</span><span class="n">timestamps</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">valid_targets</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timestamps</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
 
-    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Dropped </span><span class="si">%s</span><span class="s1"> invalid targets&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_targets</span><span class="p">))</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_valid_targets</span><span class="p">(</span><span class="n">timestamps</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">valid_targets</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_targets</span><span class="p">)</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Dropped </span><span class="si">%s</span><span class="s1"> targets without enough data. Final target_times size: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">)</span> <span class="o">-</span> <span class="n">length</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">valid_targets</span></div>
+
+
+<div class="viewcode-block" id="drop_duplicates"><a class="viewcode-back" href="../../api/greenguard.targets.html#greenguard.targets.drop_duplicates">[docs]</a><span class="k">def</span> <span class="nf">drop_duplicates</span><span class="p">(</span><span class="n">target_times</span><span class="p">):</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_times</span><span class="p">)</span>
+    <span class="n">filtered</span> <span class="o">=</span> <span class="n">target_times</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="n">new_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">length</span> <span class="o">!=</span> <span class="n">new_length</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Dropped </span><span class="si">%s</span><span class="s1"> duplicate targets!&#39;</span><span class="p">,</span> <span class="n">length</span> <span class="o">-</span> <span class="n">new_length</span><span class="p">)</span>
+
+    <span class="n">filtered</span> <span class="o">=</span> <span class="n">filtered</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">final_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">new_length</span> <span class="o">!=</span> <span class="n">final_length</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Dropped </span><span class="si">%s</span><span class="s1"> incoherent targets!&#39;</span><span class="p">,</span> <span class="n">new_length</span> <span class="o">-</span> <span class="n">final_length</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">filtered</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

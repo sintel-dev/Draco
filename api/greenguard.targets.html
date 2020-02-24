@@ -265,17 +265,25 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.targets.make_target_times" title="greenguard.targets.make_target_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_target_times</span></code></a>(failure_dates, step[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.targets.drop_duplicates" title="greenguard.targets.drop_duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drop_duplicates</span></code></a>(target_times)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.targets.make_targets" title="greenguard.targets.make_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_targets</span></code></a>(target_times, window_size, target)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.targets.make_target_times" title="greenguard.targets.make_target_times"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_target_times</span></code></a>(failure_dates, step[, …])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.targets.select_valid_targets" title="greenguard.targets.select_valid_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_valid_targets</span></code></a>(target_times, readings, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.targets.make_targets" title="greenguard.targets.make_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_targets</span></code></a>(target_times, window_size, target)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.targets.select_valid_targets" title="greenguard.targets.select_valid_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_valid_targets</span></code></a>(target_times, readings, …)</p></td>
 <td><p>Filter out target_times without enough data for this window_size.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="function">
+<dt id="greenguard.targets.drop_duplicates">
+<code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">drop_duplicates</code><span class="sig-paren">(</span><em class="sig-param">target_times</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#drop_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.drop_duplicates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="greenguard.targets.make_target_times">
 <code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">make_target_times</code><span class="sig-paren">(</span><em class="sig-param">failure_dates</em>, <em class="sig-param">step</em>, <em class="sig-param">start=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">forecast_window=0</em>, <em class="sig-param">prediction_window=0</em>, <em class="sig-param">before=0</em>, <em class="sig-param">after=0</em>, <em class="sig-param">offset=0</em>, <em class="sig-param">max_true=None</em>, <em class="sig-param">max_false=None</em>, <em class="sig-param">shuffle=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#make_target_times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.make_target_times" title="Permalink to this definition">¶</a></dt>
@@ -288,7 +296,7 @@
 
 <dl class="function">
 <dt id="greenguard.targets.select_valid_targets">
-<code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">select_valid_targets</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">window_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#select_valid_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.select_valid_targets" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">greenguard.targets.</code><code class="sig-name descname">select_valid_targets</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">window_size</em>, <em class="sig-param">rule=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/targets.html#select_valid_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.targets.select_valid_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter out target_times without enough data for this window_size.</p>
 <p>The table_times table is scanned and checked against the readings table
 considering the window_size. All the target times entries that do not
@@ -299,6 +307,8 @@ have enough data are dropped.</p>
 <li><p><strong>target_times</strong> (<em>pandas.DataFrame</em>) – Target times table, with at least turbined_id and cutoff_time fields.</p></li>
 <li><p><strong>readings</strong> (<em>pandas.DataFrame</em>) – Readings table, with at least turbine_id, signal_id, and timestamp ields.</p></li>
 <li><p><strong>window_size</strong> (<em>str</em><em> or </em><em>pandas.TimeDelta</em>) – TimeDelta specification that indicates the lenght of the training window.</p></li>
+<li><p><strong>rule</strong> (<em>str</em><em> or </em><em>pandas.TimeDelta</em>) – Resampling rule specification. If given, add that to the max timestamp
+to ensure the period is completely covered.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

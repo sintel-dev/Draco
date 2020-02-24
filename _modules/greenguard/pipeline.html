@@ -473,6 +473,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Preprocessing cannot be bigger than static&#39;</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="mi">0</span>
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="s2">&quot;GreenGuardPipeline(</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -693,7 +695,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tuner</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">+</span> <span class="n">iterations</span><span class="p">):</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Scoring pipeline </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
             <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuner</span><span class="o">.</span><span class="n">propose</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
