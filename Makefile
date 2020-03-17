@@ -240,3 +240,9 @@ docker-jupyter-start: ## Start the greenguard-jupyter image as a daemon
 .PHONY: docker-jupyter-stop
 docker-jupyter-stop: ## Stop the greenguard-jupyter daemon
 	docker stop greenguard-jupyter
+
+.PHONY: docker-jupyter-push
+docker-jupyter-push: docker-jupyter-build ## Push the docker image to Dockerhub
+	docker tag greenguard-jupyter:latest mlbazaar/greenguard:jupyter
+	docker push mlbazaar/greenguard:jupyter
+	docker push
