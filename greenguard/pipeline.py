@@ -371,7 +371,7 @@ class GreenGuardPipeline(object):
 
                 splits[template_name] = template_splits
 
-            cv_score = self._cross_validate(template_name, template_splits, config)
+            cv_score = self._cross_validate(template_splits, config)
 
             if self._is_better(cv_score):
                 self.cv_score = cv_score
@@ -420,7 +420,7 @@ class GreenGuardPipeline(object):
         if not template_name:
             template_name = self.template_name
             if hyperparams is None:
-                hyperparams = self.get_hyperparams()
+                hyperparams = self.get_hyperparameters()
 
         elif hyperparams is None:
             hyperparams = {}
