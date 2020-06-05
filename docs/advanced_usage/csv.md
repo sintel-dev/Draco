@@ -26,10 +26,10 @@ following structure:
     * `readings/T001`
     * `readings/T002`
     * ...
-* Inside each turbine folder one CSV file exists for each month, named `%Y-%m-.csv`.
-    * `readings/T001/2010-01-.csv`
-    * `readings/T001/2010-02-.csv`
-    * `readings/T001/2010-03-.csv`
+* Inside each turbine folder one CSV file exists for each month, named `%Y-%m.csv`.
+    * `readings/T001/2010-01.csv`
+    * `readings/T001/2010-02.csv`
+    * `readings/T001/2010-03.csv`
     * ...
 * Each CSV file contains three columns:
     * `signal_id`: name or id of the signal.
