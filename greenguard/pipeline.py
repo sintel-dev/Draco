@@ -142,10 +142,6 @@ class GreenGuardPipeline(object):
     _init_params = None
     _preprocessing = None
 
-    @staticmethod
-    def _clone_pipeline(pipeline):
-        return MLPipeline.from_dict(pipeline.to_dict())
-
     def _get_cv(self, stratify, cv_splits, shuffle, random_state):
         if stratify:
             cv_class = StratifiedKFold
@@ -298,7 +294,6 @@ class GreenGuardPipeline(object):
         y = target_times['target']
 
         if preprocessing:
-
             if preprocessing > static:
                 raise ValueError('Preprocessing cannot be bigger than static')
 
@@ -345,7 +340,6 @@ class GreenGuardPipeline(object):
         return np.mean(scores)
 
     def _make_btb_scorer(self, target_times, readings, turbines):
-
         splits = {}
 
         def scorer(template_name, config):
