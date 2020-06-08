@@ -257,7 +257,8 @@ class GreenGuardPipeline(object):
 
         for name, template in self._template_dicts.items():
             init_params = self._init_params.get(name, self._default_init_params)
-            self._update_params(template['init_params'], init_params)
+            template_params = template.setdefault('init_params', {})
+            self._update_params(template_params, init_params)
 
         self._generate_preprocessing(preprocessing)
         self._static = {
