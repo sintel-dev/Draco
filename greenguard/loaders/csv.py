@@ -37,7 +37,7 @@ class CSVLoader:
     """
 
     DEFAULT_DATETIME_FMT = '%m/%d/%y %H:%M:%S'
-    DEFAULT_FILENAME_FMT = '%Y-%m-.csv'
+    DEFAULT_FILENAME_FMT = '%Y-%m.csv'
 
     def __init__(self, readings_path='.', rule=None, aggregation='mean', unstack=False,
                  datetime_fmt=DEFAULT_DATETIME_FMT, filename_fmt=DEFAULT_FILENAME_FMT):
