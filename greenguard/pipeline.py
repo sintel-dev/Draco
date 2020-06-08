@@ -158,8 +158,8 @@ class GreenGuardPipeline(object):
         if self._init_params is None:
             return {}
 
-        elif any(name in self._init_params for name in list(self.template_names.keys())):
-            return self._init_params.get(template_name)
+        elif any(name in self._init_params for name in list(self.templates.keys())):
+            return self._init_params.get(template_name) or {}
 
         return self._init_params
 
@@ -167,8 +167,8 @@ class GreenGuardPipeline(object):
         self._hyperparameters = deepcopy(new_hyperparameters)
 
     def _set_template(self, template_name):
-        self.template_name = deepcopy(template_name)
-        self.template = self.templates[self.template_name]
+        self.template_name = template_name
+        self.template = self._template_dicts[self.template_name]
 
     def _get_preprocessing(self, template_name):
         if isinstance(self._preprocessing, int):
@@ -189,25 +189,8 @@ class GreenGuardPipeline(object):
             for param, value in params.items():
                 block_params[param] = value
 
-    def _build_pipeline(self):
-        template_params = self.template.setdefault('init_params', dict())
-        for name, params in list(template_params.items()):
-            if '#' not in name:
-                template_params[name + '#1'] = template_params.pop(name)
-
-        init_params = self._get_init_params(self.template_name)
-        if init_params:
-            self._update_params(template_params, init_params)
-
-        self._pipeline = MLPipeline(self.template)
-
-        if self._hyperparameters:
-            self._pipeline.set_hyperparameters(self._hyperparameters)
-
-        self.fitted = False
-
-    @staticmethod
-    def _count_static_steps(pipeline):
+    def _count_static_steps(self, template_name):
+        pipeline = MLPipeline(self._template_dicts.get(template_name))
         tunable_hyperparams = pipeline.get_tunable_hyperparameters()
         for index, block_name in enumerate(pipeline.blocks.keys()):
             if tunable_hyperparams[block_name]:
@@ -215,14 +198,9 @@ class GreenGuardPipeline(object):
 
         return 0
 
-    @staticmethod
-    def _get_templates(template):
-        if not isinstance(template, list):
-            templates = [template]
-        else:
-            templates = template
-
-        templates_dict = dict()
+    def _get_templates(self, templates):
+        template_dicts = dict()
+        template_names = list()
         for template in templates:
             if isinstance(template, str):
                 template_name = template
@@ -230,59 +208,70 @@ class GreenGuardPipeline(object):
             else:
                 template_name = md5(json.dumps(template)).digest()
 
-            templates_dict[template_name] = template
+            init_params = self._init_params.get(template_name, self._default_init_params)
+            self._update_params(template['init_params'], init_params)
+            template_dicts[template_name] = template
+            template_names.append(template_name)
 
-        return templates_dict
+        return template_names, template_dicts
 
-    def __init__(self, template, metric='accuracy', cost=False, init_params=None, stratify=True,
+    def _generate_init_params(self, init_params):
+        if not init_params:
+            self._init_params = {}
+        elif isinstance(init_params, list):
+            self._init_params = dict(zip(self._template_names, init_params))
+        elif any(name in init_params for name in self._template_names):
+            self._init_params = init_params
+
+    def _generate_preprocessing(self, preprocessing):
+        if isinstance(preprocessing, int):
+            self._preprocessing = {name: preprocessing for name in self._template_names}
+        else:
+            if isinstance(preprocessing, list):
+                preprocessing = dict(zip(self._temlpate_names, preprocessing))
+
+            self._preprocessing = {
+                name: preprocessing.get(name, 0)
+                for name in self._template_names
+            }
+
+    def _build_pipeline(self):
+        self._pipeline = MLPipeline(self.template)
+
+        if self._hyperparameters:
+            self._pipeline.set_hyperparameters(self._hyperparameters)
+
+        self.fitted = False
+
+    def __init__(self, templates, metric='accuracy', cost=False, init_params=None, stratify=True,
                  cv_splits=5, shuffle=True, random_state=0, preprocessing=0):
-
-        self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)
 
         if isinstance(metric, str):
             metric, cost = METRICS[metric]
 
         self._metric = metric
         self._cost = cost
-        self._init_params = init_params
-        self._preprocessing = preprocessing
-
+        self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)
         self.cv_score = np.inf if cost else -np.inf
 
-        self.templates = self._get_templates(template)
-        self._set_template(list(self.templates.keys())[0])
+        if not isinstance(templates, list):
+            templates = [templates]
 
+        self._default_init_params = {}
+        self._generate_init_params(init_params)
+
+        self.templates = templates
+        self._template_names, self._template_dicts = self._get_templates(templates)
+
+        self._generate_preprocessing(preprocessing)
+        self._static = {
+            name: self._count_static_steps(name)
+            for name in self._template_names
+        }
+
+        self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()
-
-        _static = self._count_static_steps(self._pipeline)
-        _preprocessing = self._get_preprocessing(self.template_name)
-
-        if _preprocessing and (_preprocessing > _static):
-            raise ValueError('Preprocessing cannot be bigger than static')
-
-        self.iterations = 0
-
-    def __repr__(self):
-        steps = self._pipeline.primitives.copy()
-        preprocessing = self._get_preprocessing(self.template_name)
-        static = self._count_static_steps()
-
-        preprocessing_steps = steps[:preprocessing]
-        static_steps = steps[preprocessing:static]
-        tunable_steps = steps[static:]
-
-        return (
-            "GreenGuardPipeline({})\n"
-            "  preprocessing:\n{}\n"
-            "  static:\n{}\n"
-            "  tunable:\n{}\n"
-        ).format(
-            self.template_name,
-            '\n'.join('    {}'.format(step) for step in preprocessing_steps),
-            '\n'.join('    {}'.format(step) for step in static_steps),
-            '\n'.join('    {}'.format(step) for step in tunable_steps),
-        )
 
     def get_hyperparameters(self):
         """Get the current hyperparameters.
@@ -300,14 +289,13 @@ class GreenGuardPipeline(object):
         return score > self.cv_score
 
     def _generate_splits(self, template_name, target_times, readings, turbines=None):
-        template = self.templates.get(template_name)
+        template = self._template_dicts.get(template_name)
+        pipeline = MLPipeline(template)
+        preprocessing = self._preprocessing.get(template_name)
+        static = self._static.get(template_name)
 
         X = target_times[['turbine_id', 'cutoff_time']]
         y = target_times['target']
-
-        pipeline = MLPipeline(template)
-        preprocessing = self._get_preprocessing(template_name)
-        static = self._count_static_steps(pipeline)
 
         if preprocessing:
 
@@ -354,16 +342,13 @@ class GreenGuardPipeline(object):
             LOGGER.debug('Fold fold %s score: %s', fold, score)
             scores.append(score)
 
-        cv_score = np.mean(scores)
-
-        return cv_score
+        return np.mean(scores)
 
     def _make_btb_scorer(self, target_times, readings, turbines):
 
         splits = {}
 
         def scorer(template_name, config):
-
             template_splits = splits.get(template_name)
             if template_splits is None:
                 template_splits = self._generate_splits(
@@ -372,11 +357,16 @@ class GreenGuardPipeline(object):
                 splits[template_name] = template_splits
 
             cv_score = self._cross_validate(template_splits, config)
-
             if self._is_better(cv_score):
+                _config = '\n'.join('      {}: {}'.format(n, v) for n, v in config.items())
+                LOGGER.info(('New configuration found:\n'
+                             '  Template: %s \n'
+                             '    Hyperparameters: \n'
+                             '%s'), template_name, _config)
+
                 self.cv_score = cv_score
                 self._set_template(template_name)
-                self._set_hyperparameters(deepcopy(config))
+                self._set_hyperparameters(config)
                 self._build_pipeline()
 
             return cv_score
@@ -416,7 +406,6 @@ class GreenGuardPipeline(object):
                 Computed cross validation score. This score is the average
                 of the scores obtained accross all the cross validation folds.
         """
-
         if not template_name:
             template_name = self.template_name
             if hyperparams is None:
@@ -428,37 +417,18 @@ class GreenGuardPipeline(object):
         template_splits = self._generate_splits(template_name, target_times, readings, turbines)
         return self._cross_validate(template_splits, hyperparams)
 
-    @staticmethod
-    def _parse_params(param_details):
-        param_type = param_details['type']
-        param_details['type'] = 'str' if param_type == 'string' else param_type
-
-        if param_details['type'] == 'bool':
-            param_details['range'] = [True, False]
-        else:
-            param_details['range'] = param_details.get('range') or param_details.get('values')
-
-        if 'default' not in param_details:
-            param_details['default'] = param_details['range'][0]
-
-        return param_details
-
     @classmethod
-    def _get_tunables(cls, templates):
-        pipelines = {name: MLPipeline(template) for name, template in templates.items()}
+    def _get_tunables(cls, template_dicts):
         tunables = {}
-
-        for pipeline_name, pipeline in pipelines.items():
-            pipeline_tunables = {}
-            for name, param_details in pipeline.get_tunable_hyperparameters(flat=True).items():
-                pipeline_tunables[name] = cls._parse_params(param_details)
-
-            tunables[pipeline_name] = Tunable.from_dict(pipeline_tunables)
+        for name, template in template_dicts.items():
+            pipeline = MLPipeline(template)
+            pipeline_tunables = pipeline.get_tunable_hyperparameters(flat=True)
+            tunables[name] = Tunable.from_dict(pipeline_tunables)
 
         return tunables
 
-    def tune(self, target_times, readings, turbines=None, iterations=10):
-        """Tune this pipeline for the indicated number of iterations.
+    def tune(self, target_times, readings, turbines=None):
+        """Create a tuning session object that tunes and selects the templates.
 
         Args:
             target_times (pandas.DataFrame):
@@ -471,16 +441,10 @@ class GreenGuardPipeline(object):
             turbines (pandas.DataFrame):
                 ``turbines`` table. Only needed if the splits have not been
                 previously computed.
-            iterations (int):
-                Number of iterations to perform.
         """
         scoring_function = self._make_btb_scorer(target_times, readings, turbines)
-        tunables = self._get_tunables(self.templates)
-        session = BTBSession(tunables, scoring_function, maximize=not self._cost)
-        if iterations:
-            session.run(iterations)
-
-        return session
+        tunables = self._get_tunables(self._template_dicts)
+        return BTBSession(tunables, scoring_function, maximize=not self._cost)
 
     def fit(self, target_times, readings, turbines=None):
         """Fit this pipeline to the given data.
