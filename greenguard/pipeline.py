@@ -207,9 +207,6 @@ class GreenGuardPipeline(object):
                 template = load_pipeline(template_name)
             else:
                 template_name = md5(json.dumps(template)).digest()
-
-            init_params = self._init_params.get(template_name, self._default_init_params)
-            self._update_params(template['init_params'], init_params)
             template_dicts[template_name] = template
             template_names.append(template_name)
 
@@ -228,7 +225,7 @@ class GreenGuardPipeline(object):
             self._preprocessing = {name: preprocessing for name in self._template_names}
         else:
             if isinstance(preprocessing, list):
-                preprocessing = dict(zip(self._temlpate_names, preprocessing))
+                preprocessing = dict(zip(self._template_names, preprocessing))
 
             self._preprocessing = {
                 name: preprocessing.get(name, 0)
@@ -257,11 +254,14 @@ class GreenGuardPipeline(object):
         if not isinstance(templates, list):
             templates = [templates]
 
+        self.templates = templates
+        self._template_names, self._template_dicts = self._get_templates(templates)
         self._default_init_params = {}
         self._generate_init_params(init_params)
 
-        self.templates = templates
-        self._template_names, self._template_dicts = self._get_templates(templates)
+        for name, template in self._template_dicts.items():
+            init_params = self._init_params.get(name, self._default_init_params)
+            self._update_params(template['init_params'], init_params)
 
         self._generate_preprocessing(preprocessing)
         self._static = {
