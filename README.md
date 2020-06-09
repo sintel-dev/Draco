@@ -13,17 +13,17 @@ AutoML for Renewable Energy Industries.
 
 
 [![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
-[![Travis CI Shield](https://travis-ci.org/D3-AI/GreenGuard.svg?branch=master)](https://travis-ci.org/D3-AI/GreenGuard)
+[![Travis CI Shield](https://travis-ci.org/signals-dev/GreenGuard.svg?branch=master)](https://travis-ci.org/signals-dev/GreenGuard)
 [![Downloads](https://pepy.tech/badge/greenguard)](https://pepy.tech/project/greenguard)
 <!--
-[![Coverage Status](https://codecov.io/gh/D3-AI/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/D3-AI/GreenGuard)
+[![Coverage Status](https://codecov.io/gh/signals-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/signals-dev/GreenGuard)
 -->
 
 # GreenGuard
 
-- License: [MIT](https://github.com/D3-AI/GreenGuard/blob/master/LICENSE)
-- Documentation: https://D3-AI.github.io/GreenGuard
-- Homepage: https://github.com/D3-AI/GreenGuard
+- License: [MIT](https://github.com/signals-dev/GreenGuard/blob/master/LICENSE)
+- Documentation: https://signals-dev.github.io/GreenGuard
+- Homepage: https://github.com/signals-dev/GreenGuard
 
 # Overview
 
@@ -65,7 +65,7 @@ pip install greenguard
 This will pull and install the latest stable release from [PyPi](https://pypi.org/).
 
 If you want to install from source or contribute to the project please read the
-[Contributing Guide](https://d3-ai.github.io/GreenGuard/contributing.html#get-started).
+[Contributing Guide](https://signals-dev.github.io/GreenGuard/contributing.html#get-started).
 
 ## Docker usage
 
@@ -78,7 +78,7 @@ https://docs.docker.com/compose/install/) installed on your system and then foll
 1. Clone this repository and go into the `GreenGuard` folder:
 
 ```bash
-git clone git@github.com:D3-AI/GreenGuard.git
+git clone git@github.com:signals-dev/GreenGuard.git
 cd GreenGuard
 ```
 
@@ -153,7 +153,7 @@ A part from the in-memory data format explained above, which is limited by the m
 allocation capabilities of the system where it is run, **GreenGuard** is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
-[project documentation site](https://d3-ai.github.io/GreenGuard/advanced_usage/csv.html).
+[project documentation site](https://signals-dev.github.io/GreenGuard/advanced_usage/csv.html).
 
 # Quickstart
 
@@ -298,6 +298,6 @@ f1_score(test_targets, predictions)
 ## What's next?
 
 For more details about **GreenGuard** and all its possibilities and features, please check the
-[project documentation site](https://D3-AI.github.io/GreenGuard/)
+[project documentation site](https://signals-dev.github.io/GreenGuard/)
 Also do not forget to have a look at the [notebook tutorials](
-https://github.com/D3-AI/GreenGuard/tree/master/notebooks)!
+https://github.com/signals-dev/GreenGuard/tree/master/notebooks)!
