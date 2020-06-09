@@ -150,30 +150,12 @@ class GreenGuardPipeline(object):
 
         return cv_class(n_splits=cv_splits, shuffle=shuffle, random_state=random_state)
 
-    def _get_init_params(self, template_name):
-        if self._init_params is None:
-            return {}
-
-        elif any(name in self._init_params for name in list(self.templates.keys())):
-            return self._init_params.get(template_name) or {}
-
-        return self._init_params
-
     def _set_hyperparameters(self, new_hyperparameters):
         self._hyperparameters = deepcopy(new_hyperparameters)
 
     def _set_template(self, template_name):
         self.template_name = template_name
         self.template = self._template_dicts[self.template_name]
-
-    def _get_preprocessing(self, template_name):
-        if isinstance(self._preprocessing, int):
-            return self._preprocessing
-
-        if isinstance(self._preprocessing, dict):
-            return self._preprocessing.get(template_name) or 0
-
-        return 0  # by default
 
     @staticmethod
     def _update_params(old, new):
@@ -185,8 +167,7 @@ class GreenGuardPipeline(object):
             for param, value in params.items():
                 block_params[param] = value
 
-    def _count_static_steps(self, template_name):
-        pipeline = MLPipeline(self._template_dicts.get(template_name))
+    def _count_static_steps(self, pipeline):
         tunable_hyperparams = pipeline.get_tunable_hyperparameters()
         for index, block_name in enumerate(pipeline.blocks.keys()):
             if tunable_hyperparams[block_name]:
@@ -261,11 +242,6 @@ class GreenGuardPipeline(object):
             self._update_params(template_params, init_params)
 
         self._generate_preprocessing(preprocessing)
-        self._static = {
-            name: self._count_static_steps(name)
-            for name in self._template_names
-        }
-
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()
@@ -289,8 +265,7 @@ class GreenGuardPipeline(object):
         template = self._template_dicts.get(template_name)
         pipeline = MLPipeline(template)
         preprocessing = self._preprocessing.get(template_name)
-        static = self._static.get(template_name)
-
+        static = self._count_static_steps(pipeline)
         X = target_times[['turbine_id', 'cutoff_time']]
         y = target_times['target']
 
