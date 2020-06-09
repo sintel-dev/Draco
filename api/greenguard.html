@@ -292,7 +292,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline" title="greenguard.GreenGuardPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code></a>(template[, metric, cost, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline" title="greenguard.GreenGuardPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code></a>(templates[, metric, …])</p></td>
 <td><p>Main Machine Learning component in the GreenGuard project.</p></td>
 </tr>
 </tbody>
@@ -311,7 +311,7 @@
 </table>
 <dl class="class">
 <dt id="greenguard.GreenGuardPipeline">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">metric='accuracy'</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">metric='accuracy'</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main Machine Learning component in the GreenGuard project.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> represents the abstraction of a Machine
@@ -327,7 +327,7 @@ cross validation.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cross_validate" title="greenguard.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>([X, y, readings, turbines, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cross_validate" title="greenguard.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>(target_times, readings, turbines)</p></td>
 <td><p>Compute cross validation score using the given data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.fit" title="greenguard.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(target_times, readings[, turbines])</p></td>
@@ -345,14 +345,8 @@ cross validation.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.save" title="greenguard.GreenGuardPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
 <td><p>Serialize and save this pipeline using cloudpickle.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.set_hyperparameters" title="greenguard.GreenGuardPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
-<td><p>Set new hyperparameters for this pipeline instance.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.set_init_params" title="greenguard.GreenGuardPipeline.set_init_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_init_params</span></code></a>(init_params)</p></td>
-<td><p>Set new init params for the template and pipeline.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>([target_times, readings, turbines, …])</p></td>
-<td><p>Tune this pipeline for the indicated number of iterations.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(target_times, readings[, turbines])</p></td>
+<td><p>Create a tuning session object that tunes and selects the templates.</p></td>
 </tr>
 </tbody>
 </table>
@@ -475,7 +469,7 @@ Defaults to <code class="docutils literal notranslate"><span class="pre">0</span
 </dl>
 <dl class="method">
 <dt id="greenguard.GreenGuardPipeline.cross_validate">
-<code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">turbines=None</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">turbines</em>, <em class="sig-param">template_name=None</em>, <em class="sig-param">hyperparams=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute cross validation score using the given data.</p>
 <p>If the splits have not been previously computed, compute them now.
 During this computation, the data is partitioned using the indicated
@@ -597,29 +591,6 @@ and <code class="docutils literal notranslate"><span class="pre">target</span></
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="greenguard.GreenGuardPipeline.set_hyperparameters">
-<code class="sig-name descname">set_hyperparameters</code><span class="sig-paren">(</span><em class="sig-param">hyperparameters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.set_hyperparameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.set_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set new hyperparameters for this pipeline instance.</p>
-<p>The template <code class="docutils literal notranslate"><span class="pre">init_params</span></code> remain unmodified.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>hyperparameters</strong> (<em>dict</em>) – New hyperparameters to use.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="greenguard.GreenGuardPipeline.set_init_params">
-<code class="sig-name descname">set_init_params</code><span class="sig-paren">(</span><em class="sig-param">init_params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.set_init_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.set_init_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set new init params for the template and pipeline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>init_params</strong> (<em>dict</em>) – New init_params to use.</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
 <dt>
 <code class="sig-name descname">template</code><em class="property"> = None</em></dt>
@@ -632,8 +603,8 @@ and <code class="docutils literal notranslate"><span class="pre">target</span></
 
 <dl class="method">
 <dt id="greenguard.GreenGuardPipeline.tune">
-<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">turbines=None</em>, <em class="sig-param">iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tune this pipeline for the indicated number of iterations.</p>
+<code class="sig-name descname">tune</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">turbines=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.tune"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.tune" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a tuning session object that tunes and selects the templates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -644,7 +615,6 @@ Only needed if the splits have not been previously computed.</p></li>
 previously computed.</p></li>
 <li><p><strong>turbines</strong> (<em>pandas.DataFrame</em>) – <code class="docutils literal notranslate"><span class="pre">turbines</span></code> table. Only needed if the splits have not been
 previously computed.</p></li>
-<li><p><strong>iterations</strong> (<em>int</em>) – Number of iterations to perform.</p></li>
 </ul>
 </dd>
 </dl>
