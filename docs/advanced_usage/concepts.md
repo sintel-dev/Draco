@@ -38,8 +38,8 @@ https://hdi-project.github.io/MLBlocks), or using the **GreenGuardPipeline**.
 
 ## Tuning
 
-We call tuning the process of, given a dataset and a template, finding the pipeline derived from
-the template that gets the best possible score on the dataset.
+We call tuning the process of, given a dataset and a collection of templates, finding the pipeline
+derived from the templates that gets the best possible score on the dataset.
 
 This process usually involves fitting and evaluating multiple pipelines with different
 hyperparameter configurations on the same data while using optimization algorithms to deduce
@@ -47,23 +47,15 @@ which hyperparameters are more likely to get the best results in the next iterat
 
 We call each one of these evaluations a **tuning iteration**.
 
-## Tuning Session
-
-We call tuning session to the [BTBSession](
-https://hdi-project.github.io/BTB/tutorials/03_Session.html) instance generated for a given
-collection of templates and data. This tuning session searches for the best solution for the
-tuning problem by performing tuning and selection over the given templates, evaluating wich
-template to try next according to their previous score using a [Multi-armed Bandit](
-https://en.wikipedia.org/wiki/Multi-armed_bandit) aproach.
-
-The tuning session is in charge of discarding the templates that are not useful, updating the
-best template to be used and it's hyperparameters that have generated the best score for the
-given data.
+The process of selecting and tuning the templates is handled by a [BTBSession](
+https://hdi-project.github.io/BTB/tutorials/03_Session.html), which is responsible for
+discarding the templates that do not work on the given data and for keeping
+track of the template and hyperparameters that obtain the best performance.
 
 ## GreenGuardPipeline
 
 This class is the one in charge of loading the **MLBlocks Pipelines** configured in the
 system and use them to learn from the data and make predictions.
 
-This class is also responsible for creating the tuning session with [BTB](
-https://hdi-project.github.io/BTB/)
+This class is also responsible for creating the BTBSession that will handle the
+selection and tuning of the templates.
