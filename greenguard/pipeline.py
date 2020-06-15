@@ -97,18 +97,22 @@ class GreenGuardPipeline(object):
             the tuning loop.
 
     Args:
-        template (str or MLPipeline):
+        templates (str, MLPipeline or list):
             Template to use. If a ``str`` is given, load the corresponding
-            ``MLPipeline``.
+            ``MLPipeline``. Also can be a list combining both.
         metric (str or function):
             Metric to use. If an ``str`` is give it must be one of the metrics
             defined in the ``greenguard.metrics.METRICS`` dictionary.
         cost (bool):
             Whether the metric is a cost function (the lower the better) or not.
             Defaults to ``False``.
-        init_params (dict):
+        init_params (dict or list):
             Initial parameters to pass to the underlying MLPipeline if something
-            other than the defaults need to be used.
+            other than the defaults need to be used. If a single dict is given
+            it will be used for all the templates. If is a list of dicts, those
+            will be matched by position with the templates. If a dict that has
+            as keys the name of the templates and as values a dict with init
+            params, those will be used for each corresponding template.
             Defaults to ``None``.
         stratify (bool):
             Whether to stratify the data when partitioning for cross validation.
@@ -121,10 +125,13 @@ class GreenGuardPipeline(object):
         random_state (int or RandomState):
             random state to use for the cross validation partitioning.
             Defaults to ``0``.
-        preprocessing (int):
+        preprocessing (int, dict or list):
             Number of steps to execute during the preprocessing stage.
             The number of preprocessing steps cannot be higher than the
-            number of static steps in the given template.
+            number of static steps in the given template. If is a list of ints,
+            those will be matched by position with the templates. If a dict that
+            has as keys the name of the templates and as values a int those will be
+            used for each corresponding template.
             Defaults to ``0``.
     """
 

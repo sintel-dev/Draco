@@ -47,10 +47,23 @@ which hyperparameters are more likely to get the best results in the next iterat
 
 We call each one of these evaluations a **tuning iteration**.
 
+## Tuning Session
+
+We call tuning session to the [BTBSession](
+https://hdi-project.github.io/BTB/tutorials/03_Session.html) instance generated for a given
+collection of templates and data. This tuning session searches for the best solution for the
+tuning problem by performing tuning and selection over the given templates, evaluating wich
+template to try next according to their previous score using a [Multi-armed Bandit](
+https://en.wikipedia.org/wiki/Multi-armed_bandit) aproach.
+
+The tuning session is in charge of discarding the templates that are not useful, updating the
+best template to be used and it's hyperparameters that have generated the best score for the
+given data.
+
 ## GreenGuardPipeline
 
 This class is the one in charge of loading the **MLBlocks Pipelines** configured in the
 system and use them to learn from the data and make predictions.
 
-This class is also responsible for tuning the pipeline hyperparameters using [BTB](
+This class is also responsible for creating the tuning session with [BTB](
 https://hdi-project.github.io/BTB/)
