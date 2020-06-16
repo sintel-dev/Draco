@@ -97,18 +97,24 @@ class GreenGuardPipeline(object):
             the tuning loop.
 
     Args:
-        template (str or MLPipeline):
+        templates (str, MLPipeline or list):
             Template to use. If a ``str`` is given, load the corresponding
-            ``MLPipeline``.
+            ``MLPipeline``. Also can be a list combining both.
         metric (str or function):
             Metric to use. If an ``str`` is give it must be one of the metrics
             defined in the ``greenguard.metrics.METRICS`` dictionary.
         cost (bool):
             Whether the metric is a cost function (the lower the better) or not.
             Defaults to ``False``.
-        init_params (dict):
-            Initial parameters to pass to the underlying MLPipeline if something
-            other than the defaults need to be used.
+        init_params (dict or list):
+            There are three possible values for init_params:
+
+                * Init params ``dict``: It will be used for all templates.
+                * ``dict`` with the name of the template as a key and dictionary with its
+                  init params.
+                * ``list``: each value will be assigned to the corresponding position of
+                  self.templates.
+
             Defaults to ``None``.
         stratify (bool):
             Whether to stratify the data when partitioning for cross validation.
@@ -121,10 +127,15 @@ class GreenGuardPipeline(object):
         random_state (int or RandomState):
             random state to use for the cross validation partitioning.
             Defaults to ``0``.
-        preprocessing (int):
-            Number of steps to execute during the preprocessing stage.
-            The number of preprocessing steps cannot be higher than the
-            number of static steps in the given template.
+        preprocessing (int, dict or list):
+            There are three possible values for preprocessing:
+
+                * ``int``: the value will be used for all templates.
+                * ``dict`` with the template name as a key and a number as a value, will
+                  be used for that template.
+                * ``list``: each value will be assigned to the corresponding position of
+                  self.templates.
+
             Defaults to ``0``.
     """
 
