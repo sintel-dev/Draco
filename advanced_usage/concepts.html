@@ -292,18 +292,22 @@ hyperparameters of their template.</p></li>
 </div>
 <div class="section" id="tuning">
 <h2>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h2>
-<p>We call tuning the process of, given a dataset and a template, finding the pipeline derived from
-the template that gets the best possible score on the dataset.</p>
+<p>We call tuning the process of, given a dataset and a collection of templates, finding the pipeline
+derived from the templates that gets the best possible score on the dataset.</p>
 <p>This process usually involves fitting and evaluating multiple pipelines with different
 hyperparameter configurations on the same data while using optimization algorithms to deduce
 which hyperparameters are more likely to get the best results in the next iterations.</p>
 <p>We call each one of these evaluations a <strong>tuning iteration</strong>.</p>
+<p>The process of selecting and tuning the templates is handled by a <a class="reference external" href="https://hdi-project.github.io/BTB/tutorials/03_Session.html">BTBSession</a>, which is responsible for
+discarding the templates that do not work on the given data and for keeping
+track of the template and hyperparameters that obtain the best performance.</p>
 </div>
 <div class="section" id="greenguardpipeline">
 <h2>GreenGuardPipeline<a class="headerlink" href="#greenguardpipeline" title="Permalink to this headline">¶</a></h2>
 <p>This class is the one in charge of loading the <strong>MLBlocks Pipelines</strong> configured in the
 system and use them to learn from the data and make predictions.</p>
-<p>This class is also responsible for tuning the pipeline hyperparameters using <a class="reference external" href="https://hdi-project.github.io/BTB/">BTB</a></p>
+<p>This class is also responsible for creating the BTBSession that will handle the
+selection and tuning of the templates.</p>
 </div>
 </div>
 

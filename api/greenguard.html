@@ -444,15 +444,24 @@ the tuning loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>template</strong> (<em>str</em><em> or </em><em>MLPipeline</em>) – Template to use. If a <code class="docutils literal notranslate"><span class="pre">str</span></code> is given, load the corresponding
-<code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code>.</p></li>
+<li><p><strong>templates</strong> (<em>str</em><em>, </em><em>MLPipeline</em><em> or </em><em>list</em>) – Template to use. If a <code class="docutils literal notranslate"><span class="pre">str</span></code> is given, load the corresponding
+<code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code>. Also can be a list combining both.</p></li>
 <li><p><strong>metric</strong> (<em>str</em><em> or </em><em>function</em>) – Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics
 defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary.</p></li>
 <li><p><strong>cost</strong> (<em>bool</em>) – Whether the metric is a cost function (the lower the better) or not.
 Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>init_params</strong> (<em>dict</em>) – Initial parameters to pass to the underlying MLPipeline if something
-other than the defaults need to be used.
-Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>init_params</strong> (<em>dict</em><em> or </em><em>list</em>) – <p>There are three possible values for init_params:</p>
+<blockquote>
+<div><ul>
+<li><p>Init params <code class="docutils literal notranslate"><span class="pre">dict</span></code>: It will be used for all templates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> with the name of the template as a key and dictionary with its
+init params.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>: each value will be assigned to the corresponding position of
+self.templates.</p></li>
+</ul>
+</div></blockquote>
+<p>Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</p></li>
 <li><p><strong>stratify</strong> (<em>bool</em>) – Whether to stratify the data when partitioning for cross validation.
 Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p><strong>cv_splits</strong> (<em>int</em>) – Number of cross validation folds to use. Defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
@@ -460,10 +469,18 @@ Defaults to <code class="docutils literal notranslate"><span class="pre">True</s
 Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p><strong>random_state</strong> (<em>int</em><em> or </em><em>RandomState</em>) – random state to use for the cross validation partitioning.
 Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
-<li><p><strong>preprocessing</strong> (<em>int</em>) – Number of steps to execute during the preprocessing stage.
-The number of preprocessing steps cannot be higher than the
-number of static steps in the given template.
-Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>preprocessing</strong> (<em>int</em><em>, </em><em>dict</em><em> or </em><em>list</em>) – <p>There are three possible values for preprocessing:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span></code>: the value will be used for all templates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> with the template name as a key and a number as a value, will
+be used for that template.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>: each value will be assigned to the corresponding position of
+self.templates.</p></li>
+</ul>
+</div></blockquote>
+<p>Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</p></li>
 </ul>
 </dd>
 </dl>
