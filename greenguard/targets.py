@@ -119,12 +119,12 @@ def _valid_targets(timestamps):
         except KeyError:
             return False
 
-        return times['min'] < cutoff < times['max']
+        return times['min'] <= cutoff <= times['max']
 
     return apply_function
 
 
-def select_valid_targets(target_times, readings, window_size):
+def select_valid_targets(target_times, readings, window_size, rule=None):
     """Filter out target_times without enough data for this window_size.
 
     The table_times table is scanned and checked against the readings table
@@ -138,6 +138,9 @@ def select_valid_targets(target_times, readings, window_size):
             Readings table, with at least turbine_id, signal_id, and timestamp ields.
         window_size (str or pandas.TimeDelta):
             TimeDelta specification that indicates the lenght of the training window.
+        rule (str or pandas.TimeDelta):
+            Resampling rule specification. If given, add that to the max timestamp
+            to ensure the period is completely covered.
 
     Returns:
         pandas.DataFrame:
@@ -147,9 +150,29 @@ def select_valid_targets(target_times, readings, window_size):
     timestamps = readings.groupby('turbine_id').timestamp.agg(['min', 'max'])
     timestamps['min'] += pd.to_timedelta(window_size)
 
-    valid = target_times.apply(_valid_targets(timestamps), axis=1)
-    valid_targets = target_times[valid].copy()
+    if rule is not None:
+        timestamps['max'] += pd.to_timedelta(rule)
 
-    LOGGER.info('Dropped %s invalid targets', len(target_times) - len(valid_targets))
+    valid = target_times.apply(_valid_targets(timestamps), axis=1)
+    valid_targets = target_times[valid]
+
+    length = len(valid_targets)
+    LOGGER.info('Dropped %s targets without enough data. Final target_times size: %s',
+                len(target_times) - length, length)
 
     return valid_targets
+
+
+def drop_duplicates(target_times):
+    length = len(target_times)
+    filtered = target_times.drop_duplicates()
+    new_length = len(filtered)
+    if length != new_length:
+        LOGGER.warn('Dropped %s duplicate targets!', length - new_length)
+
+    filtered = filtered.drop_duplicates(subset=['turbine_id', 'cutoff_time'], keep=False)
+    final_length = len(filtered)
+    if new_length != final_length:
+        LOGGER.warn('Dropped %s incoherent targets!', new_length - final_length)
+
+    return filtered.copy()

@@ -61,8 +61,8 @@ def generate_raw_readings(output_path='demo'):
         data = readings[readings.turbine_id == turbine_id]
         for month in range(1, 13):
             month_data = data[data.timestamp.dt.month == month].copy()
-            month_data['timestamp'] = month_data['timestamp'].dt.strftime('%m/%d/%y %M:%H:%S')
-            month_path = os.path.join(turbine_path, '2013-{:02d}-.csv'.format(month))
+            month_data['timestamp'] = month_data['timestamp'].dt.strftime('%m/%d/%y %H:%M:%S')
+            month_path = os.path.join(turbine_path, '2013-{:02d}.csv'.format(month))
             LOGGER.info('Generating file %s', month_path)
             month_data[['signal_id', 'timestamp', 'value']].to_csv(month_path, index=False)
 

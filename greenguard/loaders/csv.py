@@ -4,7 +4,7 @@ import os
 import dask
 import pandas as pd
 
-from greenguard.targets import select_valid_targets
+from greenguard.targets import drop_duplicates, select_valid_targets
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,8 +36,8 @@ class CSVLoader:
             Only used when resampling. Defaults to ``False``.
     """
 
-    DEFAULT_DATETIME_FMT = '%m/%d/%y %M:%H:%S'
-    DEFAULT_FILENAME_FMT = '%Y-%m-.csv'
+    DEFAULT_DATETIME_FMT = '%m/%d/%y %H:%M:%S'
+    DEFAULT_FILENAME_FMT = '%Y-%m.csv'
 
     def __init__(self, readings_path='.', rule=None, aggregation='mean', unstack=False,
                  datetime_fmt=DEFAULT_DATETIME_FMT, filename_fmt=DEFAULT_FILENAME_FMT):
@@ -53,6 +53,12 @@ class CSVLoader:
         if signals is not None:
             LOGGER.debug('Filtering by signal')
             readings = readings[readings.signal_id.isin(signals)]
+
+        try:
+            readings['value'] = readings['value'].astype(float)
+        except ValueError:
+            signals = readings[readings['value'].str.isnumeric()].signal_id.unique()
+            raise ValueError('Signals contain non-numerical values: {}'.format(signals))
 
         LOGGER.debug('Selected %s readings by signal', len(readings))
 
@@ -97,12 +103,6 @@ class CSVLoader:
     @dask.delayed
     def __consolidate(self, readings, turbine_id):
         readings = pd.concat(readings, ignore_index=True)
-        try:
-            readings['value'] = readings['value'].astype(float)
-        except ValueError:
-            signals = readings[readings['value'].str.isnumeric()].signal_id.unique()
-            raise ValueError('Signals contain non-numerical values: {}'.format(signals))
-
         readings.insert(0, 'turbine_id', turbine_id)
 
         LOGGER.info('Loaded %s readings from turbine %s', len(readings), turbine_id)
@@ -127,9 +127,12 @@ class CSVLoader:
     @dask.delayed
     def __resample(self, readings):
         LOGGER.info('Resampling: %s - %s', self._rule, self._aggregation)
-        grouped = readings.groupby(['turbine_id', 'signal_id'])
+        grouped = readings.groupby('signal_id')
         dfr = grouped.resample(rule=self._rule, on='timestamp')
         agg = dfr.agg(self._aggregation)
+
+        LOGGER.info('%s readings reduced to %s', len(readings), len(agg))
+
         if self._unstack:
             agg = agg.unstack(level='signal_id').reset_index()
             agg.columns = agg.columns.map(self._join_names)
@@ -149,13 +152,14 @@ class CSVLoader:
             file_readings = self.__load_readings_file(filename, timestamps, signals)
             file_readings = self.__filter_by_signal(file_readings, signals)
             file_readings = self.__filter_by_timestamp(file_readings, timestamps)
+
+            if self._rule:
+                file_readings = self.__resample(file_readings)
+
             readings.append(file_readings)
 
         if readings:
             readings = self.__consolidate(readings, turbine_id)
-
-            if self._rule:
-                readings = self.__resample(readings)
 
         return readings
 
@@ -199,6 +203,8 @@ class CSVLoader:
             target_times = pd.read_csv(target_times)
             target_times['cutoff_time'] = pd.to_datetime(target_times['cutoff_time'])
 
+        target_times = drop_duplicates(target_times)
+
         if isinstance(signals, pd.DataFrame):
             signals = signals.signal_id
 
@@ -222,7 +228,7 @@ class CSVLoader:
         LOGGER.info('Loaded %s turbine readings', len(readings))
 
         if select_valid:
-            target_times = select_valid_targets(target_times, readings, window_size)
+            target_times = select_valid_targets(target_times, readings, window_size, self._rule)
             return target_times, readings
 
         return readings
