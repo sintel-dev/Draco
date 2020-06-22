@@ -213,33 +213,9 @@ release-major: check-release bumpversion-major release
 
 # DOCKER TARGETS
 
-.PHONY: docker-clean
-docker-clean: ## Remove the greenguard docker image
-	docker rmi -f greenguard
-
 .PHONY: docker-build
 docker-build:
 	docker build -f docker/Dockerfile -t greenguard .
-
-.PHONY: docker-save
-docker-save: docker-build  ## Build the greenguard image and save it as greenguard.tar
-	docker save --output greenguard.tar greenguard
-
-.PHONY: docker-load
-docker-load: ## Load the greenguard image from greenguard.tar
-	docker load --input greenguard.tar
-
-.PHONY: docker-run
-docker-run: ## Run the greenguard image in editable mode
-	docker run --rm -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard greenguard
-
-.PHONY: docker-start
-docker-start: ## Start the greenguard image as a daemon
-	docker run --rm -d -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard greenguard
-
-.PHONY: docker-stop
-docker-stop: ## Stop the greenguard daemon
-	docker stop greenguard
 
 .PHONY: docker-login
 docker-login:
@@ -248,5 +224,5 @@ docker-login:
 .PHONY: docker-push
 docker-push: docker-login docker-build
 	@$(eval VERSION := $(shell python -c 'import greenguard; print(greenguard.__version__)'))
-	docker tag greenguard signals-dev/greenguard:$(VERSION)
-	docker push signals-dev/greenguard:$(VERSION)
+	docker tag greenguard signalsdev/greenguard:$(VERSION)
+	docker push signalsdev/greenguard:$(VERSION)
