@@ -213,30 +213,40 @@ release-major: check-release bumpversion-major release
 
 # DOCKER TARGETS
 
-.PHONY: docker-jupyter-clean
-docker-jupyter-clean: ## Remove the greenguard-jupyter docker image
-	docker rmi -f greenguard-jupyter
+.PHONY: docker-clean
+docker-clean: ## Remove the greenguard docker image
+	docker rmi -f greenguard
 
-.PHONY: docker-jupyter-build
-docker-jupyter-build:  ## Build the greenguard-jupyter docker image using repo2docker
-	docker build -t greenguard-jupyter .
+.PHONY: docker-build
+docker-build:
+	docker build -f docker/Dockerfile -t greenguard .
 
-.PHONY: docker-jupyter-save
-docker-jupyter-save: docker-jupyter-build  ## Build the greenguard-jupyter image and save it as greenguard-jupyter.tar
-	docker save --output greenguard-jupyter.tar greenguard-jupyter
+.PHONY: docker-save
+docker-save: docker-build  ## Build the greenguard image and save it as greenguard.tar
+	docker save --output greenguard.tar greenguard
 
-.PHONY: docker-jupyter-load
-docker-jupyter-load: ## Load the greenguard-jupyter image from greenguard-jupyter.tar
-	docker load --input greenguard-jupyter.tar
+.PHONY: docker-load
+docker-load: ## Load the greenguard image from greenguard.tar
+	docker load --input greenguard.tar
 
-.PHONY: docker-jupyter-run
-docker-jupyter-run: ## Run the greenguard-jupyter image in editable mode
-	docker run --rm -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+.PHONY: docker-run
+docker-run: ## Run the greenguard image in editable mode
+	docker run --rm -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard greenguard
 
-.PHONY: docker-jupyter-start
-docker-jupyter-start: ## Start the greenguard-jupyter image as a daemon
-	docker run --rm -d -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
+.PHONY: docker-start
+docker-start: ## Start the greenguard image as a daemon
+	docker run --rm -d -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard greenguard
 
-.PHONY: docker-jupyter-stop
-docker-jupyter-stop: ## Stop the greenguard-jupyter daemon
-	docker stop greenguard-jupyter
+.PHONY: docker-stop
+docker-stop: ## Stop the greenguard daemon
+	docker stop greenguard
+
+.PHONY: docker-login
+docker-login:
+	docker login
+
+.PHONY: docker-push
+docker-push: docker-login docker-build
+	@$(eval VERSION := $(shell python -c 'import greenguard; print(greenguard.__version__)'))
+	docker tag greenguard signals-dev/greenguard:$(VERSION)
+	docker push signals-dev/greenguard:$(VERSION)
