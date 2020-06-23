@@ -6,7 +6,7 @@ This is the command needed to start a Docker container locally that runs a [Jupy
 https://jupyter.org/) already configured to run GreenGuard.
 
 ```bash
-docker run -ti -p8888:8888 signals-dev/greenguard:latest
+docker run -ti -p8888:8888 signals-dev/greenguard:0.2.2.dev0
 ```
 
 Further details about the usage of this image can be found [here](
@@ -28,7 +28,7 @@ metadata:
 spec:
   containers:
   - name: greenguard
-    image: signalsdev/greenguard:latest
+    image: signalsdev/greenguard:0.2.2.dev0
     ports:
     - containerPort: 8888
 ```

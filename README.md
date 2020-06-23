@@ -71,7 +71,7 @@ If you want to install from source or contribute to the project please read the
 
 **GreenGuard** is prepared to be run inside a docker environment. Please check the
 [docker documantation](https://github.com/signals-dev/GreenGuard/blob/master/docker/README.md)
-about how run **GreenGuard** using docker.
+about how to run **GreenGuard** using docker.
 
 # Data Format
 
