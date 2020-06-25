@@ -6,8 +6,11 @@ These are the commands needed to start a Docker container locally that runs a [J
 https://jupyter.org/) already configured to run GreenGuard.
 
 ```bash
-docker run -ti -p8888:8888 signals-dev/greenguard:0.2.2.dev0
+docker run -ti -p8888:8888 signalsdev/greenguard:latest
 ```
+
+This will start a Jupyter Notebook instance on your computer already configured to use GreenGuard.
+You can access it by pointing your browser at http://127.0.0.1:8888
 
 Further details about the usage of this image can be found [here](
 https://hub.docker.com/repository/docker/signalsdev/greenguard).
@@ -16,9 +19,11 @@ https://hub.docker.com/repository/docker/signalsdev/greenguard).
 
 GreenGuard can also be started using [Kubernetes](https://kubernetes.io/).
 
-Here are the minimum steps to do so:
+Here are the minimum steps required to create a POD in a local Kubernetes cluster:
 
-1. Create a POD yaml file with the these contents:
+1. Create a yaml file with these contents:
+
+For this example, we are assuming that the yaml file is named `greegunard-pod.yml`.
 
 ```yml
 apiVersion: v1
@@ -28,18 +33,24 @@ metadata:
 spec:
   containers:
   - name: greenguard
-    image: signalsdev/greenguard:0.2.2.dev0
+    image: signalsdev/greenguard:latest
     ports:
     - containerPort: 8888
 ```
 
-2. Start the POD locally
+2. Create a POD:
+
+After creating the yaml file, you can create a POD in your Kubernetes cluster using the `kubectl`
+command:
 
 ```bash
-kubectl apply -f pod-file.yml
+kubectl apply -f greenguard-pod.yml
 ```
 
 3. Forward the port 8888
+
+After the POD is started, you still need to forward a local port to it in order to access the
+Jupyter instance.
 
 ```bash
 kubectl port-forward greenguard 8888
@@ -47,14 +58,14 @@ kubectl port-forward greenguard 8888
 
 4. Point your browser at http://localhost:8888
 
-On the other hand, if you are planing to run GreenGuard on a distributed service, we provided a
-[template file](
-https://github.com/signals-dev/GreenGuard/blob/master/docker/greenguard-deployment.yml)
-that you can use to achieve so.
+> **NOTE**: If GreenGuard is run in a production environment we recommend you to use a service and
+a deployment instead of just a simple POD. You can find a template of this setup [here](
+greenguard-deployment.yml)
 
 ## Building the Docker image from scratch
 
-In order to build the Docker image from scratch you will need to:
+If you want to build the Docker image from scratch instead of using the dockerhub image
+you will need to:
 
 1. Clone the repository
 
@@ -63,16 +74,10 @@ git clone git@github.com:signals-dev/GreenGuard.git
 cd GreenGuard
 ```
 
-2. Build the docker image
+2. Build the docker image using the GreenGuard make command.
 
 ```bash
 make docker-build
-```
-
-3. If you are generating a new release, you can push to Docker hub using:
-
-```bash
-make docker-push
 ```
 
 ## What's next?

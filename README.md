@@ -70,8 +70,7 @@ If you want to install from source or contribute to the project please read the
 ## Docker usage
 
 **GreenGuard** is prepared to be run inside a docker environment. Please check the
-[docker documantation](docker/README.md)
-about how to run **GreenGuard** using docker.
+[docker documantation](docker/README.md) for details about how to run **GreenGuard** using docker.
 
 # Data Format
 

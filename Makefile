@@ -226,3 +226,6 @@ docker-push: docker-login docker-build
 	@$(eval VERSION := $(shell python -c 'import greenguard; print(greenguard.__version__)'))
 	docker tag greenguard signalsdev/greenguard:$(VERSION)
 	docker push signalsdev/greenguard:$(VERSION)
+	docker tag greenguard signalsdev/greenguard
+	docker push signalsdev/greenguard
+
