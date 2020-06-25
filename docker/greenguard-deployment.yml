@@ -27,7 +27,7 @@ spec:
         app: greenguard
     spec:
       containers:
-      - image: signalsdev/greenguard:0.2.2.dev0
+      - image: signalsdev/greenguard:latest
         name: greenguard
         ports:
         - containerPort: 8888
