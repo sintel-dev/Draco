@@ -2,7 +2,7 @@
 
 GreenGuard is prepared to be run using [Docker](https://docker.com/).
 
-This is the command needed to start a Docker container locally that runs a [Jupyter Notebook](
+This are the commands needed to start a Docker container locally that runs a [Jupyter Notebook](
 https://jupyter.org/) already configured to run GreenGuard.
 
 ```bash
