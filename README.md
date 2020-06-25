@@ -69,26 +69,8 @@ If you want to install from source or contribute to the project please read the
 
 ## Docker usage
 
-Alternatively, **GreenGuard** is prepared to be run inside a docker environment using
-`docker-compose`.
-
-For this, make sure to have both [docker](https://docs.docker.com/install/) and [docker-compose](
-https://docs.docker.com/compose/install/) installed on your system and then follow these steps:
-
-1. Clone this repository and go into the `GreenGuard` folder:
-
-```bash
-git clone git@github.com:signals-dev/GreenGuard.git
-cd GreenGuard
-```
-
-2. Start a Jupyter Notebook inside a docker container.
-
-```bash
-docker-compose up --build
-```
-
-3. Point your browser at http://127.0.0.1:8888
+**GreenGuard** is prepared to be run inside a docker environment. Please check the
+[docker documentation](docker/README.md) for details about how to run **GreenGuard** using docker.
 
 # Data Format
 
