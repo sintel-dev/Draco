@@ -3,6 +3,7 @@
 import json
 import logging
 import os
+import pickle
 from copy import deepcopy
 from hashlib import md5
 
@@ -307,15 +308,22 @@ class GreenGuardPipeline(object):
             predict = pipeline.predict(X_test, output_=static - 1,
                                        start_=preprocessing, **context)
 
-            splits.append((fold, pipeline, fit, predict, y_test, static))
+            os.makedirs('splits', exist_ok=True)
+            export_path = os.path.join('splits', '{}_{}.pkl'.format(template_name, fold))
+            with open(export_path, 'wb') as split_file:
+                pickle.dump((fold, pipeline, fit, predict, y_test, static), split_file)
+
+            splits.append(export_path)
 
         return splits
 
     def _cross_validate(self, template_splits, hyperparams):
         scores = []
-        for fold, pipeline, fit, predict, y_test, static in template_splits:
-            LOGGER.debug('Scoring fold %s', fold)
+        for split_path in template_splits:
+            with open(split_path, 'rb') as split_file:
+                fold, pipeline, fit, predict, y_test, static = pickle.load(split_file)
 
+            LOGGER.debug('Scoring fold %s', fold)
             pipeline.set_hyperparameters(hyperparams)
             pipeline.fit(start_=static, **fit)
             predictions = pipeline.predict(start_=static, **predict)
