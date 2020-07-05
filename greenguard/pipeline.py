@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import gc
 import json
 import logging
 import os
@@ -314,6 +315,8 @@ class GreenGuardPipeline(object):
                 pickle.dump((fold, pipeline, fit, predict, y_test, static), split_file)
 
             splits.append(export_path)
+            del fold, pipeline, fit, predict, y_test
+            gc.collect()
 
         return splits
 
