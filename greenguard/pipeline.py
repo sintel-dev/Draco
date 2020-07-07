@@ -139,6 +139,9 @@ class GreenGuardPipeline(object):
                   self.templates.
 
             Defaults to ``0``.
+        cache_path (str):
+            If given, cache the generated cross validation splits in this folder.
+            Defatuls to ``None``.
     """
 
     template = None
@@ -231,7 +234,7 @@ class GreenGuardPipeline(object):
         self.fitted = False
 
     def __init__(self, templates, metric='accuracy', cost=False, init_params=None, stratify=True,
-                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0):
+                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0, cache_path=None):
 
         if isinstance(metric, str):
             metric, cost = METRICS[metric]
@@ -258,6 +261,9 @@ class GreenGuardPipeline(object):
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()
+        self._cache_path = cache_path
+        if cache_path:
+            os.makedirs(cache_path, exist_ok=True)
 
     def get_hyperparameters(self):
         """Get the current hyperparameters.
@@ -291,6 +297,8 @@ class GreenGuardPipeline(object):
                                    turbines=turbines, output_=preprocessing - 1)
             del context['X']
             del context['y']
+            gc.collect()
+
         else:
             context = {
                 'readings': readings,
@@ -300,6 +308,7 @@ class GreenGuardPipeline(object):
         splits = list()
         for fold, (train_index, test_index) in enumerate(self._cv.split(X, y)):
             LOGGER.debug('Running static steps for fold %s', fold)
+            gc.collect()
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
@@ -309,22 +318,31 @@ class GreenGuardPipeline(object):
             predict = pipeline.predict(X_test, output_=static - 1,
                                        start_=preprocessing, **context)
 
-            os.makedirs('splits', exist_ok=True)
-            export_path = os.path.join('splits', '{}_{}.pkl'.format(template_name, fold))
-            with open(export_path, 'wb') as split_file:
-                pickle.dump((fold, pipeline, fit, predict, y_test, static), split_file)
+            split = (fold, pipeline, fit, predict, y_test, static)
 
-            splits.append(export_path)
-            del fold, pipeline, fit, predict, y_test
-            gc.collect()
+            if self._cache_path:
+                split_name = '{}_{}.pkl'.format(template_name, fold)
+                split_path = os.path.join(self._cache_path, split_name)
 
+                with open(split_path, 'wb') as split_file:
+                    pickle.dump(split, split_file)
+
+                split = split_path
+
+            splits.append(split)
+
+        gc.collect()
         return splits
 
     def _cross_validate(self, template_splits, hyperparams):
         scores = []
-        for split_path in template_splits:
-            with open(split_path, 'rb') as split_file:
-                fold, pipeline, fit, predict, y_test, static = pickle.load(split_file)
+        for split in template_splits:
+            gc.collect()
+            if self._cache_path:
+                with open(split, 'rb') as split_file:
+                    split = pickle.load(split_file)
+
+            fold, pipeline, fit, predict, y_test, static = split
 
             LOGGER.debug('Scoring fold %s', fold)
             pipeline.set_hyperparameters(hyperparams)
@@ -339,15 +357,14 @@ class GreenGuardPipeline(object):
 
     def _make_btb_scorer(self, target_times, readings, turbines):
         splits = {}
+        for name in self._template_names:
+            splits[name] = self._generate_splits(name, target_times, readings, turbines)
+
+        del target_times, readings, turbines
+        gc.collect()
 
         def scorer(template_name, config):
             template_splits = splits.get(template_name)
-            if template_splits is None:
-                template_splits = self._generate_splits(
-                    template_name, target_times, readings, turbines)
-
-                splits[template_name] = template_splits
-
             cv_score = self._cross_validate(template_splits, config)
             if self._is_better(cv_score):
                 _config = '\n'.join('      {}: {}'.format(n, v) for n, v in config.items())
