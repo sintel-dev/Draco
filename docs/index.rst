@@ -7,6 +7,13 @@
    Overview <readme>
 
 .. toctree::
+   :caption: Tutorials
+   :hidden:
+
+   tutorials/01_GreenGuard_Quickstart
+   tutorials/02_Extract_Readings
+
+.. toctree::
    :caption: Advanced Usage
    :hidden:
 
