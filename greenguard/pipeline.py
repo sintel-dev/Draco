@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 
+import gc
 import json
 import logging
 import os
+import pickle
+import tempfile
 from copy import deepcopy
 from hashlib import md5
 
 import cloudpickle
+import keras
 import numpy as np
 from btb import BTBSession
 from btb.tuning import Tunable
 from mlblocks import MLPipeline
 from mlblocks.discovery import load_pipeline
+from mlprimitives.adapters.keras import Sequential
 from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import KFold, StratifiedKFold
 
@@ -21,6 +26,32 @@ LOGGER = logging.getLogger(__name__)
 
 
 PIPELINES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'pipelines'))
+
+
+# Patch Keras to save on disk without a model trained
+def __getstate__(self):
+    state = self.__dict__.copy()
+    if 'model' in state:
+        with tempfile.NamedTemporaryFile(suffix='.hdf5', delete=True) as fd:
+            keras.models.save_model(state.pop('model'), fd.name, overwrite=True)
+            state['model_str'] = fd.read()
+
+    return state
+
+
+def __setstate__(self, state):
+    if 'model_str' in state:
+        with tempfile.NamedTemporaryFile(suffix='.hdf5', delete=True) as fd:
+            fd.write(state.pop('model_str'))
+            fd.flush()
+
+            state['model'] = keras.models.load_model(fd.name)
+
+    self.__dict__ = state
+
+
+Sequential.__getstate__ = __getstate__
+Sequential.__setstate__ = __setstate__
 
 
 def get_pipelines(pattern='', path=False, unstacked=False):
@@ -137,6 +168,9 @@ class GreenGuardPipeline(object):
                   self.templates.
 
             Defaults to ``0``.
+        cache_path (str):
+            If given, cache the generated cross validation splits in this folder.
+            Defatuls to ``None``.
     """
 
     template = None
@@ -229,7 +263,7 @@ class GreenGuardPipeline(object):
         self.fitted = False
 
     def __init__(self, templates, metric='accuracy', cost=False, init_params=None, stratify=True,
-                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0):
+                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0, cache_path=None):
 
         if isinstance(metric, str):
             metric, cost = METRICS[metric]
@@ -256,6 +290,9 @@ class GreenGuardPipeline(object):
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()
+        self._cache_path = cache_path
+        if cache_path:
+            os.makedirs(cache_path, exist_ok=True)
 
     def get_hyperparameters(self):
         """Get the current hyperparameters.
@@ -289,6 +326,8 @@ class GreenGuardPipeline(object):
                                    turbines=turbines, output_=preprocessing - 1)
             del context['X']
             del context['y']
+            gc.collect()
+
         else:
             context = {
                 'readings': readings,
@@ -298,6 +337,7 @@ class GreenGuardPipeline(object):
         splits = list()
         for fold, (train_index, test_index) in enumerate(self._cv.split(X, y)):
             LOGGER.debug('Running static steps for fold %s', fold)
+            gc.collect()
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = y.iloc[train_index], y.iloc[test_index]
 
@@ -307,15 +347,33 @@ class GreenGuardPipeline(object):
             predict = pipeline.predict(X_test, output_=static - 1,
                                        start_=preprocessing, **context)
 
-            splits.append((fold, pipeline, fit, predict, y_test, static))
+            split = (fold, pipeline, fit, predict, y_test, static)
 
+            if self._cache_path:
+                split_name = '{}_{}.pkl'.format(template_name, fold)
+                split_path = os.path.join(self._cache_path, split_name)
+
+                with open(split_path, 'wb') as split_file:
+                    pickle.dump(split, split_file)
+
+                split = split_path
+
+            splits.append(split)
+
+        gc.collect()
         return splits
 
     def _cross_validate(self, template_splits, hyperparams):
         scores = []
-        for fold, pipeline, fit, predict, y_test, static in template_splits:
-            LOGGER.debug('Scoring fold %s', fold)
+        for split in template_splits:
+            gc.collect()
+            if self._cache_path:
+                with open(split, 'rb') as split_file:
+                    split = pickle.load(split_file)
 
+            fold, pipeline, fit, predict, y_test, static = split
+
+            LOGGER.debug('Scoring fold %s', fold)
             pipeline.set_hyperparameters(hyperparams)
             pipeline.fit(start_=static, **fit)
             predictions = pipeline.predict(start_=static, **predict)

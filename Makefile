@@ -50,6 +50,7 @@ clean-pyc: ## remove Python file artifacts
 .PHONY: clean-docs
 clean-docs: ## remove previously built docs
 	rm -f docs/api/*.rst
+	rm -rf docs/tutorials
 	-$(MAKE) -C docs clean 2>/dev/null  # this fails if sphinx is not yet installed
 
 .PHONY: clean-coverage
@@ -91,24 +92,32 @@ lint: ## check style with flake8 and isort
 
 .PHONY: fix-lint
 fix-lint: ## fix lint issues using autoflake, autopep8, and isort
-	find greenguard -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
-	autopep8 --in-place --recursive --aggressive greenguard
-	isort --apply --atomic --recursive greenguard
-
-	find tests -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
-	autopep8 --in-place --recursive --aggressive tests
-	isort --apply --atomic --recursive tests
+	find greenguard tests -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+	autopep8 --in-place --recursive --aggressive greenguard tests
+	isort --apply --atomic --recursive greenguard tests
 
 
 # TEST TARGETS
 
-.PHONY: test
-test: ## run tests quickly with the default Python
+.PHONY: test-unit
+test-unit: ## run tests quickly with the default Python
 	python -m pytest --basetemp=${ENVTMPDIR} --cov=greenguard
 
 .PHONY: test-readme
 test-readme: ## run the readme snippets
-	rundoc run --single-session python3 -t python3 README.md
+	rm -rf tests/readme_test && mkdir tests/readme_test
+	cd tests/readme_test && rundoc run --single-session python3 -t python3 ../../README.md
+	rm -rf tests/readme_test
+
+.PHONY: test-tutorials
+test-tutorials: ## run the tutorial notebooks
+	jupyter nbconvert --execute --ExecutePreprocessor.timeout=600 tutorials/*.ipynb --stdout > /dev/null
+
+.PHONY: test
+test: test-unit test-readme ## test everything that needs test dependencies
+
+.PHONY: test-devel
+test-devel: lint docs ## test everything that needs development dependencies
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
@@ -126,6 +135,7 @@ coverage: ## check code coverage quickly with the default Python
 
 .PHONY: docs
 docs: clean-docs ## generate Sphinx HTML documentation, including API docs
+	cp -r tutorials docs/tutorials
 	sphinx-apidoc --separate --no-toc -o docs/api/ greenguard
 	$(MAKE) -C docs html
 
@@ -146,12 +156,19 @@ dist: clean ## builds source and wheel package
 	python setup.py bdist_wheel
 	ls -l dist
 
-.PHONY: test-publish
-test-publish: dist ## package and upload a release on TestPyPI
+.PHONY: publish-confirm
+publish-confirm:
+	@echo "WARNING: This will irreversibly upload a new version to PyPI!"
+	@echo -n "Please type 'confirm' to proceed: " \
+		&& read answer \
+		&& [ "$${answer}" = "confirm" ]
+
+.PHONY: publish-test
+publish-test: dist publish-confirm ## package and upload a release on TestPyPI
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 .PHONY: publish
-publish: dist ## package and upload a release
+publish: dist publish-confirm ## package and upload a release
 	twine upload dist/*
 
 .PHONY: bumpversion-release
@@ -161,12 +178,23 @@ bumpversion-release: ## Merge master to stable and bumpversion release
 	bumpversion release
 	git push --tags origin stable
 
+.PHONY: bumpversion-release-test
+bumpversion-release-test: ## Merge master to stable and bumpversion release
+	git checkout stable || git checkout -b stable
+	git merge --no-ff master -m"make release-tag: Merge branch 'master' into stable"
+	bumpversion release --no-tag
+	@echo git push --tags origin stable
+
 .PHONY: bumpversion-patch
 bumpversion-patch: ## Merge stable to master and bumpversion patch
 	git checkout master
 	git merge stable
 	bumpversion --no-tag patch
 	git push
+
+.PHONY: bumpversion-candidate
+bumpversion-candidate: ## Bump the version to the next candidate
+	bumpversion candidate --no-tag
 
 .PHONY: bumpversion-minor
 bumpversion-minor: ## Bump the version the next minor skipping the release
@@ -176,12 +204,20 @@ bumpversion-minor: ## Bump the version the next minor skipping the release
 bumpversion-major: ## Bump the version the next major skipping the release
 	bumpversion --no-tag major
 
-.PHONY: bumpversion-candidate
-bumpversion-candidate: ## Bump the version to the next candidate
-	bumpversion candidate --no-tag
+.PHONY: bumpversion-revert
+bumpversion-revert: ## Undo a previous bumpversion-release
+	git checkout master
+	git branch -D stable
 
+CLEAN_DIR := $(shell git status --short | grep -v ??)
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
 CHANGELOG_LINES := $(shell git diff HEAD..origin/stable HISTORY.md 2>&1 | wc -l)
+
+.PHONY: check-clean
+check-clean: ## Check if the directory has uncommitted changes
+ifneq ($(CLEAN_DIR),)
+	$(error There are uncommitted changes)
+endif
 
 .PHONY: check-master
 check-master: ## Check if we are in master branch
@@ -196,13 +232,20 @@ ifeq ($(CHANGELOG_LINES),0)
 endif
 
 .PHONY: check-release
-check-release: check-master check-history ## Check if the release can be made
+check-release: check-clean check-master check-history ## Check if the release can be made
+	@echo "A new release can be made"
 
 .PHONY: release
-release: check-release bumpversion-release publish bumpversion-patch
+release: check-release bumpversion-release docker-push publish bumpversion-patch
+
+.PHONY: release-test
+release-test: check-release bumpversion-release-test publish-test bumpversion-revert
 
 .PHONY: release-candidate
 release-candidate: check-master publish bumpversion-candidate
+
+.PHONY: release-candidate-test
+release-candidate-test: check-clean check-master publish-test
 
 .PHONY: release-minor
 release-minor: check-release bumpversion-minor release
@@ -213,30 +256,18 @@ release-major: check-release bumpversion-major release
 
 # DOCKER TARGETS
 
-.PHONY: docker-jupyter-clean
-docker-jupyter-clean: ## Remove the greenguard-jupyter docker image
-	docker rmi -f greenguard-jupyter
+.PHONY: docker-build
+docker-build:
+	docker build -f docker/Dockerfile -t greenguard .
 
-.PHONY: docker-jupyter-build
-docker-jupyter-build:  ## Build the greenguard-jupyter docker image using repo2docker
-	docker build -t greenguard-jupyter .
+.PHONY: docker-login
+docker-login:
+	docker login
 
-.PHONY: docker-jupyter-save
-docker-jupyter-save: docker-jupyter-build  ## Build the greenguard-jupyter image and save it as greenguard-jupyter.tar
-	docker save --output greenguard-jupyter.tar greenguard-jupyter
-
-.PHONY: docker-jupyter-load
-docker-jupyter-load: ## Load the greenguard-jupyter image from greenguard-jupyter.tar
-	docker load --input greenguard-jupyter.tar
-
-.PHONY: docker-jupyter-run
-docker-jupyter-run: ## Run the greenguard-jupyter image in editable mode
-	docker run --rm -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
-
-.PHONY: docker-jupyter-start
-docker-jupyter-start: ## Start the greenguard-jupyter image as a daemon
-	docker run --rm -d -v $(shell pwd):/greenguard -ti -p8888:8888 --name greenguard-jupyter greenguard-jupyter
-
-.PHONY: docker-jupyter-stop
-docker-jupyter-stop: ## Stop the greenguard-jupyter daemon
-	docker stop greenguard-jupyter
+.PHONY: docker-push
+docker-push: docker-login docker-build
+	@$(eval VERSION := $(shell python -c 'import greenguard; print(greenguard.__version__)'))
+	docker tag greenguard signalsdev/greenguard:$(VERSION)
+	docker push signalsdev/greenguard:$(VERSION)
+	docker tag greenguard signalsdev/greenguard
+	docker push signalsdev/greenguard
