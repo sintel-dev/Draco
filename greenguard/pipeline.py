@@ -386,14 +386,15 @@ class GreenGuardPipeline(object):
 
     def _make_btb_scorer(self, target_times, readings, turbines):
         splits = {}
-        for name in self._template_names:
-            splits[name] = self._generate_splits(name, target_times, readings, turbines)
-
-        del target_times, readings, turbines
-        gc.collect()
 
         def scorer(template_name, config):
             template_splits = splits.get(template_name)
+            if template_splits is None:
+                template_splits = self._generate_splits(
+                    template_name, target_times, readings, turbines)
+
+                splits[template_name] = template_splits
+
             cv_score = self._cross_validate(template_splits, config)
             if self._is_better(cv_score):
                 _config = '\n'.join('      {}: {}'.format(n, v) for n, v in config.items())
