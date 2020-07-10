@@ -236,7 +236,7 @@ check-release: check-clean check-master check-history ## Check if the release ca
 	@echo "A new release can be made"
 
 .PHONY: release
-release: check-release bumpversion-release publish bumpversion-patch
+release: check-release bumpversion-release docker-push publish bumpversion-patch
 
 .PHONY: release-test
 release-test: check-release bumpversion-release-test publish-test bumpversion-revert

@@ -1,5 +1,15 @@
 # History
 
+## 0.2.2 - 2020-07-10
+
+### Internam Imrpovements
+
+* Added github actions.
+
+### Resolved Issues
+
+* Issue #27: Cache Splits pre-processed data on disk
+
 ## 0.2.1 - 2020-06-16
 
 With this release we give the possibility to the user to specify more than one template when
