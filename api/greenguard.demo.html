@@ -1,7 +1,8 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
@@ -11,10 +12,6 @@
   
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
   
     <link rel="shortcut icon" href="../_static/GreenGuard.ico"/>
   
@@ -22,20 +19,23 @@
   
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="greenguard.metrics module" href="greenguard.metrics.html" />
@@ -53,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> GreenGuard
+            <a href="../index.html" class="icon icon-home"> GreenGuard
           
 
           
@@ -76,7 +76,6 @@
           
         </div>
 
-        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -107,6 +106,26 @@
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#make-predictions">4. Make predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#evaluate-the-goodness-of-fit">5. Evaluate the goodness-of-fit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_Extract_Readings.html">Extract Readings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#0.-Setup-the-logging">0. Setup the logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#1.-Generate-Raw-Readings">1. Generate Raw Readings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#Readings-Format">Readings Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#Target-Times">Target Times</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#2.-CSVLoader">2. CSVLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#3.-Preprocessing-the-data">3. Preprocessing the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#4.-Unstacking">4. Unstacking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#5.-Saving-the-readings">5. Saving the readings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#Using-CSV">Using CSV</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_Extract_Readings.html#Using-Pickle">Using Pickle</a></li>
 </ul>
 </li>
 </ul>
@@ -199,7 +218,6 @@
             
           
         </div>
-        
       </div>
     </nav>
 
@@ -238,7 +256,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
@@ -263,7 +281,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-greenguard.demo">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-greenguard.demo">
 <span id="greenguard-demo-module"></span><h1>greenguard.demo module<a class="headerlink" href="#module-greenguard.demo" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
@@ -330,19 +372,11 @@ Subsequent calls will load the cached data instead of downloading it again.</p>
 
   <div role="contentinfo">
     <p>
-        
         &copy; Copyright 2018, MIT Data To AI Lab
 
     </p>
   </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -353,6 +387,7 @@ Subsequent calls will load the cached data instead of downloading it again.</p>
 
   </div>
   
+
 
   <script type="text/javascript">
       jQuery(function () {

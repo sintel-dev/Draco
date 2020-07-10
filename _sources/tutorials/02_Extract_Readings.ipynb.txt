@@ -1,0 +1,1374 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Extract Readings\n",
+    "\n",
+    "In this tutorial we will show you how to use the CSVLoader class to load the readings table\n",
+    "from a folder that contains readings in the raw CSV format.\n",
+    "\n",
+    "The Raw CSV format es briefly explained below, but more details can be found in [the documentation site](\n",
+    "https://signals-dev.github.io/GreenGuard/advanced_usage/csv.html)\n",
+    "\n",
+    "During the next steps we will:\n",
+    "\n",
+    "- Generate a folder with readings in the raw format based on the demo data\n",
+    "- Explore the raw format\n",
+    "- Load the redings needed for our target times\n",
+    "- Explore different options from the CSVLoader\n",
+    "- Load the readings in the unstacked format\n",
+    "- Store the readins and target times using pickle"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 0. Setup the logging\n",
+    "\n",
+    "This step sets up logging in our environment to increase our visibility over\n",
+    "the steps that GreenGuard performs."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import logging;\n",
+    "\n",
+    "logging.basicConfig(level=logging.INFO)\n",
+    "logging.getLogger().setLevel(level=logging.INFO)\n",
+    "\n",
+    "import warnings\n",
+    "warnings.simplefilter(\"ignore\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. Generate Raw Readings\n",
+    "\n",
+    "The first step will be to execute the `generate_raw_readings` function, which will create a\n",
+    "folder in the indicated path and populate it with the raw version of the demo readings.\n",
+    "\n",
+    "**NOTE**: if you want to use your own dataset you can skip this step and go directly to step 2."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.demo:Generating file readings/T001/2013-01.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-02.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-03.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-04.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-05.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-06.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-07.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-08.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-09.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-10.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-11.csv\n",
+      "INFO:greenguard.demo:Generating file readings/T001/2013-12.csv\n"
+     ]
+    }
+   ],
+   "source": [
+    "from greenguard.demo import generate_raw_readings\n",
+    "\n",
+    "target_times = generate_raw_readings('readings')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Readings Format\n",
+    "\n",
+    "Here we will load one of the generated CSV files to briefly explore its contents."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "readings_sample = pd.read_csv('readings/T001/2013-01.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>signal_id</th>\n",
+       "      <th>timestamp</th>\n",
+       "      <th>value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>S01</td>\n",
+       "      <td>01/10/13 00:00:00</td>\n",
+       "      <td>323.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>S02</td>\n",
+       "      <td>01/10/13 00:00:00</td>\n",
+       "      <td>320.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>S03</td>\n",
+       "      <td>01/10/13 00:00:00</td>\n",
+       "      <td>284.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>S04</td>\n",
+       "      <td>01/10/13 00:00:00</td>\n",
+       "      <td>348.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>S05</td>\n",
+       "      <td>01/10/13 00:00:00</td>\n",
+       "      <td>273.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  signal_id          timestamp  value\n",
+       "0       S01  01/10/13 00:00:00  323.0\n",
+       "1       S02  01/10/13 00:00:00  320.0\n",
+       "2       S03  01/10/13 00:00:00  284.0\n",
+       "3       S04  01/10/13 00:00:00  348.0\n",
+       "4       S05  01/10/13 00:00:00  273.0"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings_sample.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can cleary see the format in which the data is stored:\n",
+    "\n",
+    "* All the data from all the turbines is inside a single folder.\n",
+    "* Inside this folder, another folder exists for each turbine, named exactly like the turbine:\n",
+    "    * `readings/T001`\n",
+    "    * `readings/T002`\n",
+    "    * ...\n",
+    "* Inside each turbine folder one CSV file exists for each month, named `%Y-%m.csv`.\n",
+    "    * `readings/T001/2010-01.csv`\n",
+    "    * `readings/T001/2010-02.csv`\n",
+    "    * `readings/T001/2010-03.csv`\n",
+    "    * ...\n",
+    "* Each CSV file contains three columns:\n",
+    "    * `signal_id`: name or id of the signal.\n",
+    "    * ``timestamp``: timestamp of the reading formatted as ``%m/%d/%y %H:%M:%S``.\n",
+    "    * `value`: value of the reading."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Target Times"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The previous function will have also returned us a `target_times` variable,\n",
+    "which is a `pandas.DataFrame` containing the training examples, with the three expected columns:\n",
+    "\n",
+    "* `turbine_id`: Id of the turbine associated with each training example\n",
+    "* `cutoff_time`: Time at which the prediction is being made\n",
+    "* `target`: Value that needs to be predicted"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(353, 3)"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>turbine_id</th>\n",
+       "      <th>cutoff_time</th>\n",
+       "      <th>target</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-12</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-13</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-14</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-15</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-16</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  turbine_id cutoff_time  target\n",
+       "0       T001  2013-01-12       0\n",
+       "1       T001  2013-01-13       0\n",
+       "2       T001  2013-01-14       0\n",
+       "3       T001  2013-01-15       1\n",
+       "4       T001  2013-01-16       0"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.3002832861189802"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.target.mean()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "turbine_id             object\n",
+       "cutoff_time    datetime64[ns]\n",
+       "target                  int64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.dtypes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. CSVLoader\n",
+    "\n",
+    "The readings in raw format can arbitrarily big, which might make it impossible to load\n",
+    "them into memory all at once.\n",
+    "\n",
+    "In order to load them in an efficient way so that we can use them to solve Machine Learning\n",
+    "problems, GeenGuard provides the `greenguard.loaders.CVSLoader` class.\n",
+    "\n",
+    "This class is prepared to, given a target times table, explore a collection of raw readings\n",
+    "and extract only the information needed to solve that particular problem.\n",
+    "\n",
+    "The first step in order to use it is to create an instance passing it the path\n",
+    "to where the reading files are stored.\n",
+    "\n",
+    "**NOTE**: If you want to use your own dataset instead of the demo version,\n",
+    "all you have to do is make the `readings_path` variable point at the\n",
+    "folder where you have your CVS files stored and load your `target_times` table:\n",
+    "\n",
+    "Make sure to parse the `cutoff_time` column as a datetime!\n",
+    "\n",
+    "```python\n",
+    "readings_path = 'path/to/your/data'\n",
+    "target_times = pd.read_csv('path/to/your/target_times.csv', parse_dates=['cutoff_time'])\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from greenguard.loaders import CSVLoader\n",
+    "\n",
+    "readings_path = 'readings'\n",
+    "\n",
+    "csv_loader = CSVLoader(readings_path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Once we have created our instance, we can load the readings needed for our target times by\n",
+    "calling the `load` method with the following two arguments:\n",
+    "\n",
+    "* `target_times (pandas.DataFrame)`: the `target_times` table.\n",
+    "* `window_size (str)`: the size of the training window, as a timedelta specification\n",
+    "  (amount + time unit). This indicates the minimum amount of data that we need to\n",
+    "  load for each training example from the `target_times` table.\n",
+    "  \n",
+    "For example, let's load the readings needed for all our `target_times`, using a\n",
+    "`window_size` of **one day**."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.loaders.csv:Loaded 1306052 readings from turbine T001\n",
+      "INFO:greenguard.loaders.csv:Loaded 1306052 turbine readings\n",
+      "INFO:greenguard.targets:Dropped 0 targets without enough data. Final target_times size: 353\n"
+     ]
+    }
+   ],
+   "source": [
+    "new_target_times, readings = csv_loader.load(target_times, '1d')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1306052, 4)"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>turbine_id</th>\n",
+       "      <th>signal_id</th>\n",
+       "      <th>timestamp</th>\n",
+       "      <th>value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-11</td>\n",
+       "      <td>209.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S02</td>\n",
+       "      <td>2013-01-11</td>\n",
+       "      <td>193.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S03</td>\n",
+       "      <td>2013-01-11</td>\n",
+       "      <td>177.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S04</td>\n",
+       "      <td>2013-01-11</td>\n",
+       "      <td>188.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S05</td>\n",
+       "      <td>2013-01-11</td>\n",
+       "      <td>150.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  turbine_id signal_id  timestamp  value\n",
+       "0       T001       S01 2013-01-11  209.0\n",
+       "1       T001       S02 2013-01-11  193.0\n",
+       "2       T001       S03 2013-01-11  177.0\n",
+       "3       T001       S04 2013-01-11  188.0\n",
+       "4       T001       S05 2013-01-11  150.0"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "turbine_id            object\n",
+       "signal_id             object\n",
+       "timestamp     datetime64[ns]\n",
+       "value                float64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.dtypes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can see how the readings have been loaded with the expected format, including\n",
+    "the four expected columns:\n",
+    "\n",
+    "* `turbine_id`: Unique identifier of the turbine which this reading comes from.\n",
+    "* `signal_id`: Unique identifier of the signal which this reading comes from.\n",
+    "* `timestamp (datetime)`: Time at which the reading took place, as a datetime.\n",
+    "* `value (float)`: Numerical value of this reading."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(353, 3)"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "new_target_times.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Let's see what happens if we increase the `window_size` to, for example, **30 days**."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.loaders.csv:Loaded 1309796 readings from turbine T001\n",
+      "INFO:greenguard.loaders.csv:Loaded 1309796 turbine readings\n",
+      "INFO:greenguard.targets:Dropped 28 targets without enough data. Final target_times size: 325\n"
+     ]
+    }
+   ],
+   "source": [
+    "new_target_times, readings = csv_loader.load(target_times, '30d')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can see now in the logged output above that there is a message that indicates that there\n",
+    "were 28 invalid targets that were dropped. This is because within our readings there was not\n",
+    "enough data to cover the entire training window for each traning example, so the ones that were\n",
+    "not covered were dropped to ensure that all the training examples are valid to work with them."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(325, 3)"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "new_target_times.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "On the other side, we can see how now the size of the loaded readings table has increased,\n",
+    "as more data had to be included to properly cover all the training windows."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1309796, 4)"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3. Preprocessing the data\n",
+    "\n",
+    "In some cases, if the amount of targets is big enough, loading high frequency data\n",
+    "into memory will still be a challenge.\n",
+    "\n",
+    "For this cases, the `CSVLoader` class also supports passing a **resampling rule** and\n",
+    "an **aggregation function** specification. In this cases, the data will go through a\n",
+    "**sampling frequency reduction aggregation** while it is loaded, reducing the amount\n",
+    "of memory needed to load it.\n",
+    "\n",
+    "In order to use the resampling feature, we will need to create a new instance of the\n",
+    "`CSVLoader` passing the following new arguments:\n",
+    "\n",
+    "* `rule (str)`: Time-delta specification (amount+unit) of the new sampling frequency.\n",
+    "* `aggregation (str or function)`: Aggregation function to apply when resampling.\n",
+    "\n",
+    "For example, let's create a `CSVLoader` instance that will reduce the sampling frequency\n",
+    "to **4 hours**, computing the **mean** of all the readings withing each interval."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "csv_loader = CSVLoader(readings_path, rule='4h', aggregation='mean')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "And then call the `load` method normally."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:81749 readings reduced to 3432\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:110938 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:112118 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:111862 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:114400 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:105321 readings reduced to 4550\n",
+      "INFO:greenguard.loaders.csv:108371 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:115615 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:115647 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:103319 readings reduced to 4368\n",
+      "INFO:greenguard.loaders.csv:115979 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:114477 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Loaded 55250 readings from turbine T001\n",
+      "INFO:greenguard.loaders.csv:Loaded 55250 turbine readings\n",
+      "INFO:greenguard.targets:Dropped 12 targets without enough data. Final target_times size: 341\n"
+     ]
+    }
+   ],
+   "source": [
+    "new_target_times, readings = csv_loader.load(target_times, '14d')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can see now how the size of the readings table has been drastically reduced."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(55250, 4)"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>turbine_id</th>\n",
+       "      <th>signal_id</th>\n",
+       "      <th>timestamp</th>\n",
+       "      <th>value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-10 00:00:00</td>\n",
+       "      <td>253.041667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-10 04:00:00</td>\n",
+       "      <td>572.083333</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-10 08:00:00</td>\n",
+       "      <td>688.791667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-10 12:00:00</td>\n",
+       "      <td>396.333333</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-10 16:00:00</td>\n",
+       "      <td>390.458333</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  turbine_id signal_id           timestamp       value\n",
+       "0       T001       S01 2013-01-10 00:00:00  253.041667\n",
+       "1       T001       S01 2013-01-10 04:00:00  572.083333\n",
+       "2       T001       S01 2013-01-10 08:00:00  688.791667\n",
+       "3       T001       S01 2013-01-10 12:00:00  396.333333\n",
+       "4       T001       S01 2013-01-10 16:00:00  390.458333"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(341, 3)"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "new_target_times.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 4. Unstacking\n",
+    "\n",
+    "Some of the pipelines included in **GreenGuard** expect a slightly different input format\n",
+    "where the data has been unstacked by `signal_id`, putting the values of each signal in a\n",
+    "different column instead of having all of them in a single one.\n",
+    "\n",
+    "In such cases, the `CSVLoader` can also take care of the unstacking step.\n",
+    "\n",
+    "For this, all you need to do is add `unstack=True` argument when creating the instance\n",
+    "and then use the `load` method as usual."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:108371 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:115647 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:103319 readings reduced to 4368\n",
+      "INFO:greenguard.loaders.csv:115615 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:114400 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:114477 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:115979 readings reduced to 4836\n",
+      "INFO:greenguard.loaders.csv:111862 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:81749 readings reduced to 3432\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:105321 readings reduced to 4550\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:Resampling: 4h - mean\n",
+      "INFO:greenguard.loaders.csv:112118 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:110938 readings reduced to 4680\n",
+      "INFO:greenguard.loaders.csv:Loaded 2125 readings from turbine T001\n",
+      "INFO:greenguard.loaders.csv:Loaded 2125 turbine readings\n",
+      "INFO:greenguard.targets:Dropped 12 targets without enough data. Final target_times size: 341\n"
+     ]
+    }
+   ],
+   "source": [
+    "csv_loader = CSVLoader(readings_path, rule='4h', aggregation='mean', unstack=True)\n",
+    "new_target_times, readings = csv_loader.load(target_times, '14d')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The result is a table which has a much smaller number of rows, but one column for each signal"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(2125, 28)"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>turbine_id</th>\n",
+       "      <th>timestamp</th>\n",
+       "      <th>value_S01</th>\n",
+       "      <th>value_S02</th>\n",
+       "      <th>value_S03</th>\n",
+       "      <th>value_S04</th>\n",
+       "      <th>value_S05</th>\n",
+       "      <th>value_S06</th>\n",
+       "      <th>value_S07</th>\n",
+       "      <th>value_S08</th>\n",
+       "      <th>...</th>\n",
+       "      <th>value_S17</th>\n",
+       "      <th>value_S18</th>\n",
+       "      <th>value_S19</th>\n",
+       "      <th>value_S20</th>\n",
+       "      <th>value_S21</th>\n",
+       "      <th>value_S22</th>\n",
+       "      <th>value_S23</th>\n",
+       "      <th>value_S24</th>\n",
+       "      <th>value_S25</th>\n",
+       "      <th>value_S26</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-10 00:00:00</td>\n",
+       "      <td>253.041667</td>\n",
+       "      <td>268.250000</td>\n",
+       "      <td>268.041667</td>\n",
+       "      <td>297.166667</td>\n",
+       "      <td>234.666667</td>\n",
+       "      <td>261.916667</td>\n",
+       "      <td>206.791667</td>\n",
+       "      <td>3.198335e+06</td>\n",
+       "      <td>...</td>\n",
+       "      <td>9.079167</td>\n",
+       "      <td>3.134510e+06</td>\n",
+       "      <td>42.416667</td>\n",
+       "      <td>44.958333</td>\n",
+       "      <td>44.833333</td>\n",
+       "      <td>49.625000</td>\n",
+       "      <td>39.208333</td>\n",
+       "      <td>43.833333</td>\n",
+       "      <td>34.625</td>\n",
+       "      <td>293.166667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-10 04:00:00</td>\n",
+       "      <td>572.083333</td>\n",
+       "      <td>555.291667</td>\n",
+       "      <td>538.666667</td>\n",
+       "      <td>592.291667</td>\n",
+       "      <td>557.166667</td>\n",
+       "      <td>534.000000</td>\n",
+       "      <td>544.250000</td>\n",
+       "      <td>3.199514e+06</td>\n",
+       "      <td>...</td>\n",
+       "      <td>10.837500</td>\n",
+       "      <td>3.142505e+06</td>\n",
+       "      <td>62.083333</td>\n",
+       "      <td>62.500000</td>\n",
+       "      <td>63.625000</td>\n",
+       "      <td>63.541667</td>\n",
+       "      <td>61.333333</td>\n",
+       "      <td>62.541667</td>\n",
+       "      <td>54.000</td>\n",
+       "      <td>421.208333</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-10 08:00:00</td>\n",
+       "      <td>688.791667</td>\n",
+       "      <td>696.791667</td>\n",
+       "      <td>706.625000</td>\n",
+       "      <td>750.791667</td>\n",
+       "      <td>714.250000</td>\n",
+       "      <td>683.333333</td>\n",
+       "      <td>658.166667</td>\n",
+       "      <td>3.201449e+06</td>\n",
+       "      <td>...</td>\n",
+       "      <td>12.754167</td>\n",
+       "      <td>3.155809e+06</td>\n",
+       "      <td>92.208333</td>\n",
+       "      <td>94.958333</td>\n",
+       "      <td>94.666667</td>\n",
+       "      <td>97.333333</td>\n",
+       "      <td>94.125000</td>\n",
+       "      <td>93.583333</td>\n",
+       "      <td>86.375</td>\n",
+       "      <td>638.291667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-10 12:00:00</td>\n",
+       "      <td>396.333333</td>\n",
+       "      <td>418.500000</td>\n",
+       "      <td>415.791667</td>\n",
+       "      <td>438.541667</td>\n",
+       "      <td>382.250000</td>\n",
+       "      <td>364.666667</td>\n",
+       "      <td>320.333333</td>\n",
+       "      <td>3.203319e+06</td>\n",
+       "      <td>...</td>\n",
+       "      <td>10.916667</td>\n",
+       "      <td>3.168640e+06</td>\n",
+       "      <td>55.750000</td>\n",
+       "      <td>60.083333</td>\n",
+       "      <td>58.583333</td>\n",
+       "      <td>61.291667</td>\n",
+       "      <td>52.791667</td>\n",
+       "      <td>52.791667</td>\n",
+       "      <td>44.000</td>\n",
+       "      <td>376.125000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-10 16:00:00</td>\n",
+       "      <td>390.458333</td>\n",
+       "      <td>408.875000</td>\n",
+       "      <td>409.500000</td>\n",
+       "      <td>458.000000</td>\n",
+       "      <td>415.583333</td>\n",
+       "      <td>363.000000</td>\n",
+       "      <td>364.458333</td>\n",
+       "      <td>3.204504e+06</td>\n",
+       "      <td>...</td>\n",
+       "      <td>10.412500</td>\n",
+       "      <td>3.176672e+06</td>\n",
+       "      <td>49.958333</td>\n",
+       "      <td>53.875000</td>\n",
+       "      <td>54.458333</td>\n",
+       "      <td>56.750000</td>\n",
+       "      <td>52.708333</td>\n",
+       "      <td>46.708333</td>\n",
+       "      <td>47.625</td>\n",
+       "      <td>354.750000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 28 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  turbine_id           timestamp   value_S01   value_S02   value_S03  \\\n",
+       "0       T001 2013-01-10 00:00:00  253.041667  268.250000  268.041667   \n",
+       "1       T001 2013-01-10 04:00:00  572.083333  555.291667  538.666667   \n",
+       "2       T001 2013-01-10 08:00:00  688.791667  696.791667  706.625000   \n",
+       "3       T001 2013-01-10 12:00:00  396.333333  418.500000  415.791667   \n",
+       "4       T001 2013-01-10 16:00:00  390.458333  408.875000  409.500000   \n",
+       "\n",
+       "    value_S04   value_S05   value_S06   value_S07     value_S08  ...  \\\n",
+       "0  297.166667  234.666667  261.916667  206.791667  3.198335e+06  ...   \n",
+       "1  592.291667  557.166667  534.000000  544.250000  3.199514e+06  ...   \n",
+       "2  750.791667  714.250000  683.333333  658.166667  3.201449e+06  ...   \n",
+       "3  438.541667  382.250000  364.666667  320.333333  3.203319e+06  ...   \n",
+       "4  458.000000  415.583333  363.000000  364.458333  3.204504e+06  ...   \n",
+       "\n",
+       "   value_S17     value_S18  value_S19  value_S20  value_S21  value_S22  \\\n",
+       "0   9.079167  3.134510e+06  42.416667  44.958333  44.833333  49.625000   \n",
+       "1  10.837500  3.142505e+06  62.083333  62.500000  63.625000  63.541667   \n",
+       "2  12.754167  3.155809e+06  92.208333  94.958333  94.666667  97.333333   \n",
+       "3  10.916667  3.168640e+06  55.750000  60.083333  58.583333  61.291667   \n",
+       "4  10.412500  3.176672e+06  49.958333  53.875000  54.458333  56.750000   \n",
+       "\n",
+       "   value_S23  value_S24  value_S25   value_S26  \n",
+       "0  39.208333  43.833333     34.625  293.166667  \n",
+       "1  61.333333  62.541667     54.000  421.208333  \n",
+       "2  94.125000  93.583333     86.375  638.291667  \n",
+       "3  52.791667  52.791667     44.000  376.125000  \n",
+       "4  52.708333  46.708333     47.625  354.750000  \n",
+       "\n",
+       "[5 rows x 28 columns]"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 5. Saving the readings\n",
+    "\n",
+    "In some cases we will not be intending to use the generated `readings` and `target_times` tables\n",
+    "right away, but rather store them for later use.\n",
+    "\n",
+    "### Using CSV\n",
+    "\n",
+    "This can be done using pandas an plain `CSV` format:\n",
+    "\n",
+    "**NOTE**: Notice the `index=False` argument. Otherwise, an extra index column will be added\n",
+    "to the CSV which would force us to modify the loading steps afterwards."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "new_target_times.to_csv('my_problem_target_times.csv', index=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "readings.to_csv('my_problem_readings.csv', index=False)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "After this, we can easily reload the data back using pandas again.\n",
+    "\n",
+    "**NOTE**: Notice how the datetime columns need to be passed so they can be parsed!"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "my_target_times = pd.read_csv('my_problem_target_times.csv', parse_dates=['cutoff_time'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "my_readings = pd.read_csv('my_problem_readings.csv', parse_dates=['timestamp'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "However, this has 2 inconvenients:\n",
+    "* Saving and loading the data is slow\n",
+    "* The datetimes need to be explicitly parsed"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Using Pickle\n",
+    "\n",
+    "To solve the previously mentioned inconveniences we can use `pickle` instead of `CSV` format\n",
+    "to store our data.\n",
+    "\n",
+    "In order to do this we will put the two tables in a `tuple` and store them using `pickle.dump`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pickle\n",
+    "\n",
+    "with open('my_problem.plk', 'wb') as pickle_file:\n",
+    "    pickle.dump((new_target_times, readings), pickle_file)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "And then load it back all at once using `pickle.load`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "with open('my_problem.plk', 'rb') as pickle_file:\n",
+    "    my_target_times, my_readings = pickle.load(pickle_file)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

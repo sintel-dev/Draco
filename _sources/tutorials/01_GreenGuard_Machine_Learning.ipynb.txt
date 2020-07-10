@@ -1,0 +1,1122 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# GreenGuard Machine Learning"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this tutorial we will show you how to use GreenGuard to solve a Machine Learning problem\n",
+    "defined via a Target Times table.\n",
+    "\n",
+    "During the next steps we will:\n",
+    "\n",
+    "- Load demo target times and readings\n",
+    "- Find available pipelines and load two of them as templates\n",
+    "- Use GreenGuard AutoML to select the best template and hyperparameters for our problem\n",
+    "- Build and fit a Machine Learning pipeline based on the found template and hyperparameters\n",
+    "- Make predictions using the fitted pipeline\n",
+    "- Evaluate how good the predictions are"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 0. Setup the logging\n",
+    "\n",
+    "This step sets up logging in our environment to increase our visibility over\n",
+    "the steps that GreenGuard performs."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import logging;\n",
+    "\n",
+    "logging.basicConfig(level=logging.INFO)\n",
+    "logging.getLogger().setLevel(level=logging.INFO)\n",
+    "\n",
+    "import warnings\n",
+    "warnings.simplefilter(\"ignore\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. Load the Data\n",
+    "\n",
+    "The first step is to load the data that we are going to use.\n",
+    "\n",
+    "In order to use the demo data included in GreenGuard, the `greenguard.demo.load_demo` function can be used."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from greenguard.demo import load_demo\n",
+    "\n",
+    "target_times, readings = load_demo()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This will download some demo data from [GreenGuard S3 demo Bucket](\n",
+    "https://d3-ai-greenguard.s3.amazonaws.com/index.html) and load it as\n",
+    "the necessary `target_times` and `readings` tables.\n",
+    "\n",
+    "The exact format of these tables is described in the GreenGuard README and docs:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>turbine_id</th>\n",
+       "      <th>cutoff_time</th>\n",
+       "      <th>target</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-12</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-13</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-14</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-15</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>2013-01-16</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  turbine_id cutoff_time  target\n",
+       "0       T001  2013-01-12       0\n",
+       "1       T001  2013-01-13       0\n",
+       "2       T001  2013-01-14       0\n",
+       "3       T001  2013-01-15       1\n",
+       "4       T001  2013-01-16       0"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(353, 3)"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "turbine_id             object\n",
+       "cutoff_time    datetime64[ns]\n",
+       "target                  int64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "target_times.dtypes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>turbine_id</th>\n",
+       "      <th>signal_id</th>\n",
+       "      <th>timestamp</th>\n",
+       "      <th>value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S01</td>\n",
+       "      <td>2013-01-10</td>\n",
+       "      <td>323.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S02</td>\n",
+       "      <td>2013-01-10</td>\n",
+       "      <td>320.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S03</td>\n",
+       "      <td>2013-01-10</td>\n",
+       "      <td>284.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S04</td>\n",
+       "      <td>2013-01-10</td>\n",
+       "      <td>348.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>T001</td>\n",
+       "      <td>S05</td>\n",
+       "      <td>2013-01-10</td>\n",
+       "      <td>273.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  turbine_id signal_id  timestamp  value\n",
+       "0       T001       S01 2013-01-10  323.0\n",
+       "1       T001       S02 2013-01-10  320.0\n",
+       "2       T001       S03 2013-01-10  284.0\n",
+       "3       T001       S04 2013-01-10  348.0\n",
+       "4       T001       S05 2013-01-10  273.0"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1313540, 4)"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "turbine_id            object\n",
+       "signal_id             object\n",
+       "timestamp     datetime64[ns]\n",
+       "value                float64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "readings.dtypes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Load your own Dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Alternatively, if you want to load your own dataset, all you have to do is load the\n",
+    "`target_times` and `readings` tables as `pandas.DataFrame` objects.\n",
+    "\n",
+    "Make sure to parse the corresponding datetime fields!\n",
+    "\n",
+    "```python\n",
+    "import pandas as pd\n",
+    "\n",
+    "target_times = pd.read_csv('path/to/your/target_times.csv', parse_dates=['cutoff_time'])\n",
+    "readings = pd.read_csv('path/to/your/readings.csv', parse_dates=['timestamp'])\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. Split the data\n",
+    "\n",
+    "Once we have loaded the `target_times` and before proceeding to training any Machine Learning\n",
+    "Pipeline, we will have split them in 2 partitions for training and testing.\n",
+    "\n",
+    "In this case, we will split them using the [train_test_split function from scikit-learn](\n",
+    "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html),\n",
+    "but it can be done with any other suitable tool."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split\n",
+    "\n",
+    "train, test = train_test_split(target_times, test_size=0.25, random_state=0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3. Finding the available Templates\n",
+    "\n",
+    "The next step will be to select a collection of templates from the ones\n",
+    "available in GreenGuard.\n",
+    "\n",
+    "For this, we can use the `greenguard.get_pipelines` function, which will\n",
+    "return us the list of all the available MLBlocks pipelines found in the\n",
+    "GreenGuard system."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['resample_600s_normalize_dfs_1d_xgb_classifier',\n",
+       " 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',\n",
+       " 'resample_600s_unstack_double_144_lstm_timeseries_classifier',\n",
+       " 'resample_3600s_unstack_24_lstm_timeseries_classifier',\n",
+       " 'resample_3600s_unstack_double_24_lstm_timeseries_classifier',\n",
+       " 'resample_600s_unstack_dfs_1d_xgb_classifier',\n",
+       " 'resample_600s_unstack_144_lstm_timeseries_classifier']"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from greenguard import get_pipelines\n",
+    "\n",
+    "get_pipelines()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Optionally, we can pass a string to select the pipelines that contain it:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['resample_600s_normalize_dfs_1d_xgb_classifier',\n",
+       " 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',\n",
+       " 'resample_600s_unstack_dfs_1d_xgb_classifier']"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "get_pipelines('dfs')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Additionally, we can pass the keyword `path=True` to obtain a dictionary containing\n",
+    "also the path to the pipelines instead of only the list of names."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'resample_600s_normalize_dfs_1d_xgb_classifier': '/home/xals/Projects/MIT/GreenGuard/greenguard/pipelines/resample_600s_normalize_dfs_1d_xgb_classifier.json',\n",
+       " 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier': '/home/xals/Projects/MIT/GreenGuard/greenguard/pipelines/resample_600s_unstack_normalize_dfs_1d_xgb_classifier.json',\n",
+       " 'resample_600s_unstack_dfs_1d_xgb_classifier': '/home/xals/Projects/MIT/GreenGuard/greenguard/pipelines/resample_600s_unstack_dfs_1d_xgb_classifier.json'}"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "get_pipelines('dfs', path=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "For the rest of this tutorial, we will select and use the templates\n",
+    "`resample_600s_unstack_normalize_dfs_1d_xgb_classifier` and\n",
+    "`resample_600s_normalize_dfs_1d_xgb_classifier`.\n",
+    "\n",
+    "The `resample_600s_unstack_normalize_dfs_1d_xgb_classifier` template contains the following steps:\n",
+    "\n",
+    "- Resample the data using a 10 minute average aggregation\n",
+    "- Unstack the data by signal, so each signal is in a different column\n",
+    "- Normalize the Turbine IDs into a new table to assist DFS aggregations\n",
+    "- Use DFS on the readings based on the target_times cutoff times using a 1d window size\n",
+    "- Apply an XGBoost Classifier\n",
+    "\n",
+    "And the `resample_600s_normalize_dfs_1d_xgb_classifier` template contains the above steps but without\n",
+    "unstacking the data by signal."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "templates = [\n",
+    "    'resample_600s_unstack_normalize_dfs_1d_xgb_classifier', \n",
+    "    'resample_600s_normalize_dfs_1d_xgb_classifier'\n",
+    "]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 4. Finding the best Pipeline\n",
+    "\n",
+    "Once we have loaded the data, we create a **GreenGuardPipeline** instance by passing:\n",
+    "\n",
+    "* `templates (string or list)`: the name of a template, the path to a template json file or\n",
+    "a list that can combine both of them.\n",
+    "* `metric (string or function)`: The name of the metric to use or a metric function to use.\n",
+    "* `cost (bool)`: Whether the metric is a cost function to be minimized or a score to be maximized.\n",
+    "\n",
+    "Optionally, we can also pass defails about the cross validation configuration:\n",
+    "\n",
+    "* `stratify`\n",
+    "* `cv_splits`\n",
+    "* `shuffle`\n",
+    "* `random_state`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from greenguard.pipeline import GreenGuardPipeline\n",
+    "\n",
+    "pipeline = GreenGuardPipeline(templates, metric='f1', cv_splits=3)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Once we have created the pipeline, we can find which template and which combination of hyperparameters works best for our data by calling the `tune` method of our pipeline, passing its `target_times` and `readings` variables.\n",
+    "This method will return a `BTBSession` session that will:\n",
+    "- Select and tune templates.\n",
+    "- If a template or hyperparameters that get a higher score than the previous one is found, automatically update our pipeline so that it uses that template with those hyperparameters.\n",
+    "- Remove templates that don't work with the given data and focus on tuning only the ones that do."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "session = pipeline.tune(target_times, readings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Once we have our `session` we can call it's method `run` with the amount of\n",
+    "tuning iterations that we want to perform:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2020-07-10 11:39:49,290 - INFO - session - Obtaining default configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Built 165 features\n",
+      "Elapsed: 00:32 | Progress: 100%|██████████\n",
+      "Elapsed: 00:16 | Progress: 100%|██████████\n",
+      "Built 165 features\n",
+      "Elapsed: 00:32 | Progress: 100%|██████████\n",
+      "Elapsed: 00:16 | Progress: 100%|██████████\n",
+      "Built 165 features\n",
+      "Elapsed: 00:32 | Progress: 100%|██████████\n",
+      "Elapsed: 00:15 | Progress: 100%|██████████\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2020-07-10 11:42:19,561 - INFO - pipeline - New configuration found:\n",
+      "  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 0\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 100\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 3\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.1\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.0\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 1\n",
+      "2020-07-10 11:42:19,563 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.604136604136604\n",
+      "2020-07-10 11:42:19,565 - INFO - session - Obtaining default configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Built 99 features\n",
+      "Elapsed: 01:28 | Progress: 100%|██████████\n",
+      "Elapsed: 00:45 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 01:29 | Progress: 100%|██████████\n",
+      "Elapsed: 00:47 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 01:32 | Progress: 100%|██████████\n",
+      "Elapsed: 00:48 | Progress: 100%|██████████\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2020-07-10 11:49:21,971 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:22,446 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:22,682 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:22,862 - INFO - pipeline - New configuration found:\n",
+      "  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 16\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 82\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 3\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.39699298238763425\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.06238180737748478\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 1\n",
+      "2020-07-10 11:49:22,864 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.6110894266631971\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "{'id': '6cbe94178d761b5c263dc2f7ab1f8205',\n",
+       " 'name': 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',\n",
+       " 'config': {('mlprimitives.custom.feature_extraction.CategoricalEncoder#1',\n",
+       "   'max_labels'): 16,\n",
+       "  ('xgboost.XGBClassifier#1', 'n_estimators'): 82,\n",
+       "  ('xgboost.XGBClassifier#1', 'max_depth'): 3,\n",
+       "  ('xgboost.XGBClassifier#1', 'learning_rate'): 0.39699298238763425,\n",
+       "  ('xgboost.XGBClassifier#1', 'gamma'): 0.06238180737748478,\n",
+       "  ('xgboost.XGBClassifier#1', 'min_child_weight'): 1},\n",
+       " 'score': 0.6110894266631971}"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "session.run(5)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "When this is done, the `best_proposal` will be printed out. We can access it anytime\n",
+    "using `session.best_proposal`:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'id': '6cbe94178d761b5c263dc2f7ab1f8205',\n",
+       " 'name': 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',\n",
+       " 'config': {('mlprimitives.custom.feature_extraction.CategoricalEncoder#1',\n",
+       "   'max_labels'): 16,\n",
+       "  ('xgboost.XGBClassifier#1', 'n_estimators'): 82,\n",
+       "  ('xgboost.XGBClassifier#1', 'max_depth'): 3,\n",
+       "  ('xgboost.XGBClassifier#1', 'learning_rate'): 0.39699298238763425,\n",
+       "  ('xgboost.XGBClassifier#1', 'gamma'): 0.06238180737748478,\n",
+       "  ('xgboost.XGBClassifier#1', 'min_child_weight'): 1},\n",
+       " 'score': 0.6110894266631971}"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "session.best_proposal"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can check that the new hyperparameters are already set by calling `get_hyperparameters` method: "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{('mlprimitives.custom.feature_extraction.CategoricalEncoder#1',\n",
+       "  'max_labels'): 16,\n",
+       " ('xgboost.XGBClassifier#1', 'n_estimators'): 82,\n",
+       " ('xgboost.XGBClassifier#1', 'max_depth'): 3,\n",
+       " ('xgboost.XGBClassifier#1', 'learning_rate'): 0.39699298238763425,\n",
+       " ('xgboost.XGBClassifier#1', 'gamma'): 0.06238180737748478,\n",
+       " ('xgboost.XGBClassifier#1', 'min_child_weight'): 1}"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pipeline.get_hyperparameters()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can also check the template name that is used to generate the pipeline:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'resample_600s_unstack_normalize_dfs_1d_xgb_classifier'"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pipeline.template_name"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can  also see the obtained cross validation score by looking at the `cv_score` attribute of the\n",
+    "`pipeline` object:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.6110894266631971"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pipeline.cv_score"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**NOTE**: If the score is not good enough, we can call the `run` method of the `session` again,\n",
+    "specifying the amount of iterations, and this will resume its tuning process continuing from\n",
+    "the previous results!"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2020-07-10 11:49:22,952 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:23,246 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:23,464 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:23,668 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:23,791 - INFO - pipeline - New configuration found:\n",
+      "  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 80\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 31\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 4\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.32814385597842255\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.19795099494663482\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 1\n",
+      "2020-07-10 11:49:23,792 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.6297458681170419\n",
+      "2020-07-10 11:49:23,796 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:23,955 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:24,191 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:24,403 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:24,546 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:25,544 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier\n",
+      "2020-07-10 11:49:25,698 - INFO - pipeline - New configuration found:\n",
+      "  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 96\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 36\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 9\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.3256576169027807\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.1061546068995437\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 1\n",
+      "2020-07-10 11:49:25,699 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.6306697372853741\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "{'id': '157087395a2643c9ecc4a2b3549a1fc9',\n",
+       " 'name': 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',\n",
+       " 'config': {('mlprimitives.custom.feature_extraction.CategoricalEncoder#1',\n",
+       "   'max_labels'): 96,\n",
+       "  ('xgboost.XGBClassifier#1', 'n_estimators'): 36,\n",
+       "  ('xgboost.XGBClassifier#1', 'max_depth'): 9,\n",
+       "  ('xgboost.XGBClassifier#1', 'learning_rate'): 0.3256576169027807,\n",
+       "  ('xgboost.XGBClassifier#1', 'gamma'): 0.1061546068995437,\n",
+       "  ('xgboost.XGBClassifier#1', 'min_child_weight'): 1},\n",
+       " 'score': 0.6306697372853741}"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "session.run(iterations=10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.6306697372853741"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pipeline.cv_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{('mlprimitives.custom.feature_extraction.CategoricalEncoder#1',\n",
+       "  'max_labels'): 96,\n",
+       " ('xgboost.XGBClassifier#1', 'n_estimators'): 36,\n",
+       " ('xgboost.XGBClassifier#1', 'max_depth'): 9,\n",
+       " ('xgboost.XGBClassifier#1', 'learning_rate'): 0.3256576169027807,\n",
+       " ('xgboost.XGBClassifier#1', 'gamma'): 0.1061546068995437,\n",
+       " ('xgboost.XGBClassifier#1', 'min_child_weight'): 1}"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pipeline.get_hyperparameters()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 5. Fitting the pipeline\n",
+    "\n",
+    "Once we are satisfied with the obtained cross validation score, we can proceed to call\n",
+    "the `fit` method passing again the same data elements.\n",
+    "\n",
+    "This will fit the pipeline with all the training data available using the best hyperparameters\n",
+    "found during the tuning process:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Built 165 features\n",
+      "Elapsed: 00:37 | Progress: 100%|██████████\n"
+     ]
+    }
+   ],
+   "source": [
+    "pipeline.fit(train, readings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 6. Use the fitted pipeline\n",
+    "\n",
+    "After fitting the pipeline, we are ready to make predictions on new data:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed: 00:12 | Progress: 100%|██████████\n"
+     ]
+    }
+   ],
+   "source": [
+    "predictions = pipeline.predict(test, readings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "And evaluate its prediction performance:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.7307692307692306"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from sklearn.metrics import f1_score\n",
+    "\n",
+    "f1_score(test['target'], predictions)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 7. Save and load the pipeline\n",
+    "\n",
+    "Since the tuning and fitting process takes time to execute and requires a lot of data, you\n",
+    "will probably want to save a fitted instance and load it later to analyze new signals\n",
+    "instead of fitting pipelines over and over again.\n",
+    "\n",
+    "This can be done by using the `save` and `load` methods from the `GreenGuardPipeline`.\n",
+    "\n",
+    "In order to save an instance, call its `save` method passing it the path and filename\n",
+    "where the model should be saved."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "path = 'my_pipeline.pkl'\n",
+    "\n",
+    "pipeline.save(path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Once the pipeline is saved, it can be loaded back as a new `GreenGuardPipeline` by using the\n",
+    "`GreenGuardPipeline.load` method:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "new_pipeline = GreenGuardPipeline.load(path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Once loaded, it can be directly used to make predictions on new data."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed: 00:12 | Progress: 100%|██████████\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "array([0, 0, 0, 1, 0])"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "predictions = new_pipeline.predict(test, readings)\n",
+    "predictions[0:5]"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
