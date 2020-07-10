@@ -281,5 +281,5 @@ f1_score(test_targets, predictions)
 
 For more details about **GreenGuard** and all its possibilities and features, please check the
 [project documentation site](https://signals-dev.github.io/GreenGuard/)
-Also do not forget to have a look at the [notebook tutorials](
-https://github.com/signals-dev/GreenGuard/tree/master/notebooks)!
+Also do not forget to have a look at the [tutorials](
+https://github.com/signals-dev/GreenGuard/tree/master/tutorials)!
