@@ -5,15 +5,18 @@ import json
 import logging
 import os
 import pickle
+import tempfile
 from copy import deepcopy
 from hashlib import md5
 
 import cloudpickle
+import keras
 import numpy as np
 from btb import BTBSession
 from btb.tuning import Tunable
 from mlblocks import MLPipeline
 from mlblocks.discovery import load_pipeline
+from mlprimitives.adapters.keras import Sequential
 from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import KFold, StratifiedKFold
 
@@ -23,6 +26,32 @@ LOGGER = logging.getLogger(__name__)
 
 
 PIPELINES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'pipelines'))
+
+
+# Patch Keras to save on disk without a model trained
+def __getstate__(self):
+    state = self.__dict__.copy()
+    if 'model' in state:
+        with tempfile.NamedTemporaryFile(suffix='.hdf5', delete=True) as fd:
+            keras.models.save_model(state.pop('model'), fd.name, overwrite=True)
+            state['model_str'] = fd.read()
+
+    return state
+
+
+def __setstate__(self, state):
+    if 'model_str' in state:
+        with tempfile.NamedTemporaryFile(suffix='.hdf5', delete=True) as fd:
+            fd.write(state.pop('model_str'))
+            fd.flush()
+
+            state['model'] = keras.models.load_model(fd.name)
+
+    self.__dict__ = state
+
+
+Sequential.__getstate__ = __getstate__
+Sequential.__setstate__ = __setstate__
 
 
 def get_pipelines(pattern='', path=False, unstacked=False):
