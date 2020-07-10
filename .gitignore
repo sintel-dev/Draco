@@ -111,3 +111,4 @@ notebooks/
 notebooks-private/
 scripts/
 dask-worker-space/
+tutorials/*.pkl
