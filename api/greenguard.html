@@ -362,7 +362,7 @@
 </table>
 <dl class="class">
 <dt id="greenguard.GreenGuardPipeline">
-<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">metric='accuracy'</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">greenguard.</code><code class="sig-name descname">GreenGuardPipeline</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">metric='accuracy'</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">stratify=True</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">cache_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main Machine Learning component in the GreenGuard project.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> represents the abstraction of a Machine
@@ -532,6 +532,8 @@ self.templates.</p></li>
 </div></blockquote>
 <p>Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 </p></li>
+<li><p><strong>cache_path</strong> (<em>str</em>) – If given, cache the generated cross validation splits in this folder.
+Defatuls to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
