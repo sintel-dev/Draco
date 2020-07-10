@@ -2,7 +2,7 @@
 
 ## 0.2.2 - 2020-07-10
 
-### Internam Imrpovements
+### Internal Imrpovements
 
 * Added github actions.
 
