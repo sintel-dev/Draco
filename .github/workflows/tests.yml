@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.5, 3.6, 3.7]
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v1
@@ -21,18 +21,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - if: matrix.os == 'ubuntu-latest'
-      name: Install graphviz - Ubuntu
-      run: |
-        sudo apt-get install pandoc
-
-    - if: matrix.os == 'macos-latest'
-      name: Install graphviz - MacOS
-      run: |
-        brew install pandoc
-
     - name: Install dependencies
       run: |
+        sudo apt-get install pandoc
         python -m pip install --upgrade pip
         pip install tox tox-gh-actions
 
