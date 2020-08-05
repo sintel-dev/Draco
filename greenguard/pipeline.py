@@ -93,6 +93,29 @@ def get_pipelines(pattern='', path=False, unstacked=False):
     return pipelines
 
 
+def generate_init_params(template_names, init_params):
+    """Generate init_params dicts.
+
+    The output will be a dict that contains one entry for each template
+    with a dict indicating the init_params to use with that template.
+    """
+    if not init_params:
+        init_params = {}
+    elif isinstance(init_params, list):
+        init_params = dict(zip(template_names, init_params))
+
+    if not any(name in init_params for name in template_names):
+        return {
+            name: deepcopy(init_params)
+            for name in template_names
+        }
+    else:
+        return {
+            name: deepcopy(init_params.get(name, {}))
+            for name in template_names
+        }
+
+
 class GreenGuardPipeline(object):
     """Main Machine Learning component in the GreenGuard project.
 
@@ -132,7 +155,7 @@ class GreenGuardPipeline(object):
             Template to use. If a ``str`` is given, load the corresponding
             ``MLPipeline``. Also can be a list combining both.
         metric (str or function):
-            Metric to use. If an ``str`` is give it must be one of the metrics
+            Metric to use. If an ``str`` is given it must be one of the metrics
             defined in the ``greenguard.metrics.METRICS`` dictionary.
         cost (bool):
             Whether the metric is a cost function (the lower the better) or not.
@@ -226,23 +249,44 @@ class GreenGuardPipeline(object):
         for template in templates:
             if isinstance(template, str):
                 template_name = template
-                template = load_pipeline(template_name)
+                template = deepcopy(load_pipeline(template_name))
             else:
                 template_name = md5(json.dumps(template)).digest()
+
             template_dicts[template_name] = template
             template_names.append(template_name)
 
         return template_names, template_dicts
 
     def _generate_init_params(self, init_params):
+        """Generate init_params dicts.
+
+        The output will be a dict that contains one entry for each template
+        with a dict indicating the init_params to use with that template.
+        """
         if not init_params:
-            self._init_params = {}
+            init_params = {}
         elif isinstance(init_params, list):
-            self._init_params = dict(zip(self._template_names, init_params))
-        elif any(name in init_params for name in self._template_names):
-            self._init_params = init_params
+            init_params = dict(zip(self._template_names, init_params))
+
+        if not any(name in init_params for name in self._template_names):
+            self._init_params = {
+                name: deepcopy(init_params)
+                for name in self._template_names
+            }
+        else:
+            self._init_params = {
+                name: deepcopy(init_params.get(name, {}))
+                for name in self._template_names
+            }
 
     def _generate_preprocessing(self, preprocessing):
+        """Generate preprocessing dict.
+
+        The preprocessing dict contains one entry for each template and
+        an integer indicating the number of preprocessing steps for that
+        template.
+        """
         if isinstance(preprocessing, int):
             self._preprocessing = {name: preprocessing for name in self._template_names}
         else:
@@ -279,7 +323,7 @@ class GreenGuardPipeline(object):
         self.templates = templates
         self._template_names, self._template_dicts = self._get_templates(templates)
         self._default_init_params = {}
-        self._generate_init_params(init_params)
+        self._init_params = generate_init_params(self._template_names, init_params)
 
         for name, template in self._template_dicts.items():
             init_params = self._init_params.get(name, self._default_init_params)
