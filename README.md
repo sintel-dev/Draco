@@ -219,20 +219,18 @@ The returned `pipeline` variable will be `list` containing the names of all the 
 available in the GreenGuard system:
 
 ```
-['resample_600s_normalize_dfs_1d_xgb_classifier',
- 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',
- 'resample_600s_unstack_double_144_lstm_timeseries_classifier',
- 'resample_3600s_unstack_24_lstm_timeseries_classifier',
- 'resample_3600s_unstack_double_24_lstm_timeseries_classifier',
- 'resample_600s_unstack_dfs_1d_xgb_classifier',
- 'resample_600s_unstack_144_lstm_timeseries_classifier']
+['unstack_double_lstm_timeseries_classifier',
+ 'unstack_lstm_timeseries_classifier',
+ 'unstack_normalize_dfs_xgb_classifier',
+ 'unstack_dfs_xgb_classifier',
+ 'normalize_dfs_xgb_classifier']
 ```
 
 For the rest of this tutorial, we will select and use the pipeline
-`resample_600s_unstack_normalize_dfs_1d_xgb_classifier` as our template.
+`normalize_dfs_xgb_classifier` as our template.
 
 ```python3
-pipeline_name = 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier'
+pipeline_name = 'normalize_dfs_xgb_classifier'
 ```
 
 ## 3. Fitting the Pipeline

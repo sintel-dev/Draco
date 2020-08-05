@@ -18,7 +18,7 @@ except IOError:
 install_requires = [
     'Keras>=2.1.6,<2.4',
     'mlblocks>=0.3.4,<0.4',
-    'mlprimitives>=0.2.4,<0.3',
+    'mlprimitives>=0.2.5,<0.3',
     'scipy>=1.0.1,<1.4.0',
     'baytune>=0.3.9,<0.4',
     'numpy>=1.15.4,<1.17',
