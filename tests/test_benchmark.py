@@ -17,7 +17,7 @@ def test_predict():
 
     target_times, readings = load_demo()
     target_times = target_times.head(10)
-    readings = readings.head(1000)
+    readings = readings.head(100)
 
     # run
     scores_df = evaluate_templates(
