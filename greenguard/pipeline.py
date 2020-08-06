@@ -116,6 +116,26 @@ def generate_init_params(template_names, init_params):
         }
 
 
+def generate_preprocessing(templates_names, template, preprocessing):
+    """Generate preprocessing dict.
+
+    The preprocessing dict contains one entry for each template and
+    an integer indicating the number of preprocessing steps for that
+    template.
+    """
+    if isinstance(preprocessing, int):
+        preprocessing = {template: preprocessing for template in templates_names}
+    else:
+        if isinstance(preprocessing, list):
+            preprocessing = dict(zip(templates_names, preprocessing))
+
+        preprocessing = {
+            template: preprocessing.get(template, 0)
+            for name in templates_names
+        }
+    return preprocessing
+
+
 class GreenGuardPipeline(object):
     """Main Machine Learning component in the GreenGuard project.
 
@@ -258,46 +278,6 @@ class GreenGuardPipeline(object):
 
         return template_names, template_dicts
 
-    def _generate_init_params(self, init_params):
-        """Generate init_params dicts.
-
-        The output will be a dict that contains one entry for each template
-        with a dict indicating the init_params to use with that template.
-        """
-        if not init_params:
-            init_params = {}
-        elif isinstance(init_params, list):
-            init_params = dict(zip(self._template_names, init_params))
-
-        if not any(name in init_params for name in self._template_names):
-            self._init_params = {
-                name: deepcopy(init_params)
-                for name in self._template_names
-            }
-        else:
-            self._init_params = {
-                name: deepcopy(init_params.get(name, {}))
-                for name in self._template_names
-            }
-
-    def _generate_preprocessing(self, preprocessing):
-        """Generate preprocessing dict.
-
-        The preprocessing dict contains one entry for each template and
-        an integer indicating the number of preprocessing steps for that
-        template.
-        """
-        if isinstance(preprocessing, int):
-            self._preprocessing = {name: preprocessing for name in self._template_names}
-        else:
-            if isinstance(preprocessing, list):
-                preprocessing = dict(zip(self._template_names, preprocessing))
-
-            self._preprocessing = {
-                name: preprocessing.get(name, 0)
-                for name in self._template_names
-            }
-
     def _build_pipeline(self):
         self._pipeline = MLPipeline(self.template)
 
@@ -330,7 +310,7 @@ class GreenGuardPipeline(object):
             template_params = template.setdefault('init_params', {})
             self._update_params(template_params, init_params)
 
-        self._generate_preprocessing(preprocessing)
+        generate_preprocessing(self._template_names, self.templates, preprocessing)
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()

@@ -6,22 +6,9 @@ from sklearn.model_selection import train_test_split
 
 from greenguard.demo import load_demo
 from greenguard.metrics import METRICS
-from greenguard.pipeline import GreenGuardPipeline, generate_init_params
+from greenguard.pipeline import GreenGuardPipeline, generate_init_params, generate_preprocessing
 
 LOGGER = logging.getLogger(__name__)
-
-
-def _generate_init_params(templates, init_params):
-    if not init_params:
-        init_params = {}
-    elif isinstance(init_params, list):
-        init_params = dict(zip(templates, init_params))
-    elif any(name in init_params for name in templates):
-        init_params = init_params
-    else:
-        init_params = {template: init_params for template in templates}
-
-    return init_params
 
 
 def _build_init_params(template, window_size, rule, template_params):
@@ -49,15 +36,6 @@ def _build_init_params(template, window_size, rule, template_params):
         primitive_params.update(params)
 
     return template_params
-
-
-def _build_init_preprocessing(templates, template, preprocessing):
-    if isinstance(preprocessing, int):
-        return preprocessing
-    elif isinstance(preprocessing, list):
-        preprocessing = dict(zip(templates, preprocessing))
-
-    return preprocessing.get(template, 0)
 
 
 def evaluate_template(template, target_times, readings, metric='f1', tuning_iterations=50,
@@ -243,7 +221,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
         try:
             template_params = init_params[template]
             template_params = _build_init_params(template, window_size, rule, template_params)
-            init_preprocessing = _build_init_preprocessing(templates, template, preprocessing)
+            init_preprocessing = generate_preprocessing(templates, template, preprocessing)
 
             result = evaluate_template(
                 template=template,
