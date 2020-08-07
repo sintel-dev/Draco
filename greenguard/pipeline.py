@@ -311,7 +311,7 @@ class GreenGuardPipeline(object):
             self._update_params(template_params, init_params)
 
         self._preprocessing = generate_preprocessing(
-                self._template_names, self.templates, preprocessing)
+            self._template_names, self.templates, preprocessing)
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()
