@@ -96,8 +96,15 @@ def get_pipelines(pattern='', path=False, unstacked=False):
 def generate_init_params(template_names, init_params):
     """Generate init_params dicts.
 
-    The output will be a dict that contains one entry for each template
-    with a dict indicating the init_params to use with that template.
+    Args:
+        template_names (list):
+            List of templates.
+        init_params (list or dict):
+            Initialization parameters for the templates.
+
+    Returns:
+        Dict that contains one entry for each template with a dict indicating
+        the init_params to use with that template.
     """
     if not init_params:
         init_params = {}
@@ -116,22 +123,29 @@ def generate_init_params(template_names, init_params):
         }
 
 
-def generate_preprocessing(templates_names, template, preprocessing):
+def generate_preprocessing(templates_names, preprocessing):
     """Generate preprocessing dict.
 
-    The preprocessing dict contains one entry for each template and
-    an integer indicating the number of preprocessing steps for that
-    template.
+    Args:
+        template_names (list):
+            List of templates.
+        preprocessing (int, list or dict):
+            Number of preprocessing steps to be used.
+
+    Returns:
+        preprocessing (dict):
+            Contains one entry for each template and an integer indicating the
+            number of preprocessing steps for that template.
     """
     if isinstance(preprocessing, int):
-        preprocessing = {template: preprocessing for template in templates_names}
+        preprocessing = {name: preprocessing for name in templates_names}
     else:
         if isinstance(preprocessing, list):
             preprocessing = dict(zip(templates_names, preprocessing))
 
         preprocessing = {
-            template: preprocessing.get(template, 0)
-            for template in templates_names
+            name: preprocessing.get(name, 0)
+            for name in templates_names
         }
     return preprocessing
 
@@ -310,8 +324,7 @@ class GreenGuardPipeline(object):
             template_params = template.setdefault('init_params', {})
             self._update_params(template_params, init_params)
 
-        self._preprocessing = generate_preprocessing(
-            self._template_names, self.templates, preprocessing)
+        self._preprocessing = generate_preprocessing(self._template_names, preprocessing)
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()

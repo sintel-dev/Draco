@@ -46,9 +46,6 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
     Args:
         template (str):
             Given template to evaluate.
-        metric (function or str):
-            Metric to use. If an ``str`` is give it must be one of the metrics
-            defined in the ``greenguard.metrics.METRICS`` dictionary.
         target_times (DataFrame):
             Contains the specefication problem that we are solving, which has three columns:
 
@@ -67,10 +64,13 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
                 * timestamp (datetime): Time where the reading took place, as a datetime.
                 * value (float): Numeric value of this reading.
 
+        metric (function or str):
+            Metric to use. If an ``str`` is give it must be one of the metrics
+            defined in the ``greenguard.metrics.METRICS`` dictionary.
         tuning_iterations (int):
             Number of iterations to be used.
         preprocessing (int, list or dict):
-            Type of preprocessing to be used.
+            Number of preprocessing steps to be used.
         init_params (list):
             Initialization parameters for the pipeline.
         cost (bool):
@@ -137,6 +137,8 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             defined in the ``greenguard.metrics.METRICS`` dictionary.
         tuning_iterations (int):
             Number of iterations to be used.
+        init_params (dict):
+            Initialization parameters for the pipelines.
         target_times (DataFrame):
             Contains the specefication problem that we are solving, which has three columns:
 
@@ -156,7 +158,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
                 * value (float): Numeric value of this reading.
 
         preprocessing (int, list or dict):
-            Type of preprocessing to be used.
+            Number of preprocessing steps to be used.
         cost (bool):
             Wheter the metric is a cost function (the lower the better) or not.
         test_size (float):
@@ -208,6 +210,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
         target_times, readings = load_demo()
 
     init_params = generate_init_params(templates, init_params)
+    preprocessing = generate_preprocessing(templates, preprocessing)
 
     scores_list = []
     for template, window_rule in product(templates, window_size_rule):
@@ -221,7 +224,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
         try:
             template_params = init_params[template]
             template_params = _build_init_params(template, window_size, rule, template_params)
-            init_preprocessing = generate_preprocessing(templates, template, preprocessing)
+            template_preprocessing = preprocessing[template]
 
             result = evaluate_template(
                 template=template,
@@ -229,7 +232,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
                 readings=readings,
                 metric=metric,
                 tuning_iterations=tuning_iterations,
-                preprocessing=init_preprocessing,
+                preprocessing=template_preprocessing,
                 init_params=template_params,
                 cost=cost,
                 test_size=test_size,
