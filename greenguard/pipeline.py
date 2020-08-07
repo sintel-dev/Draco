@@ -131,7 +131,7 @@ def generate_preprocessing(templates_names, template, preprocessing):
 
         preprocessing = {
             template: preprocessing.get(template, 0)
-            for name in templates_names
+            for template in templates_names
         }
     return preprocessing
 
@@ -310,7 +310,8 @@ class GreenGuardPipeline(object):
             template_params = template.setdefault('init_params', {})
             self._update_params(template_params, init_params)
 
-        generate_preprocessing(self._template_names, self.templates, preprocessing)
+        self._preprocessing = generate_preprocessing(
+                self._template_names, self.templates, preprocessing)
         self._set_template(self._template_names[0])
         self._hyperparameters = dict()
         self._build_pipeline()
