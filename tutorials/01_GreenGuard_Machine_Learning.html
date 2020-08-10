@@ -169,6 +169,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/greenguard.benchmark.html">greenguard.benchmark module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/greenguard.metrics.html">greenguard.metrics module</a></li>
@@ -540,7 +541,7 @@ div.rendered_html tbody tr:hover {
 <h2>0. Setup the logging<a class="headerlink" href="#0.-Setup-the-logging" title="Permalink to this headline">¶</a></h2>
 <p>This step sets up logging in our environment to increase our visibility over the steps that GreenGuard performs.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -560,7 +561,7 @@ div.rendered_html tbody tr:hover {
 <p>The first step is to load the data that we are going to use.</p>
 <p>In order to use the demo data included in GreenGuard, the <code class="docutils literal notranslate"><span class="pre">greenguard.demo.load_demo</span></code> function can be used.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -573,7 +574,7 @@ div.rendered_html tbody tr:hover {
 <p>This will download some demo data from <a class="reference external" href="https://d3-ai-greenguard.s3.amazonaws.com/index.html">GreenGuard S3 demo Bucket</a> and load it as the necessary <code class="docutils literal notranslate"><span class="pre">target_times</span></code> and <code class="docutils literal notranslate"><span class="pre">readings</span></code> tables.</p>
 <p>The exact format of these tables is described in the GreenGuard README and docs:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -582,7 +583,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -645,7 +646,7 @@ div.rendered_html tbody tr:hover {
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -654,7 +655,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -663,7 +664,7 @@ div.rendered_html tbody tr:hover {
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -672,7 +673,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -684,7 +685,7 @@ dtype: object
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -693,7 +694,7 @@ dtype: object
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -762,7 +763,7 @@ dtype: object
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -771,7 +772,7 @@ dtype: object
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -780,7 +781,7 @@ dtype: object
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -789,7 +790,7 @@ dtype: object
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -818,7 +819,7 @@ dtype: object
 <p>Once we have loaded the <code class="docutils literal notranslate"><span class="pre">target_times</span></code> and before proceeding to training any Machine Learning Pipeline, we will have split them in 2 partitions for training and testing.</p>
 <p>In this case, we will split them using the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">train_test_split function from scikit-learn</a>, but it can be done with any other suitable tool.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -834,7 +835,7 @@ dtype: object
 <p>The next step will be to select a collection of templates from the ones available in GreenGuard.</p>
 <p>For this, we can use the <code class="docutils literal notranslate"><span class="pre">greenguard.get_pipelines</span></code> function, which will return us the list of all the available MLBlocks pipelines found in the GreenGuard system.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -845,23 +846,21 @@ dtype: object
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;resample_600s_normalize_dfs_1d_xgb_classifier&#39;,
- &#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;,
- &#39;resample_600s_unstack_double_144_lstm_timeseries_classifier&#39;,
- &#39;resample_3600s_unstack_24_lstm_timeseries_classifier&#39;,
- &#39;resample_3600s_unstack_double_24_lstm_timeseries_classifier&#39;,
- &#39;resample_600s_unstack_dfs_1d_xgb_classifier&#39;,
- &#39;resample_600s_unstack_144_lstm_timeseries_classifier&#39;]
+[&#39;normalize_dfs_xgb_classifier&#39;,
+ &#39;unstack_normalize_dfs_xgb_classifier&#39;,
+ &#39;unstack_dfs_xgb_classifier&#39;,
+ &#39;unstack_lstm_timeseries_classifier&#39;,
+ &#39;unstack_double_lstm_timeseries_classifier&#39;]
 </pre></div></div>
 </div>
 <p>Optionally, we can pass a string to select the pipelines that contain it:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -870,19 +869,19 @@ dtype: object
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;resample_600s_normalize_dfs_1d_xgb_classifier&#39;,
- &#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;,
- &#39;resample_600s_unstack_dfs_1d_xgb_classifier&#39;]
+[&#39;normalize_dfs_xgb_classifier&#39;,
+ &#39;unstack_normalize_dfs_xgb_classifier&#39;,
+ &#39;unstack_dfs_xgb_classifier&#39;]
 </pre></div></div>
 </div>
 <p>Additionally, we can pass the keyword <code class="docutils literal notranslate"><span class="pre">path=True</span></code> to obtain a dictionary containing also the path to the pipelines instead of only the list of names.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -891,18 +890,18 @@ dtype: object
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;resample_600s_normalize_dfs_1d_xgb_classifier&#39;: &#39;/home/xals/Projects/MIT/GreenGuard/greenguard/pipelines/resample_600s_normalize_dfs_1d_xgb_classifier.json&#39;,
- &#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;: &#39;/home/xals/Projects/MIT/GreenGuard/greenguard/pipelines/resample_600s_unstack_normalize_dfs_1d_xgb_classifier.json&#39;,
- &#39;resample_600s_unstack_dfs_1d_xgb_classifier&#39;: &#39;/home/xals/Projects/MIT/GreenGuard/greenguard/pipelines/resample_600s_unstack_dfs_1d_xgb_classifier.json&#39;}
+{&#39;normalize_dfs_xgb_classifier&#39;: &#39;/home/usuario/Projects/GreenGuard/greenguard/pipelines/normalize_dfs_xgb_classifier.json&#39;,
+ &#39;unstack_normalize_dfs_xgb_classifier&#39;: &#39;/home/usuario/Projects/GreenGuard/greenguard/pipelines/unstack_normalize_dfs_xgb_classifier.json&#39;,
+ &#39;unstack_dfs_xgb_classifier&#39;: &#39;/home/usuario/Projects/GreenGuard/greenguard/pipelines/unstack_dfs_xgb_classifier.json&#39;}
 </pre></div></div>
 </div>
-<p>For the rest of this tutorial, we will select and use the templates <code class="docutils literal notranslate"><span class="pre">resample_600s_unstack_normalize_dfs_1d_xgb_classifier</span></code> and <code class="docutils literal notranslate"><span class="pre">resample_600s_normalize_dfs_1d_xgb_classifier</span></code>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">resample_600s_unstack_normalize_dfs_1d_xgb_classifier</span></code> template contains the following steps:</p>
+<p>For the rest of this tutorial, we will select and use the templates <code class="docutils literal notranslate"><span class="pre">unstack_normalize_dfs_xgb_classifier</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_dfs_xgb_classifier</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">unstack_normalize_dfs_xgb_classifier</span></code> template contains the following steps:</p>
 <ul class="simple">
 <li><p>Resample the data using a 10 minute average aggregation</p></li>
 <li><p>Unstack the data by signal, so each signal is in a different column</p></li>
@@ -910,15 +909,15 @@ dtype: object
 <li><p>Use DFS on the readings based on the target_times cutoff times using a 1d window size</p></li>
 <li><p>Apply an XGBoost Classifier</p></li>
 </ul>
-<p>And the <code class="docutils literal notranslate"><span class="pre">resample_600s_normalize_dfs_1d_xgb_classifier</span></code> template contains the above steps but without unstacking the data by signal.</p>
+<p>And the <code class="docutils literal notranslate"><span class="pre">normalize_dfs_xgb_classifier</span></code> template contains the above steps but without unstacking the data by signal.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">templates</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;resample_600s_normalize_dfs_1d_xgb_classifier&#39;</span>
+    <span class="s1">&#39;unstack_normalize_dfs_xgb_classifier&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;normalize_dfs_xgb_classifier&#39;</span>
 <span class="p">]</span>
 </pre></div>
 </div>
@@ -940,7 +939,7 @@ dtype: object
 <li><p><code class="docutils literal notranslate"><span class="pre">random_state</span></code></p></li>
 </ul>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -953,7 +952,7 @@ dtype: object
 <p>Once we have created the pipeline, we can find which template and which combination of hyperparameters works best for our data by calling the <code class="docutils literal notranslate"><span class="pre">tune</span></code> method of our pipeline, passing its <code class="docutils literal notranslate"><span class="pre">target_times</span></code> and <code class="docutils literal notranslate"><span class="pre">readings</span></code> variables. This method will return a <code class="docutils literal notranslate"><span class="pre">BTBSession</span></code> session that will: - Select and tune templates. - If a template or hyperparameters that get a higher score than the previous one is found, automatically update our pipeline so that it uses that template with those
 hyperparameters. - Remove templates that don’t work with the given data and focus on tuning only the ones that do.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -963,7 +962,7 @@ hyperparameters. - Remove templates that don’t work with the given data and fo
 </div>
 <p>Once we have our <code class="docutils literal notranslate"><span class="pre">session</span></code> we can call it’s method <code class="docutils literal notranslate"><span class="pre">run</span></code> with the amount of tuning iterations that we want to perform:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -976,7 +975,7 @@ hyperparameters. - Remove templates that don’t work with the given data and fo
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2020-07-10 11:39:49,290 - INFO - session - Obtaining default configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
+INFO:btb.session:Obtaining default configuration for unstack_normalize_dfs_xgb_classifier
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -985,14 +984,14 @@ hyperparameters. - Remove templates that don’t work with the given data and fo
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Built 165 features
-Elapsed: 00:32 | Progress: 100%|██████████
-Elapsed: 00:16 | Progress: 100%|██████████
+Elapsed: 00:34 | Progress: 100%|██████████
+Elapsed: 00:18 | Progress: 100%|██████████
 Built 165 features
-Elapsed: 00:32 | Progress: 100%|██████████
-Elapsed: 00:16 | Progress: 100%|██████████
+Elapsed: 00:36 | Progress: 100%|██████████
+Elapsed: 00:17 | Progress: 100%|██████████
 Built 165 features
-Elapsed: 00:32 | Progress: 100%|██████████
-Elapsed: 00:15 | Progress: 100%|██████████
+Elapsed: 00:38 | Progress: 100%|██████████
+Elapsed: 00:17 | Progress: 100%|██████████
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1000,8 +999,8 @@ Elapsed: 00:15 | Progress: 100%|██████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2020-07-10 11:42:19,561 - INFO - pipeline - New configuration found:
-  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier
+INFO:greenguard.pipeline:New configuration found:
+  Template: unstack_normalize_dfs_xgb_classifier
     Hyperparameters:
       (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 0
       (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 100
@@ -1009,8 +1008,8 @@ Elapsed: 00:15 | Progress: 100%|██████████
       (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.1
       (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.0
       (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1
-2020-07-10 11:42:19,563 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.604136604136604
-2020-07-10 11:42:19,565 - INFO - session - Obtaining default configuration for resample_600s_normalize_dfs_1d_xgb_classifier
+INFO:btb.session:New optimal found: unstack_normalize_dfs_xgb_classifier - 0.605187908496732
+INFO:btb.session:Obtaining default configuration for normalize_dfs_xgb_classifier
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1019,14 +1018,14 @@ Elapsed: 00:15 | Progress: 100%|██████████
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Built 99 features
-Elapsed: 01:28 | Progress: 100%|██████████
-Elapsed: 00:45 | Progress: 100%|██████████
+Elapsed: 01:44 | Progress: 100%|██████████
+Elapsed: 00:52 | Progress: 100%|██████████
 Built 99 features
-Elapsed: 01:29 | Progress: 100%|██████████
-Elapsed: 00:47 | Progress: 100%|██████████
+Elapsed: 01:38 | Progress: 100%|██████████
+Elapsed: 00:52 | Progress: 100%|██████████
 Built 99 features
-Elapsed: 01:32 | Progress: 100%|██████████
-Elapsed: 00:48 | Progress: 100%|██████████
+Elapsed: 01:39 | Progress: 100%|██████████
+Elapsed: 00:49 | Progress: 100%|██████████
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1034,42 +1033,42 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2020-07-10 11:49:21,971 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:22,446 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:22,682 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:22,862 - INFO - pipeline - New configuration found:
-  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
+INFO:greenguard.pipeline:New configuration found:
+  Template: unstack_normalize_dfs_xgb_classifier
     Hyperparameters:
-      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 16
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 82
+      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 20
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 234
       (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.39699298238763425
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.06238180737748478
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.23028782510751677
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.9403975339570728
       (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1
-2020-07-10 11:49:22,864 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.6110894266631971
+INFO:btb.session:New optimal found: unstack_normalize_dfs_xgb_classifier - 0.6106037764640573
+INFO:btb.session:Generating new proposal configuration for normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;id&#39;: &#39;6cbe94178d761b5c263dc2f7ab1f8205&#39;,
- &#39;name&#39;: &#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;,
+{&#39;id&#39;: &#39;28d8ebbde404a0e501262a652c4d9aa5&#39;,
+ &#39;name&#39;: &#39;unstack_normalize_dfs_xgb_classifier&#39;,
  &#39;config&#39;: {(&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;,
-   &#39;max_labels&#39;): 16,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 82,
+   &#39;max_labels&#39;): 20,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 234,
   (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.39699298238763425,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.06238180737748478,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.23028782510751677,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.9403975339570728,
   (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1},
- &#39;score&#39;: 0.6110894266631971}
+ &#39;score&#39;: 0.6106037764640573}
 </pre></div></div>
 </div>
 <p>When this is done, the <code class="docutils literal notranslate"><span class="pre">best_proposal</span></code> will be printed out. We can access it anytime using <code class="docutils literal notranslate"><span class="pre">session.best_proposal</span></code>:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1078,26 +1077,26 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;id&#39;: &#39;6cbe94178d761b5c263dc2f7ab1f8205&#39;,
- &#39;name&#39;: &#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;,
+{&#39;id&#39;: &#39;28d8ebbde404a0e501262a652c4d9aa5&#39;,
+ &#39;name&#39;: &#39;unstack_normalize_dfs_xgb_classifier&#39;,
  &#39;config&#39;: {(&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;,
-   &#39;max_labels&#39;): 16,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 82,
+   &#39;max_labels&#39;): 20,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 234,
   (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.39699298238763425,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.06238180737748478,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.23028782510751677,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.9403975339570728,
   (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1},
- &#39;score&#39;: 0.6110894266631971}
+ &#39;score&#39;: 0.6106037764640573}
 </pre></div></div>
 </div>
 <p>You can check that the new hyperparameters are already set by calling <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1106,23 +1105,23 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 {(&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;,
-  &#39;max_labels&#39;): 16,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 82,
+  &#39;max_labels&#39;): 20,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 234,
  (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.39699298238763425,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.06238180737748478,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.23028782510751677,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.9403975339570728,
  (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1}
 </pre></div></div>
 </div>
 <p>We can also check the template name that is used to generate the pipeline:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1131,17 +1130,17 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;
+&#39;unstack_normalize_dfs_xgb_classifier&#39;
 </pre></div></div>
 </div>
 <p>We can also see the obtained cross validation score by looking at the <code class="docutils literal notranslate"><span class="pre">cv_score</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">pipeline</span></code> object:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1150,17 +1149,17 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.6110894266631971
+0.6106037764640573
 </pre></div></div>
 </div>
 <p><strong>NOTE</strong>: If the score is not good enough, we can call the <code class="docutils literal notranslate"><span class="pre">run</span></code> method of the <code class="docutils literal notranslate"><span class="pre">session</span></code> again, specifying the amount of iterations, and this will resume its tuning process continuing from the previous results!</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1173,58 +1172,58 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2020-07-10 11:49:22,952 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:23,246 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:23,464 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:23,668 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:23,791 - INFO - pipeline - New configuration found:
-  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
+INFO:greenguard.pipeline:New configuration found:
+  Template: unstack_normalize_dfs_xgb_classifier
     Hyperparameters:
       (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 80
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 31
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 4
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.32814385597842255
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.19795099494663482
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1
-2020-07-10 11:49:23,792 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.6297458681170419
-2020-07-10 11:49:23,796 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:23,955 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:24,191 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:24,403 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:24,546 - INFO - session - Generating new proposal configuration for resample_600s_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:25,544 - INFO - session - Generating new proposal configuration for resample_600s_unstack_normalize_dfs_1d_xgb_classifier
-2020-07-10 11:49:25,698 - INFO - pipeline - New configuration found:
-  Template: resample_600s_unstack_normalize_dfs_1d_xgb_classifier
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 32
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 10
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.11814847201162682
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.9589332448610124
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 6
+INFO:btb.session:New optimal found: unstack_normalize_dfs_xgb_classifier - 0.640497737556561
+INFO:btb.session:Generating new proposal configuration for normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
+INFO:greenguard.pipeline:New configuration found:
+  Template: unstack_normalize_dfs_xgb_classifier
     Hyperparameters:
-      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 96
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 36
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 9
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.3256576169027807
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.1061546068995437
-      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1
-2020-07-10 11:49:25,699 - INFO - session - New optimal found: resample_600s_unstack_normalize_dfs_1d_xgb_classifier - 0.6306697372853741
+      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 98
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 34
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.3652063328881058
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.8627183599656656
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 6
+INFO:btb.session:New optimal found: unstack_normalize_dfs_xgb_classifier - 0.6592605156037993
+INFO:btb.session:Generating new proposal configuration for normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for normalize_dfs_xgb_classifier
+INFO:btb.session:Generating new proposal configuration for unstack_normalize_dfs_xgb_classifier
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;id&#39;: &#39;157087395a2643c9ecc4a2b3549a1fc9&#39;,
- &#39;name&#39;: &#39;resample_600s_unstack_normalize_dfs_1d_xgb_classifier&#39;,
+{&#39;id&#39;: &#39;f6b410d303a1cfeafdcfe0dbcf330767&#39;,
+ &#39;name&#39;: &#39;unstack_normalize_dfs_xgb_classifier&#39;,
  &#39;config&#39;: {(&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;,
-   &#39;max_labels&#39;): 96,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 36,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 9,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.3256576169027807,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.1061546068995437,
-  (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1},
- &#39;score&#39;: 0.6306697372853741}
+   &#39;max_labels&#39;): 98,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 34,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.3652063328881058,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.8627183599656656,
+  (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 6},
+ &#39;score&#39;: 0.6592605156037993}
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1233,16 +1232,16 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.6306697372853741
+0.6592605156037993
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1251,18 +1250,18 @@ Elapsed: 00:48 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 {(&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;,
-  &#39;max_labels&#39;): 96,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 36,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 9,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.3256576169027807,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.1061546068995437,
- (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1}
+  &#39;max_labels&#39;): 98,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 34,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.3652063328881058,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.8627183599656656,
+ (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 6}
 </pre></div></div>
 </div>
 </div>
@@ -1271,7 +1270,7 @@ Elapsed: 00:48 | Progress: 100%|██████████
 <p>Once we are satisfied with the obtained cross validation score, we can proceed to call the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing again the same data elements.</p>
 <p>This will fit the pipeline with all the training data available using the best hyperparameters found during the tuning process:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1285,7 +1284,7 @@ Elapsed: 00:48 | Progress: 100%|██████████
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Built 165 features
-Elapsed: 00:37 | Progress: 100%|██████████
+Elapsed: 00:39 | Progress: 100%|██████████
 </pre></div></div>
 </div>
 </div>
@@ -1293,7 +1292,7 @@ Elapsed: 00:37 | Progress: 100%|██████████
 <h2>6. Use the fitted pipeline<a class="headerlink" href="#6.-Use-the-fitted-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>After fitting the pipeline, we are ready to make predictions on new data:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1306,12 +1305,12 @@ Elapsed: 00:37 | Progress: 100%|██████████
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Elapsed: 00:12 | Progress: 100%|██████████
+Elapsed: 00:14 | Progress: 100%|██████████
 </pre></div></div>
 </div>
 <p>And evaluate its prediction performance:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1322,12 +1321,12 @@ Elapsed: 00:12 | Progress: 100%|██████████
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.7307692307692306
+0.693877551020408
 </pre></div></div>
 </div>
 </div>
@@ -1337,7 +1336,7 @@ Elapsed: 00:12 | Progress: 100%|██████████
 <p>This can be done by using the <code class="docutils literal notranslate"><span class="pre">save</span></code> and <code class="docutils literal notranslate"><span class="pre">load</span></code> methods from the <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code>.</p>
 <p>In order to save an instance, call its <code class="docutils literal notranslate"><span class="pre">save</span></code> method passing it the path and filename where the model should be saved.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1349,7 +1348,7 @@ Elapsed: 00:12 | Progress: 100%|██████████
 </div>
 <p>Once the pipeline is saved, it can be loaded back as a new <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> by using the <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline.load</span></code> method:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1359,7 +1358,7 @@ Elapsed: 00:12 | Progress: 100%|██████████
 </div>
 <p>Once loaded, it can be directly used to make predictions on new data.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1373,11 +1372,11 @@ Elapsed: 00:12 | Progress: 100%|██████████
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Elapsed: 00:12 | Progress: 100%|██████████
+Elapsed: 00:14 | Progress: 100%|██████████
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="output_area docutils container">

@@ -1,0 +1,7 @@
+greenguard.benchmark module
+===========================
+
+.. automodule:: greenguard.benchmark
+   :members:
+   :undoc-members:
+   :show-inheritance:

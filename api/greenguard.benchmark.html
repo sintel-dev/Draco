@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.utils module &mdash; GreenGuard 0.2.3.dev0 documentation</title>
+  <title>greenguard.benchmark module &mdash; GreenGuard 0.2.3.dev0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributing" href="../contributing.html" />
-    <link rel="prev" title="greenguard.targets module" href="greenguard.targets.html" /> 
+    <link rel="next" title="greenguard.db module" href="greenguard.db.html" />
+    <link rel="prev" title="greenguard.loaders.csv module" href="greenguard.loaders.csv.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -171,13 +171,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="greenguard.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="greenguard.benchmark.html">greenguard.benchmark module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.benchmark module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.targets.html">greenguard.targets module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="greenguard.html#module-greenguard">Module contents</a></li>
@@ -266,14 +266,14 @@
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
-      <li>greenguard.utils module</li>
+      <li>greenguard.benchmark module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.utils.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.benchmark.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -311,8 +311,8 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-greenguard.utils">
-<span id="greenguard-utils-module"></span><h1>greenguard.utils module<a class="headerlink" href="#module-greenguard.utils" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-greenguard.benchmark">
+<span id="greenguard-benchmark-module"></span><h1>greenguard.benchmark module<a class="headerlink" href="#module-greenguard.benchmark" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -320,47 +320,152 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.utils.clone_pipeline" title="greenguard.utils.clone_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clone_pipeline</span></code></a>(pipeline)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.benchmark.evaluate_template" title="greenguard.benchmark.evaluate_template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_template</span></code></a>(template, target_times, …)</p></td>
+<td><p>Returns the scores for a given template.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.utils.logging_setup" title="greenguard.utils.logging_setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging_setup</span></code></a>([verbosity, logfile, logger_name])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.utils.remove_dots" title="greenguard.utils.remove_dots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_dots</span></code></a>(document)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.utils.restore_dots" title="greenguard.utils.restore_dots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restore_dots</span></code></a>(document)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.utils.walk" title="greenguard.utils.walk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">walk</span></code></a>(document, transform)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.benchmark.evaluate_templates" title="greenguard.benchmark.evaluate_templates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate_templates</span></code></a>(templates, window_size_rule)</p></td>
+<td><p>Execute the benchmark process and optionally store the result as a <code class="docutils literal notranslate"><span class="pre">CSV</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt id="greenguard.utils.clone_pipeline">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">clone_pipeline</code><span class="sig-paren">(</span><em class="sig-param">pipeline</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#clone_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.clone_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="greenguard.benchmark.evaluate_template">
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_template</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scores for a given template.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> (<em>str</em>) – Given template to evaluate.</p></li>
+<li><p><strong>target_times</strong> (<em>DataFrame</em>) – <p>Contains the specefication problem that we are solving, which has three columns:</p>
+<blockquote>
+<div><ul>
+<li><p>turbine_id: Unique identifier of the turbine which this label corresponds to.</p></li>
+<li><p>cutoff_time: Time associated with this target.</p></li>
+<li><dl class="simple">
+<dt>target: The value that we want to predict. This can either be a numerical value</dt><dd><p>or a categorical label. This column can also be skipped when preparing
+data that will be used only to make predictions and not to fit any
+pipeline.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>readings</strong> (<em>DataFrame</em>) – <p>Contains the signal data from different sensors, with the following columns:</p>
+<blockquote>
+<div><ul>
+<li><p>turbine_id: Unique identifier of the turbine which this reading comes from.</p></li>
+<li><p>signal_id: Unique identifier of the signal which this reading comes from.</p></li>
+<li><p>timestamp (datetime): Time where the reading took place, as a datetime.</p></li>
+<li><p>value (float): Numeric value of this reading.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>metric</strong> (<em>function</em><em> or </em><em>str</em>) – Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics
+defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary.</p></li>
+<li><p><strong>tuning_iterations</strong> (<em>int</em>) – Number of iterations to be used.</p></li>
+<li><p><strong>preprocessing</strong> (<em>int</em><em>, </em><em>list</em><em> or </em><em>dict</em>) – Number of preprocessing steps to be used.</p></li>
+<li><p><strong>init_params</strong> (<em>list</em>) – Initialization parameters for the pipeline.</p></li>
+<li><p><strong>cost</strong> (<em>bool</em>) – Wheter the metric is a cost function (the lower the better) or not.</p></li>
+<li><p><strong>test_size</strong> (<em>float</em>) – Percentage of the data set to be used for the test.</p></li>
+<li><p><strong>cv_splits</strong> (<em>int</em>) – Amount of splits to create.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em>) – Random number of train_test split.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stores the four types of scores that are being evaluate.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>scores (dict)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
-<dt id="greenguard.utils.logging_setup">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">logging_setup</code><span class="sig-paren">(</span><em class="sig-param">verbosity=1</em>, <em class="sig-param">logfile=None</em>, <em class="sig-param">logger_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#logging_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.logging_setup" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.remove_dots">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">remove_dots</code><span class="sig-paren">(</span><em class="sig-param">document</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#remove_dots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.remove_dots" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.restore_dots">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">restore_dots</code><span class="sig-paren">(</span><em class="sig-param">document</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#restore_dots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.restore_dots" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="greenguard.utils.walk">
-<code class="sig-prename descclassname">greenguard.utils.</code><code class="sig-name descname">walk</code><span class="sig-paren">(</span><em class="sig-param">document</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/utils.html#walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.utils.walk" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="greenguard.benchmark.evaluate_templates">
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_templates</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">window_size_rule</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">output_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_templates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the benchmark process and optionally store the result as a <code class="docutils literal notranslate"><span class="pre">CSV</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>templates</strong> (<em>list</em>) – List of templates to try.</p></li>
+<li><p><strong>window_size_rule</strong> (<em>list</em>) – List of tupples (int, str or Timedelta object).</p></li>
+<li><p><strong>metric</strong> (<em>function</em><em> or </em><em>str</em>) – Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics
+defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary.</p></li>
+<li><p><strong>tuning_iterations</strong> (<em>int</em>) – Number of iterations to be used.</p></li>
+<li><p><strong>init_params</strong> (<em>dict</em>) – Initialization parameters for the pipelines.</p></li>
+<li><p><strong>target_times</strong> (<em>DataFrame</em>) – <p>Contains the specefication problem that we are solving, which has three columns:</p>
+<blockquote>
+<div><ul>
+<li><p>turbine_id: Unique identifier of the turbine which this label corresponds to.</p></li>
+<li><p>cutoff_time: Time associated with this target.</p></li>
+<li><dl class="simple">
+<dt>target: The value that we want to predict. This can either be a numerical value</dt><dd><p>or a categorical label. This column can also be skipped when preparing
+data that will be used only to make predictions and not to fit any
+pipeline.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>readings</strong> (<em>DataFrame</em>) – <p>Contains the signal data from different sensors, with the following columns:</p>
+<blockquote>
+<div><ul>
+<li><p>turbine_id: Unique identifier of the turbine which this reading comes from.</p></li>
+<li><p>signal_id: Unique identifier of the signal which this reading comes from.</p></li>
+<li><p>timestamp (datetime): Time where the reading took place, as a datetime.</p></li>
+<li><p>value (float): Numeric value of this reading.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>preprocessing</strong> (<em>int</em><em>, </em><em>list</em><em> or </em><em>dict</em>) – Number of preprocessing steps to be used.</p></li>
+<li><p><strong>cost</strong> (<em>bool</em>) – Wheter the metric is a cost function (the lower the better) or not.</p></li>
+<li><p><strong>test_size</strong> (<em>float</em>) – Percentage of the data set to be used for the test.</p></li>
+<li><p><strong>cv_splits</strong> (<em>int</em>) – Amount of splits to create.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em>) – Random number of train_test split.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Path where to save the benchmark report.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">output_path</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> it will return a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object,
+else it will dump the results in the specified <code class="docutils literal notranslate"><span class="pre">output_path</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame or None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">templates</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>   <span class="s1">&#39;normalize_dfs_xgb_classifier&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;unstack_lstm_timeseries_classifier&#39;</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">window_size_rule</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;30d&#39;</span><span class="p">,</span><span class="s1">&#39;12h&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s1">&#39;7d&#39;</span><span class="p">,</span><span class="s1">&#39;4h&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preprocessing</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores_df</span> <span class="o">=</span> <span class="n">evaluate_templates</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="n">templates</span><span class="o">=</span><span class="n">templates</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">window_size_rule</span><span class="o">=</span><span class="n">window_size_rule</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">metric</span><span class="o">=</span><span class="n">f1_score</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">tuning_iterations</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">preprocessing</span><span class="o">=</span><span class="n">preprocessing</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">cv_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores_df</span>
+<span class="go">                         template window_size resample_rule  default_test  default_cv  tuned_cv  tuned_test status</span>
+</pre></div>
+</div>
+<p>0  unstack_lstm_timeseries_classifier         30d           12h      0.720000    0.593634  0.627883    0.775510     OK
+1  unstack_lstm_timeseries_classifier          7d            4h      0.723404    0.597440  0.610766    0.745098     OK
+2        normalize_dfs_xgb_classifier         30d           12h      0.581818    0.619698  0.637123    0.596491     OK
+3        normalize_dfs_xgb_classifier          7d            4h      0.581818    0.619698  0.650367    0.603774     OK</p>
+</dd></dl>
 
 </div>
 
@@ -372,10 +477,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.db.html" class="btn btn-neutral float-right" title="greenguard.db module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="greenguard.targets.html" class="btn btn-neutral float-left" title="greenguard.targets module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="greenguard.loaders.csv.html" class="btn btn-neutral float-left" title="greenguard.loaders.csv module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -169,6 +169,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/greenguard.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.benchmark.html">greenguard.benchmark module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.metrics.html">greenguard.metrics module</a></li>
@@ -374,6 +375,63 @@
     <span class="k">return</span> <span class="n">pipelines</span></div>
 
 
+<div class="viewcode-block" id="generate_init_params"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.generate_init_params">[docs]</a><span class="k">def</span> <span class="nf">generate_init_params</span><span class="p">(</span><span class="n">template_names</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate init_params dicts.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template_names (list):</span>
+<span class="sd">            List of templates.</span>
+<span class="sd">        init_params (list or dict):</span>
+<span class="sd">            Initialization parameters for the templates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict that contains one entry for each template with a dict indicating</span>
+<span class="sd">        the init_params to use with that template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">init_params</span><span class="p">:</span>
+        <span class="n">init_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init_params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">init_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">template_names</span><span class="p">,</span> <span class="n">init_params</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">init_params</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">template_names</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">init_params</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">template_names</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">init_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{}))</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">template_names</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="generate_preprocessing"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.generate_preprocessing">[docs]</a><span class="k">def</span> <span class="nf">generate_preprocessing</span><span class="p">(</span><span class="n">templates_names</span><span class="p">,</span> <span class="n">preprocessing</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate preprocessing dict.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template_names (list):</span>
+<span class="sd">            List of templates.</span>
+<span class="sd">        preprocessing (int, list or dict):</span>
+<span class="sd">            Number of preprocessing steps to be used.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        preprocessing (dict):</span>
+<span class="sd">            Contains one entry for each template and an integer indicating the</span>
+<span class="sd">            number of preprocessing steps for that template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">preprocessing</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">preprocessing</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">preprocessing</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">templates_names</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">preprocessing</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">preprocessing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">templates_names</span><span class="p">,</span> <span class="n">preprocessing</span><span class="p">))</span>
+
+        <span class="n">preprocessing</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">templates_names</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">preprocessing</span></div>
+
+
 <div class="viewcode-block" id="GreenGuardPipeline"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline">[docs]</a><span class="k">class</span> <span class="nc">GreenGuardPipeline</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Main Machine Learning component in the GreenGuard project.</span>
 
@@ -413,7 +471,7 @@
 <span class="sd">            Template to use. If a ``str`` is given, load the corresponding</span>
 <span class="sd">            ``MLPipeline``. Also can be a list combining both.</span>
 <span class="sd">        metric (str or function):</span>
-<span class="sd">            Metric to use. If an ``str`` is give it must be one of the metrics</span>
+<span class="sd">            Metric to use. If an ``str`` is given it must be one of the metrics</span>
 <span class="sd">            defined in the ``greenguard.metrics.METRICS`` dictionary.</span>
 <span class="sd">        cost (bool):</span>
 <span class="sd">            Whether the metric is a cost function (the lower the better) or not.</span>
@@ -507,33 +565,14 @@
         <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">template_name</span> <span class="o">=</span> <span class="n">template</span>
-                <span class="n">template</span> <span class="o">=</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">template_name</span><span class="p">)</span>
+                <span class="n">template</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">load_pipeline</span><span class="p">(</span><span class="n">template_name</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">template_name</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">template</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+
             <span class="n">template_dicts</span><span class="p">[</span><span class="n">template_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span>
             <span class="n">template_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template_name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">template_names</span><span class="p">,</span> <span class="n">template_dicts</span>
-
-    <span class="k">def</span> <span class="nf">_generate_init_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_params</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">init_params</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init_params</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">,</span> <span class="n">init_params</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">init_params</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span> <span class="o">=</span> <span class="n">init_params</span>
-
-    <span class="k">def</span> <span class="nf">_generate_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preprocessing</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">preprocessing</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">preprocessing</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">preprocessing</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">preprocessing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">,</span> <span class="n">preprocessing</span><span class="p">))</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">name</span><span class="p">:</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span>
-            <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_build_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
@@ -560,14 +599,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="n">templates</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_template_dicts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_templates</span><span class="p">(</span><span class="n">templates</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_default_init_params</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_init_params</span><span class="p">(</span><span class="n">init_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span> <span class="o">=</span> <span class="n">generate_init_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">template</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_template_dicts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">init_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_init_params</span><span class="p">)</span>
             <span class="n">template_params</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;init_params&#39;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_params</span><span class="p">(</span><span class="n">template_params</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_preprocessing</span><span class="p">(</span><span class="n">preprocessing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preprocessing</span> <span class="o">=</span> <span class="n">generate_preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">,</span> <span class="n">preprocessing</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_template</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_template_names</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_build_pipeline</span><span class="p">()</span>
