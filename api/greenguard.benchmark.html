@@ -330,7 +330,7 @@
 </table>
 <dl class="function">
 <dt id="greenguard.benchmark.evaluate_template">
-<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_template</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_template</code><span class="sig-paren">(</span><em class="sig-param">template</em>, <em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">cache_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the scores for a given template.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -370,6 +370,8 @@ defined in the <code class="docutils literal notranslate"><span class="pre">gree
 <li><p><strong>test_size</strong> (<em>float</em>) – Percentage of the data set to be used for the test.</p></li>
 <li><p><strong>cv_splits</strong> (<em>int</em>) – Amount of splits to create.</p></li>
 <li><p><strong>random_state</strong> (<em>int</em>) – Random number of train_test split.</p></li>
+<li><p><strong>cache_path</strong> (<em>str</em>) – If given, cache the generated cross validation splits in this folder.
+Defatuls to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -383,7 +385,7 @@ defined in the <code class="docutils literal notranslate"><span class="pre">gree
 
 <dl class="function">
 <dt id="greenguard.benchmark.evaluate_templates">
-<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_templates</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">window_size_rule</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">output_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_templates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_templates</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">window_size_rule</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">cache_path=None</em>, <em class="sig-param">output_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the benchmark process and optionally store the result as a <code class="docutils literal notranslate"><span class="pre">CSV</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -425,6 +427,8 @@ pipeline.</p>
 <li><p><strong>cv_splits</strong> (<em>int</em>) – Amount of splits to create.</p></li>
 <li><p><strong>random_state</strong> (<em>int</em>) – Random number of train_test split.</p></li>
 <li><p><strong>output_path</strong> (<em>str</em>) – Path where to save the benchmark report.</p></li>
+<li><p><strong>cache_path</strong> (<em>str</em>) – If given, cache the generated cross validation splits in this folder.
+Defatuls to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; GreenGuard 0.2.3.dev0 documentation</title>
+  <title>Benchmarking &mdash; GreenGuard 0.2.3.dev0 documentation</title>
   
 
   
@@ -262,7 +262,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>Benchmarking</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -525,6 +525,11 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
+<div class="section" id="Benchmarking">
+<h1>Benchmarking<a class="headerlink" href="#Benchmarking" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="0.-Setup-the-logging">
+<h2>0. Setup the logging<a class="headerlink" href="#0.-Setup-the-logging" title="Permalink to this headline">¶</a></h2>
+<p>This step sets up logging in our environment to increase our visibility over the steps that GreenGuard performs.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -541,62 +546,43 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
+</div>
+<div class="section" id="Running-the-Benchmarking">
+<h2>Running the Benchmarking<a class="headerlink" href="#Running-the-Benchmarking" title="Permalink to this headline">¶</a></h2>
+<p>The user API for the GreenGuard Benchmarking is the <code class="docutils literal notranslate"><span class="pre">greenguard.benchmark.evaluate_templates</span></code> function.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">evaluate_templates</span></code> function accepts the following arguments: * <code class="docutils literal notranslate"><span class="pre">templates</span> <span class="pre">(list)</span></code>: List of templates to try. * <code class="docutils literal notranslate"><span class="pre">window_size_rule</span> <span class="pre">(list)</span></code>: List of tupples (int, str or Timedelta object). * <code class="docutils literal notranslate"><span class="pre">metric</span> <span class="pre">(function</span> <span class="pre">or</span> <span class="pre">str)</span></code>: Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary. * <code class="docutils literal notranslate"><span class="pre">tuning_iterations</span> <span class="pre">(int)</span></code>: Number of iterations to be used. * <code class="docutils literal notranslate"><span class="pre">init_params</span> <span class="pre">(dict)</span></code>: Initialization parameters for the pipelines. *
+<code class="docutils literal notranslate"><span class="pre">target_times</span> <span class="pre">(DataFrame)</span></code>: Contains the specefication problem that we are solving, which has three columns: * <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: Unique identifier of the turbine which this label corresponds to. * <code class="docutils literal notranslate"><span class="pre">cutoff_time</span></code>: Time associated with this target. * <code class="docutils literal notranslate"><span class="pre">target</span></code>: The value that we want to predict. This can either be a numerical value or a categorical label. This column can also be skipped when preparing data that will be used only to make predictions and not to fit any pipeline. *
+<code class="docutils literal notranslate"><span class="pre">readings</span> <span class="pre">(DataFrame)</span></code>: Contains the signal data from different sensors, with the following columns: * <code class="docutils literal notranslate"><span class="pre">turbine_id</span></code>: Unique identifier of the turbine which this reading comes from. * <code class="docutils literal notranslate"><span class="pre">signal_id</span></code>: Unique identifier of the signal which this reading comes from. * <code class="docutils literal notranslate"><span class="pre">timestamp</span> <span class="pre">(datetime)</span></code>: Time where the reading took place, as a datetime. * <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">(float)</span></code>: Numeric value of this reading. * <code class="docutils literal notranslate"><span class="pre">preprocessing</span> <span class="pre">(int,</span> <span class="pre">list</span> <span class="pre">or</span> <span class="pre">dict)</span></code>: Number of preprocessing steps to be used. *
+<code class="docutils literal notranslate"><span class="pre">cost</span> <span class="pre">(bool)</span></code>: Wheter the metric is a cost function (the lower the better) or not. * <code class="docutils literal notranslate"><span class="pre">test_size</span> <span class="pre">(float)</span></code>: Percentage of the data set to be used for the test. * <code class="docutils literal notranslate"><span class="pre">cv_splits</span> <span class="pre">(int)</span></code>: Amount of splits to create. * <code class="docutils literal notranslate"><span class="pre">random_state</span> <span class="pre">(int)</span></code>: Random number of train_test split. * <code class="docutils literal notranslate"><span class="pre">output_path</span> <span class="pre">(str)</span></code>: Path where to save the benchmark report. * <code class="docutils literal notranslate"><span class="pre">cache_path</span> <span class="pre">(str)</span></code>: If given, cache the generated cross validation splits in this folder. Defatuls to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">greenguard</span> <span class="kn">import</span> <span class="n">get_pipelines</span>
+<span></span><span class="n">templates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;unstack_lstm_timeseries_classifier&#39;</span><span class="p">,</span> <span class="s1">&#39;normalize_dfs_xgb_classifier&#39;</span><span class="p">]</span>
+<span class="n">window_size_rule</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;1d&#39;</span><span class="p">,</span> <span class="s1">&#39;1h&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;3d&#39;</span><span class="p">,</span> <span class="s1">&#39;4h&#39;</span><span class="p">)]</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;unstack_lstm_timeseries_classifier&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;epochs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">get_pipelines</span><span class="p">(</span><span class="s1">&#39;lstm&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-Using TensorFlow backend.
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[&#39;unstack_double_lstm_timeseries_classifier&#39;,
- &#39;unstack_lstm_timeseries_classifier&#39;]
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">greenguard.benchmark</span> <span class="kn">import</span> <span class="n">evaluate_templates</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">evaluate_templates</span><span class="p">(</span>
-    <span class="n">templates</span><span class="o">=</span><span class="p">[</span>
-        <span class="s1">&#39;unstack_lstm_timeseries_classifier&#39;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">window_size_rule</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s1">&#39;1d&#39;</span><span class="p">,</span> <span class="s1">&#39;1h&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;3d&#39;</span><span class="p">,</span> <span class="s1">&#39;4h&#39;</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">init_params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;epochs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">evaluate_templates</span><span class="p">(</span>
+    <span class="n">templates</span><span class="o">=</span><span class="n">templates</span><span class="p">,</span>
+    <span class="n">window_size_rule</span><span class="o">=</span><span class="n">window_size_rule</span><span class="p">,</span>
+    <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">,</span>
     <span class="n">tuning_iterations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">cv_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="p">)</span>
@@ -608,42 +594,139 @@ Using TensorFlow backend.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-2020-08-05 17:14:08,860 - INFO - greenguard.pipeline - New configuration found:
+Using TensorFlow backend.
+INFO:greenguard.pipeline:New configuration found:
   Template: unstack_lstm_timeseries_classifier
     Hyperparameters:
       (&#39;sklearn.impute.SimpleImputer#1&#39;, &#39;strategy&#39;): mean
       (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;lstm_1_units&#39;): 80
       (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dropout_1_rate&#39;): 0.3
       (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dense_1_units&#39;): 80
-2020-08-05 17:14:16,974 - INFO - greenguard.pipeline - New configuration found:
-  Template: unstack_lstm_timeseries_classifier
-    Hyperparameters:
-      (&#39;sklearn.impute.SimpleImputer#1&#39;, &#39;strategy&#39;): constant
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;lstm_1_units&#39;): 397
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dropout_1_rate&#39;): 0.38706239055719976
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dense_1_units&#39;): 367
-2020-08-05 17:14:36,898 - INFO - greenguard.pipeline - New configuration found:
-  Template: unstack_lstm_timeseries_classifier
-    Hyperparameters:
-      (&#39;sklearn.impute.SimpleImputer#1&#39;, &#39;strategy&#39;): most_frequent
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;lstm_1_units&#39;): 90
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dropout_1_rate&#39;): 0.7472037016839137
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dense_1_units&#39;): 215
-2020-08-05 17:15:00,145 - INFO - greenguard.pipeline - New configuration found:
+INFO:greenguard.pipeline:New configuration found:
   Template: unstack_lstm_timeseries_classifier
     Hyperparameters:
       (&#39;sklearn.impute.SimpleImputer#1&#39;, &#39;strategy&#39;): mean
       (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;lstm_1_units&#39;): 80
       (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dropout_1_rate&#39;): 0.3
       (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dense_1_units&#39;): 80
-2020-08-05 17:15:14,558 - INFO - greenguard.pipeline - New configuration found:
+INFO:greenguard.pipeline:New configuration found:
   Template: unstack_lstm_timeseries_classifier
     Hyperparameters:
-      (&#39;sklearn.impute.SimpleImputer#1&#39;, &#39;strategy&#39;): most_frequent
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;lstm_1_units&#39;): 245
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dropout_1_rate&#39;): 0.23326913705083852
-      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dense_1_units&#39;): 425
+      (&#39;sklearn.impute.SimpleImputer#1&#39;, &#39;strategy&#39;): median
+      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;lstm_1_units&#39;): 353
+      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dropout_1_rate&#39;): 0.4718077136146996
+      (&#39;keras.Sequential.LSTMTimeSeriesClassifier#1&#39;, &#39;dense_1_units&#39;): 151
 </pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Built 99 features
+Elapsed: 02:58 | Progress: 100%|██████████
+Elapsed: 00:58 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 01:54 | Progress: 100%|██████████
+Elapsed: 01:08 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 02:20 | Progress: 100%|██████████
+Elapsed: 01:09 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 02:16 | Progress: 100%|██████████
+Elapsed: 01:07 | Progress: 100%|██████████
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:greenguard.pipeline:New configuration found:
+  Template: normalize_dfs_xgb_classifier
+    Hyperparameters:
+      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 0
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 100
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.1
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.0
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1
+INFO:greenguard.pipeline:New configuration found:
+  Template: normalize_dfs_xgb_classifier
+    Hyperparameters:
+      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 18
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 920
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 10
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.02731362750079913
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.46258174821600884
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 3
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Built 99 features
+Elapsed: 03:18 | Progress: 100%|██████████
+Elapsed: 01:03 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 03:15 | Progress: 100%|██████████
+Elapsed: 01:06 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 02:05 | Progress: 100%|██████████
+Elapsed: 01:10 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 01:51 | Progress: 100%|██████████
+Elapsed: 00:54 | Progress: 100%|██████████
+Built 99 features
+Elapsed: 01:51 | Progress: 100%|██████████
+Elapsed: 00:58 | Progress: 100%|██████████
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:greenguard.pipeline:New configuration found:
+  Template: normalize_dfs_xgb_classifier
+    Hyperparameters:
+      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 0
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 100
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.1
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.0
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 1
+INFO:greenguard.pipeline:New configuration found:
+  Template: normalize_dfs_xgb_classifier
+    Hyperparameters:
+      (&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;, &#39;max_labels&#39;): 7
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;n_estimators&#39;): 348
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;max_depth&#39;): 3
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;learning_rate&#39;): 0.5272082810065426
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;gamma&#39;): 0.04014402178038856
+      (&#39;xgboost.XGBClassifier#1&#39;, &#39;min_child_weight&#39;): 2
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Built 99 features
+Elapsed: 02:42 | Progress: 100%|██████████
+Elapsed: 01:00 | Progress: 100%|██████████
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">results</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -684,9 +767,9 @@ Using TensorFlow backend.
       <td>unstack_lstm_timeseries_classifier</td>
       <td>1d</td>
       <td>1h</td>
-      <td>0.603774</td>
-      <td>0.624928</td>
-      <td>0.638871</td>
+      <td>0.711864</td>
+      <td>0.646437</td>
+      <td>0.646437</td>
       <td>0.666667</td>
       <td>OK</td>
     </tr>
@@ -695,15 +778,39 @@ Using TensorFlow backend.
       <td>unstack_lstm_timeseries_classifier</td>
       <td>3d</td>
       <td>4h</td>
-      <td>0.708333</td>
-      <td>0.607978</td>
-      <td>0.640048</td>
+      <td>0.703704</td>
+      <td>0.577295</td>
+      <td>0.616052</td>
       <td>0.709677</td>
+      <td>OK</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>normalize_dfs_xgb_classifier</td>
+      <td>1d</td>
+      <td>1h</td>
+      <td>0.581818</td>
+      <td>0.619698</td>
+      <td>0.646750</td>
+      <td>0.631579</td>
+      <td>OK</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>normalize_dfs_xgb_classifier</td>
+      <td>3d</td>
+      <td>4h</td>
+      <td>0.581818</td>
+      <td>0.619698</td>
+      <td>0.637957</td>
+      <td>0.642857</td>
       <td>OK</td>
     </tr>
   </tbody>
 </table>
 </div></div>
+</div>
+</div>
 </div>
 
 

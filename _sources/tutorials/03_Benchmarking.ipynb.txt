@@ -1,6 +1,23 @@
 {
  "cells": [
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Benchmarking"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 0. Setup the logging\n",
+    "\n",
+    "This step sets up logging in our environment to increase our visibility over\n",
+    "the steps that GreenGuard performs."
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": 1,
    "metadata": {},
@@ -17,47 +34,61 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    "## Running the Benchmarking\n",
+    "\n",
+    "The user API for the GreenGuard Benchmarking is the `greenguard.benchmark.evaluate_templates` function.\n",
+    "\n",
+    "The `evaluate_templates` function accepts the following arguments:\n",
+    "* `templates (list)`: List of templates to try.\n",
+    "* `window_size_rule (list)`: List of tupples (int, str or Timedelta object).\n",
+    "* `metric (function or str)`: Metric to use. If an ``str`` is give it must be one of the metrics defined in the `greenguard.metrics.METRICS` dictionary.\n",
+    "* `tuning_iterations (int)`: Number of iterations to be used.\n",
+    "* `init_params (dict)`: Initialization parameters for the pipelines.\n",
+    "* `target_times (DataFrame)`: Contains the specefication problem that we are solving, which has three columns:\n",
+    "    * `turbine_id`: Unique identifier of the turbine which this label corresponds to.\n",
+    "    * `cutoff_time`: Time associated with this target.\n",
+    "    * `target`: The value that we want to predict. This can either be a numerical value\n",
+    "        or a categorical label. This column can also be skipped when preparing\n",
+    "        data that will be used only to make predictions and not to fit any\n",
+    "        pipeline.\n",
+    "* `readings (DataFrame)`: Contains the signal data from different sensors, with the following columns:\n",
+    "    * `turbine_id`: Unique identifier of the turbine which this reading comes from.\n",
+    "    * `signal_id`: Unique identifier of the signal which this reading comes from.\n",
+    "    * `timestamp (datetime)`: Time where the reading took place, as a datetime.\n",
+    "    * `value (float)`: Numeric value of this reading.\n",
+    "* `preprocessing (int, list or dict)`: Number of preprocessing steps to be used.\n",
+    "* `cost (bool)`: Wheter the metric is a cost function (the lower the better) or not.\n",
+    "* `test_size (float)`: Percentage of the data set to be used for the test.\n",
+    "* `cv_splits (int)`: Amount of splits to create.\n",
+    "* `random_state (int)`: Random number of train_test split.\n",
+    "* `output_path (str)`: Path where to save the benchmark report.\n",
+    "* `cache_path (str)`: If given, cache the generated cross validation splits in this folder. Defatuls to ``None``."
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": 2,
    "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "Using TensorFlow backend.\n"
-     ]
-    },
-    {
-     "data": {
-      "text/plain": [
-       "['unstack_double_lstm_timeseries_classifier',\n",
-       " 'unstack_lstm_timeseries_classifier']"
-      ]
-     },
-     "execution_count": 2,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
-    "from greenguard import get_pipelines\n",
-    "\n",
-    "get_pipelines('lstm')"
+    "templates = ['unstack_lstm_timeseries_classifier', 'normalize_dfs_xgb_classifier']\n",
+    "window_size_rule = [('1d', '1h'), ('3d', '4h')]\n",
+    "init_params = {\n",
+    "    'unstack_lstm_timeseries_classifier': {\n",
+    "        'keras.Sequential.LSTMTimeSeriesClassifier#1': {\n",
+    "            'epochs': 1,\n",
+    "        }\n",
+    "    }\n",
+    "}\n"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 3,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "from greenguard.benchmark import evaluate_templates"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 4,
    "metadata": {
     "scrolled": false
    },
@@ -66,43 +97,144 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "2020-08-05 17:14:08,860 - INFO - greenguard.pipeline - New configuration found:\n",
+      "Using TensorFlow backend.\n",
+      "INFO:greenguard.pipeline:New configuration found:\n",
       "  Template: unstack_lstm_timeseries_classifier \n",
       "    Hyperparameters: \n",
       "      ('sklearn.impute.SimpleImputer#1', 'strategy'): mean\n",
       "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'lstm_1_units'): 80\n",
       "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dropout_1_rate'): 0.3\n",
       "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dense_1_units'): 80\n",
-      "2020-08-05 17:14:16,974 - INFO - greenguard.pipeline - New configuration found:\n",
-      "  Template: unstack_lstm_timeseries_classifier \n",
-      "    Hyperparameters: \n",
-      "      ('sklearn.impute.SimpleImputer#1', 'strategy'): constant\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'lstm_1_units'): 397\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dropout_1_rate'): 0.38706239055719976\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dense_1_units'): 367\n",
-      "2020-08-05 17:14:36,898 - INFO - greenguard.pipeline - New configuration found:\n",
-      "  Template: unstack_lstm_timeseries_classifier \n",
-      "    Hyperparameters: \n",
-      "      ('sklearn.impute.SimpleImputer#1', 'strategy'): most_frequent\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'lstm_1_units'): 90\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dropout_1_rate'): 0.7472037016839137\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dense_1_units'): 215\n",
-      "2020-08-05 17:15:00,145 - INFO - greenguard.pipeline - New configuration found:\n",
+      "INFO:greenguard.pipeline:New configuration found:\n",
       "  Template: unstack_lstm_timeseries_classifier \n",
       "    Hyperparameters: \n",
       "      ('sklearn.impute.SimpleImputer#1', 'strategy'): mean\n",
       "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'lstm_1_units'): 80\n",
       "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dropout_1_rate'): 0.3\n",
       "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dense_1_units'): 80\n",
-      "2020-08-05 17:15:14,558 - INFO - greenguard.pipeline - New configuration found:\n",
+      "INFO:greenguard.pipeline:New configuration found:\n",
       "  Template: unstack_lstm_timeseries_classifier \n",
       "    Hyperparameters: \n",
-      "      ('sklearn.impute.SimpleImputer#1', 'strategy'): most_frequent\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'lstm_1_units'): 245\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dropout_1_rate'): 0.23326913705083852\n",
-      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dense_1_units'): 425\n"
+      "      ('sklearn.impute.SimpleImputer#1', 'strategy'): median\n",
+      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'lstm_1_units'): 353\n",
+      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dropout_1_rate'): 0.4718077136146996\n",
+      "      ('keras.Sequential.LSTMTimeSeriesClassifier#1', 'dense_1_units'): 151\n"
      ]
     },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Built 99 features\n",
+      "Elapsed: 02:58 | Progress: 100%|██████████\n",
+      "Elapsed: 00:58 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 01:54 | Progress: 100%|██████████\n",
+      "Elapsed: 01:08 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 02:20 | Progress: 100%|██████████\n",
+      "Elapsed: 01:09 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 02:16 | Progress: 100%|██████████\n",
+      "Elapsed: 01:07 | Progress: 100%|██████████\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.pipeline:New configuration found:\n",
+      "  Template: normalize_dfs_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 0\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 100\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 3\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.1\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.0\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 1\n",
+      "INFO:greenguard.pipeline:New configuration found:\n",
+      "  Template: normalize_dfs_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 18\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 920\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 10\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.02731362750079913\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.46258174821600884\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 3\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Built 99 features\n",
+      "Elapsed: 03:18 | Progress: 100%|██████████\n",
+      "Elapsed: 01:03 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 03:15 | Progress: 100%|██████████\n",
+      "Elapsed: 01:06 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 02:05 | Progress: 100%|██████████\n",
+      "Elapsed: 01:10 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 01:51 | Progress: 100%|██████████\n",
+      "Elapsed: 00:54 | Progress: 100%|██████████\n",
+      "Built 99 features\n",
+      "Elapsed: 01:51 | Progress: 100%|██████████\n",
+      "Elapsed: 00:58 | Progress: 100%|██████████\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "INFO:greenguard.pipeline:New configuration found:\n",
+      "  Template: normalize_dfs_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 0\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 100\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 3\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.1\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.0\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 1\n",
+      "INFO:greenguard.pipeline:New configuration found:\n",
+      "  Template: normalize_dfs_xgb_classifier \n",
+      "    Hyperparameters: \n",
+      "      ('mlprimitives.custom.feature_extraction.CategoricalEncoder#1', 'max_labels'): 7\n",
+      "      ('xgboost.XGBClassifier#1', 'n_estimators'): 348\n",
+      "      ('xgboost.XGBClassifier#1', 'max_depth'): 3\n",
+      "      ('xgboost.XGBClassifier#1', 'learning_rate'): 0.5272082810065426\n",
+      "      ('xgboost.XGBClassifier#1', 'gamma'): 0.04014402178038856\n",
+      "      ('xgboost.XGBClassifier#1', 'min_child_weight'): 2\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Built 99 features\n",
+      "Elapsed: 02:42 | Progress: 100%|██████████\n",
+      "Elapsed: 01:00 | Progress: 100%|██████████\n"
+     ]
+    }
+   ],
+   "source": [
+    "from greenguard.benchmark import evaluate_templates\n",
+    "\n",
+    "results = evaluate_templates(\n",
+    "    templates=templates,\n",
+    "    window_size_rule=window_size_rule,\n",
+    "    init_params=init_params,\n",
+    "    tuning_iterations=3,\n",
+    "    cv_splits=3,\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
     {
      "data": {
       "text/html": [
@@ -140,9 +272,9 @@
        "      <td>unstack_lstm_timeseries_classifier</td>\n",
        "      <td>1d</td>\n",
        "      <td>1h</td>\n",
-       "      <td>0.603774</td>\n",
-       "      <td>0.624928</td>\n",
-       "      <td>0.638871</td>\n",
+       "      <td>0.711864</td>\n",
+       "      <td>0.646437</td>\n",
+       "      <td>0.646437</td>\n",
        "      <td>0.666667</td>\n",
        "      <td>OK</td>\n",
        "    </tr>\n",
@@ -151,10 +283,32 @@
        "      <td>unstack_lstm_timeseries_classifier</td>\n",
        "      <td>3d</td>\n",
        "      <td>4h</td>\n",
-       "      <td>0.708333</td>\n",
-       "      <td>0.607978</td>\n",
-       "      <td>0.640048</td>\n",
+       "      <td>0.703704</td>\n",
+       "      <td>0.577295</td>\n",
+       "      <td>0.616052</td>\n",
        "      <td>0.709677</td>\n",
+       "      <td>OK</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>normalize_dfs_xgb_classifier</td>\n",
+       "      <td>1d</td>\n",
+       "      <td>1h</td>\n",
+       "      <td>0.581818</td>\n",
+       "      <td>0.619698</td>\n",
+       "      <td>0.646750</td>\n",
+       "      <td>0.631579</td>\n",
+       "      <td>OK</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>normalize_dfs_xgb_classifier</td>\n",
+       "      <td>3d</td>\n",
+       "      <td>4h</td>\n",
+       "      <td>0.581818</td>\n",
+       "      <td>0.619698</td>\n",
+       "      <td>0.637957</td>\n",
+       "      <td>0.642857</td>\n",
        "      <td>OK</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
@@ -163,12 +317,16 @@
       ],
       "text/plain": [
        "                             template window_size resample_rule  default_test  \\\n",
-       "0  unstack_lstm_timeseries_classifier          1d            1h      0.603774   \n",
-       "1  unstack_lstm_timeseries_classifier          3d            4h      0.708333   \n",
+       "0  unstack_lstm_timeseries_classifier          1d            1h      0.711864   \n",
+       "1  unstack_lstm_timeseries_classifier          3d            4h      0.703704   \n",
+       "2        normalize_dfs_xgb_classifier          1d            1h      0.581818   \n",
+       "3        normalize_dfs_xgb_classifier          3d            4h      0.581818   \n",
        "\n",
        "   default_cv  tuned_cv  tuned_test status  \n",
-       "0    0.624928  0.638871    0.666667     OK  \n",
-       "1    0.607978  0.640048    0.709677     OK  "
+       "0    0.646437  0.646437    0.666667     OK  \n",
+       "1    0.577295  0.616052    0.709677     OK  \n",
+       "2    0.619698  0.646750    0.631579     OK  \n",
+       "3    0.619698  0.637957    0.642857     OK  "
       ]
      },
      "execution_count": 4,
@@ -177,22 +335,7 @@
     }
    ],
    "source": [
-    "evaluate_templates(\n",
-    "    templates=[\n",
-    "        'unstack_lstm_timeseries_classifier',\n",
-    "    ],\n",
-    "    window_size_rule=[\n",
-    "        ('1d', '1h'),\n",
-    "        ('3d', '4h'),\n",
-    "    ],\n",
-    "    init_params={\n",
-    "        'keras.Sequential.LSTMTimeSeriesClassifier#1': {\n",
-    "            'epochs': 1,\n",
-    "        }\n",
-    "    },\n",
-    "    tuning_iterations=3,\n",
-    "    cv_splits=3,\n",
-    ")"
+    "results"
    ]
   }
  ],
@@ -212,7 +355,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.6.9"
+   "version": "3.6.11"
   }
  },
  "nbformat": 4,
