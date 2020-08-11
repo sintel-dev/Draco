@@ -39,8 +39,8 @@ def _build_init_params(template, window_size, rule, template_params):
 
 
 def evaluate_template(template, target_times, readings, metric='f1', tuning_iterations=50,
-                      preprocessing=0, init_params=None, cost=False, test_size=0.25, cv_splits=3,
-                      random_state=0):
+                      preprocessing=0, init_params=None, cost=False, test_size=0.25,
+                      cv_splits=3, random_state=0, cache_path=None):
     """Returns the scores for a given template.
 
     Args:
@@ -81,6 +81,9 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
             Amount of splits to create.
         random_state (int):
             Random number of train_test split.
+        cache_path (str):
+            If given, cache the generated cross validation splits in this folder.
+            Defatuls to ``None``.
 
     Returns:
         scores (dict):
@@ -93,8 +96,15 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
     if isinstance(metric, str):
         metric, cost = METRICS[metric]
 
-    pipeline = GreenGuardPipeline(template, metric, cost=cost, cv_splits=cv_splits,
-                                  init_params=init_params, preprocessing=preprocessing)
+    pipeline = GreenGuardPipeline(
+        template,
+        metric,
+        cost=cost,
+        cv_splits=cv_splits,
+        init_params=init_params,
+        preprocessing=preprocessing,
+        cache_path=cache_path
+    )
 
     # Computing the default test score
     pipeline.fit(train, readings)
@@ -122,9 +132,10 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
     return scores
 
 
-def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iterations=50,
-                       init_params=None, target_times=None, readings=None, preprocessing=0,
-                       cost=False, test_size=0.25, cv_splits=3, random_state=0, output_path=None):
+def evaluate_templates(templates, window_size_rule, metric='f1',
+                       tuning_iterations=50, init_params=None, target_times=None,
+                       readings=None, preprocessing=0, cost=False, test_size=0.25,
+                       cv_splits=3, random_state=0, cache_path=None, output_path=None):
     """Execute the benchmark process and optionally store the result as a ``CSV``.
 
     Args:
@@ -132,7 +143,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             List of templates to try.
         window_size_rule (list):
             List of tupples (int, str or Timedelta object).
-        metric (function or str).
+        metric (function or str):
             Metric to use. If an ``str`` is give it must be one of the metrics
             defined in the ``greenguard.metrics.METRICS`` dictionary.
         tuning_iterations (int):
@@ -169,6 +180,9 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             Random number of train_test split.
         output_path (str):
             Path where to save the benchmark report.
+        cache_path (str):
+            If given, cache the generated cross validation splits in this folder.
+            Defatuls to ``None``.
 
     Returns:
         pandas.DataFrame or None:
@@ -237,7 +251,9 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
                 cost=cost,
                 test_size=test_size,
                 cv_splits=cv_splits,
-                random_state=random_state)
+                random_state=random_state,
+                cache_path=cache_path
+            )
 
             scores.update(result)
             scores['status'] = 'OK'
