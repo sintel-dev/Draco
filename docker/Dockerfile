@@ -6,7 +6,7 @@ EXPOSE 8888
 RUN mkdir /app
 COPY setup.py /app
 COPY greenguard /app/greenguard
-COPY notebooks /app/notebooks
+COPY tutorials /app/tutorials
 RUN pip install -e /app jupyter
 
 WORKDIR /app

@@ -15,6 +15,7 @@ AutoML for Renewable Energy Industries.
 [![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
 [![Travis CI Shield](https://travis-ci.org/signals-dev/GreenGuard.svg?branch=master)](https://travis-ci.org/signals-dev/GreenGuard)
 [![Downloads](https://pepy.tech/badge/greenguard)](https://pepy.tech/project/greenguard)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/signals-dev/GreenGuard/master?filepath=tutorials)
 <!--
 [![Coverage Status](https://codecov.io/gh/signals-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/signals-dev/GreenGuard)
 -->
@@ -219,20 +220,18 @@ The returned `pipeline` variable will be `list` containing the names of all the 
 available in the GreenGuard system:
 
 ```
-['resample_600s_normalize_dfs_1d_xgb_classifier',
- 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier',
- 'resample_600s_unstack_double_144_lstm_timeseries_classifier',
- 'resample_3600s_unstack_24_lstm_timeseries_classifier',
- 'resample_3600s_unstack_double_24_lstm_timeseries_classifier',
- 'resample_600s_unstack_dfs_1d_xgb_classifier',
- 'resample_600s_unstack_144_lstm_timeseries_classifier']
+['unstack_double_lstm_timeseries_classifier',
+ 'unstack_lstm_timeseries_classifier',
+ 'unstack_normalize_dfs_xgb_classifier',
+ 'unstack_dfs_xgb_classifier',
+ 'normalize_dfs_xgb_classifier']
 ```
 
 For the rest of this tutorial, we will select and use the pipeline
-`resample_600s_unstack_normalize_dfs_1d_xgb_classifier` as our template.
+`normalize_dfs_xgb_classifier` as our template.
 
 ```python3
-pipeline_name = 'resample_600s_unstack_normalize_dfs_1d_xgb_classifier'
+pipeline_name = 'normalize_dfs_xgb_classifier'
 ```
 
 ## 3. Fitting the Pipeline

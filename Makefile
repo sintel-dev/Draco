@@ -101,7 +101,7 @@ fix-lint: ## fix lint issues using autoflake, autopep8, and isort
 
 .PHONY: test-unit
 test-unit: ## run tests quickly with the default Python
-	python -m pytest --basetemp=${ENVTMPDIR} --cov=greenguard
+	python -m pytest --cov=greenguard
 
 .PHONY: test-readme
 test-readme: ## run the readme snippets
