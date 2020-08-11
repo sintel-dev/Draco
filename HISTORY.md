@@ -1,5 +1,9 @@
 # History
 
+## 0.2.3 - 2020-08-10
+
+* Added benchmarking module.
+
 ## 0.2.2 - 2020-07-10
 
 ### Internal Imrpovements

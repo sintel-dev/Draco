@@ -15,6 +15,7 @@ AutoML for Renewable Energy Industries.
 [![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
 [![Travis CI Shield](https://travis-ci.org/signals-dev/GreenGuard.svg?branch=master)](https://travis-ci.org/signals-dev/GreenGuard)
 [![Downloads](https://pepy.tech/badge/greenguard)](https://pepy.tech/project/greenguard)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/signals-dev/GreenGuard/master?filepath=tutorials)
 <!--
 [![Coverage Status](https://codecov.io/gh/signals-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/signals-dev/GreenGuard)
 -->
