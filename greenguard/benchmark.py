@@ -1,10 +1,15 @@
 import logging
+import os
+import pickle
 from itertools import product
 
 import pandas as pd
+from dask.distributed import Client, LocalCluster
 from sklearn.model_selection import train_test_split
+from tqdm import tqdm
 
 from greenguard.demo import load_demo
+from greenguard.loaders import CSVLoader
 from greenguard.metrics import METRICS
 from greenguard.pipeline import GreenGuardPipeline, generate_init_params, generate_preprocessing
 
@@ -273,3 +278,80 @@ def evaluate_templates(templates, window_size_rule, metric='f1',
         results.to_csv(output_path)
     else:
         return results
+
+
+def make_problem(target_times_paths, readings_path, window_size_resample_rule, output_path,
+                 signals=None, aggregation='mean', datetime_fmt='%m/%d/%y %H:%M:%S',
+                 filename_fmt='%Y-%m.csv', unstack=False, parse_dates=['cutoff_time']):
+    """
+    Args:
+        target_times_paths (list):
+            List of paths to CSVs that contain target times.
+        readings_path (str):
+            Path to the folder where readings in raw CSV format can be found.
+        window_size_resample_rule (list):
+            List of tupples (int, str or Timedelta object).
+        output_path (str):
+            Path to save the generated problems.
+        signals (str):
+            List of signal names or csv file that has a `signal_id` column to use as the signal
+            names list.
+        aggregation (str):
+            Aggregation to perform to the.
+        datetime_fmt (str):
+            Date format used by the column timestamp for the readings. Defaults
+            to `%m/%d/%y %H:%M:%S`.
+        filename_fmt (str):
+            Filename format. Defaults to `%Y-%m.csv`.
+        unstack (bool):
+            Whether to unstack the resampled data, generating one column per signal. Only used
+            when resampling. Defaults to `False`.
+    """
+    cluster = LocalCluster(n_workers=16, dashboard_adress=':9792')
+    client = Client(cluster)
+
+    for tt_path in tqdm(target_times_paths):
+        if parse_dates:
+            parse_dates = [parse_dates] if not isinstance(parse_dates, list) else parse_dates
+            target_times = pd.read_csv(tt_path, parse_dates=parse_dates)
+        else:
+            target_times = pd.read_csv(tt_path)
+
+        for window_size, rule in window_size_resample_rule:
+            csv_loader = CSVLoader(
+                readings_path,
+                rule=rule,
+                aggregation=aggregation,
+                datetime_fmt=datetime_fmt,
+            )
+
+            new_target_times, readings = csv_loader.load(
+                target_times,
+                window_size=window_size,
+                signals=signals,
+            )
+
+            problem_name = 'problem_{}_{}.pkl'.format(window_size, rule)
+            output_pickle = os.path.join(output_path, problem_name)
+
+            with open(output_pickle, 'wb') as pickle_file:
+                pickle.dump((new_target_times, readings), pickle_file)
+
+    client.shutdown()
+
+
+def benchmark():
+    """
+    Args:
+        pipelines (list):
+        problem_paths (list):
+        target_times_paths (list):
+        readings_path (list):
+        window_size_resample_rule (list):
+            List of tupples (int, str or Timedelta object).
+        tuning_iterations (int):
+        cv_splits (int):
+        cache_path (str):
+        output_path (str):
+    """
+    pass
