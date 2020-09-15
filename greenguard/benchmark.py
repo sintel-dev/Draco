@@ -310,6 +310,8 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule, o
     cluster = LocalCluster(n_workers=16, dashboard_adress=':9792')
     client = Client(cluster)
 
+    generated_problems = list()
+
     for tt_path in tqdm(target_times_paths):
         if parse_dates:
             parse_dates = [parse_dates] if not isinstance(parse_dates, list) else parse_dates
@@ -322,6 +324,7 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule, o
                 readings_path,
                 rule=rule,
                 aggregation=aggregation,
+                unstack=unstack,
                 datetime_fmt=datetime_fmt,
             )
 
@@ -332,12 +335,15 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule, o
             )
 
             problem_name = 'problem_{}_{}.pkl'.format(window_size, rule)
-            output_pickle = os.path.join(output_path, problem_name)
-
-            with open(output_pickle, 'wb') as pickle_file:
+            output_pickle_path = os.path.join(output_path, problem_name)
+            with open(output_pickle_path, 'wb') as pickle_file:
                 pickle.dump((new_target_times, readings), pickle_file)
 
+            generated_problems.append(output_pickle_path)
+
     client.shutdown()
+
+    return generated_problems
 
 
 def benchmark():
