@@ -84,15 +84,18 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#resources">Resources</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#download-and-install">Download and Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-usage">Docker usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id1">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#turbines">Turbines</a></li>
@@ -344,7 +347,7 @@
 <div class="section" id="module-greenguard">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-greenguard" title="Permalink to this headline">¶</a></h2>
 <p>Top-level package for GreenGuard.</p>
-<p><strong>Classes</strong></p>
+<p><strong>Classes:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -356,7 +359,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Functions</strong></p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -379,48 +382,6 @@ format.</p>
 <p>In order to use it, an MLBlocks pipeline template needs to be given,
 alongside information about how to evaluate its performance using
 cross validation.</p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cross_validate" title="greenguard.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>(target_times, readings, turbines)</p></td>
-<td><p>Compute cross validation score using the given data.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.fit" title="greenguard.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(target_times, readings[, turbines])</p></td>
-<td><p>Fit this pipeline to the given data.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.get_hyperparameters" title="greenguard.GreenGuardPipeline.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a>()</p></td>
-<td><p>Get the current hyperparameters.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.load" title="greenguard.GreenGuardPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
-<td><p>Load a previously saved pipeline from a file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.predict" title="greenguard.GreenGuardPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(target_times, readings[, turbines])</p></td>
-<td><p>Make predictions using this pipeline.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.save" title="greenguard.GreenGuardPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
-<td><p>Serialize and save this pipeline using cloudpickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(target_times, readings[, turbines])</p></td>
-<td><p>Create a tuning session object that tunes and selects the templates.</p></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Attributes</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.fitted" title="greenguard.GreenGuardPipeline.fitted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitted</span></code></a></p></td>
-<td><p>bool(x) -&gt; bool</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="attribute">
 <dt id="greenguard.GreenGuardPipeline.template">
 <code class="sig-name descname">template</code><a class="headerlink" href="#greenguard.GreenGuardPipeline.template" title="Permalink to this definition">¶</a></dt>
@@ -545,6 +506,57 @@ Defatuls to <code class="docutils literal notranslate"><span class="pre">None</s
 </ul>
 </dd>
 </dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cross_validate" title="greenguard.GreenGuardPipeline.cross_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cross_validate</span></code></a>(target_times, readings, turbines)</p></td>
+<td><p>Compute cross validation score using the given data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.fit" title="greenguard.GreenGuardPipeline.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(target_times, readings[, turbines])</p></td>
+<td><p>Fit this pipeline to the given data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.get_hyperparameters" title="greenguard.GreenGuardPipeline.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a>()</p></td>
+<td><p>Get the current hyperparameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.load" title="greenguard.GreenGuardPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
+<td><p>Load a previously saved pipeline from a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.predict" title="greenguard.GreenGuardPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(target_times, readings[, turbines])</p></td>
+<td><p>Make predictions using this pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.save" title="greenguard.GreenGuardPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
+<td><p>Serialize and save this pipeline using cloudpickle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.tune" title="greenguard.GreenGuardPipeline.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tune</span></code></a>(target_times, readings[, turbines])</p></td>
+<td><p>Create a tuning session object that tunes and selects the templates.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.cv_score" title="greenguard.GreenGuardPipeline.cv_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cv_score</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.fitted" title="greenguard.GreenGuardPipeline.fitted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitted</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.template" title="greenguard.GreenGuardPipeline.template"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.GreenGuardPipeline.template_name" title="greenguard.GreenGuardPipeline.template_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_name</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="greenguard.GreenGuardPipeline.cross_validate">
 <code class="sig-name descname">cross_validate</code><span class="sig-paren">(</span><em class="sig-param">target_times</em>, <em class="sig-param">readings</em>, <em class="sig-param">turbines</em>, <em class="sig-param">template_name=None</em>, <em class="sig-param">hyperparams=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/pipeline.html#GreenGuardPipeline.cross_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.GreenGuardPipeline.cross_validate" title="Permalink to this definition">¶</a></dt>

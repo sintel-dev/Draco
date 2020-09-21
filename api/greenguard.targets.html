@@ -84,15 +84,18 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#resources">Resources</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#download-and-install">Download and Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-usage">Docker usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id1">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#turbines">Turbines</a></li>
@@ -316,7 +319,7 @@
 <span id="greenguard-targets-module"></span><h1>greenguard.targets module<a class="headerlink" href="#module-greenguard.targets" title="Permalink to this headline">¶</a></h1>
 <p>Targets module.</p>
 <p>This module contains functions to work with target_times.</p>
-<p><strong>Functions</strong></p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -334,6 +337,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greenguard.targets.select_valid_targets" title="greenguard.targets.select_valid_targets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_valid_targets</span></code></a>(target_times, readings, …)</p></td>
 <td><p>Filter out target_times without enough data for this window_size.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trange</span></code>(*args, **kwargs)</p></td>
+<td><p>A shortcut for <cite>tqdm.auto.tqdm(range(*args), **kwargs)</cite>.</p></td>
 </tr>
 </tbody>
 </table>

@@ -83,15 +83,18 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="readme.html">GreenGuard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">GreenGuard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#resources">Resources</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#download-and-install">Download and Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#docker-usage">Docker usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#id1">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#readings">Readings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#turbines">Turbines</a></li>
@@ -330,9 +333,8 @@ AutoML for Renewable Energy Industries.
 <li><p>Documentation: <a class="reference external" href="https://signals-dev.github.io/GreenGuard">https://signals-dev.github.io/GreenGuard</a></p></li>
 <li><p>Homepage: <a class="reference external" href="https://github.com/signals-dev/GreenGuard">https://github.com/signals-dev/GreenGuard</a></p></li>
 </ul>
-</div>
 <div class="section" id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The GreenGuard project is a collection of end-to-end solutions for machine learning problems
 commonly found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
@@ -348,6 +350,14 @@ vetted through testing across multiple publicly available datasets for the same 
 <li><p>A robust continuous integration and testing infrastructure.</p></li>
 <li><p>A <code class="docutils literal notranslate"><span class="pre">learning</span> <span class="pre">database</span></code> recording all past outcomes –&gt; tasks, pipelines, outcomes.</p></li>
 </ul>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="DATA_FORMAT.md">Data Format</a>.</p></li>
+<li><p><a class="reference external" href="DATA_FORMAT.md#folder-structure">GreenGuard folder structure</a>.</p></li>
+</ul>
+</div>
 </div>
 <div class="section" id="install">
 <h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
@@ -374,8 +384,8 @@ the following command:</p>
 <a class="reference external" href="docker/README.md">docker documentation</a> for details about how to run <strong>GreenGuard</strong> using docker.</p>
 </div>
 </div>
-<div class="section" id="data-format">
-<h1>Data Format<a class="headerlink" href="#data-format" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h1>Data Format<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>The minimum input expected by the <strong>GreenGuard</strong> system consists of the following two elements,
 which need to be passed as <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> objects:</p>
 <div class="section" id="target-times">
@@ -570,7 +580,7 @@ an arbitraty number of additional fields.</p>
 allocation capabilities of the system where it is run, <strong>GreenGuard</strong> is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
-<a class="reference external" href="https://signals-dev.github.io/GreenGuard/advanced_usage/csv.html">project documentation site</a>.</p>
+<a class="reference external" href="DATA_FORMAT.md#csv-format">project documentation site</a>.</p>
 </div>
 </div>
 <div class="section" id="quickstart">

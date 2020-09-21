@@ -84,15 +84,18 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#resources">Resources</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#download-and-install">Download and Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-usage">Docker usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id1">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#turbines">Turbines</a></li>
@@ -314,14 +317,35 @@
 </style>
 <div class="section" id="module-greenguard.db">
 <span id="greenguard-db-module"></span><h1>greenguard.db module<a class="headerlink" href="#module-greenguard.db" title="Permalink to this headline">¶</a></h1>
-<p><strong>Classes</strong></p>
+<p><strong>Classes:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.db.MongoDB" title="greenguard.db.MongoDB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MongoDB</span></code></a>([database, config])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MongoClient</span></code>([host, port, document_class, …])</p></td>
+<td><p>A client-side representation of a MongoDB cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.db.MongoDB" title="greenguard.db.MongoDB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MongoDB</span></code></a>([database, config])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime</span></code>(year, month, day[, hour[, minute[, …)</p></td>
+<td><p>The year, month and day arguments are required.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_dots</span></code>(document)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">restore_dots</span></code>(document)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -330,7 +354,7 @@
 <dt id="greenguard.db.MongoDB">
 <em class="property">class </em><code class="sig-prename descclassname">greenguard.db.</code><code class="sig-name descname">MongoDB</code><span class="sig-paren">(</span><em class="sig-param">database=None</em>, <em class="sig-param">config=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/db.html#MongoDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.db.MongoDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p><strong>Methods</strong></p>
+<p><strong>Methods:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />

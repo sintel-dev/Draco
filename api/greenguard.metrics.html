@@ -84,15 +84,18 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#resources">Resources</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#download-and-install">Download and Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-usage">Docker usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id1">Data Format</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#target-times">Target Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#readings">Readings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#turbines">Turbines</a></li>
@@ -314,15 +317,30 @@
 </style>
 <div class="section" id="module-greenguard.metrics">
 <span id="greenguard-metrics-module"></span><h1>greenguard.metrics module<a class="headerlink" href="#module-greenguard.metrics" title="Permalink to this headline">¶</a></h1>
-<p><strong>Functions</strong></p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.metrics.f1_macro" title="greenguard.metrics.f1_macro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f1_macro</span></code></a>(exp, obs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">accuracy_score</span></code>(y_true, y_pred[, normalize, …])</p></td>
+<td><p>Accuracy classification score.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.metrics.f1_macro" title="greenguard.metrics.f1_macro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f1_macro</span></code></a>(exp, obs)</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">f1_score</span></code>(y_true, y_pred[, labels, …])</p></td>
+<td><p>Compute the F1 score, also known as balanced F-score or F-measure</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_absolute_error</span></code>(y_true, y_pred[, …])</p></td>
+<td><p>Mean absolute error regression loss</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_squared_error</span></code>(y_true, y_pred[, …])</p></td>
+<td><p>Mean squared error regression loss</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">r2_score</span></code>(y_true, y_pred[, sample_weight, …])</p></td>
+<td><p>R^2 (coefficient of determination) regression score function.</p></td>
 </tr>
 </tbody>
 </table>
