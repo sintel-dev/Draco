@@ -26,7 +26,7 @@ AutoML for Renewable Energy Industries.
 - Documentation: https://signals-dev.github.io/GreenGuard
 - Homepage: https://github.com/signals-dev/GreenGuard
 
-# Overview
+## Overview
 
 The GreenGuard project is a collection of end-to-end solutions for machine learning problems
 commonly found in monitoring wind energy production systems. Most tasks utilize sensor data
@@ -43,6 +43,11 @@ The salient aspects of this customized project are:
 * A community oriented infrastructure to incorporate new pipelines.
 * A robust continuous integration and testing infrastructure.
 * A ``learning database`` recording all past outcomes --> tasks, pipelines, outcomes.
+
+## Resources
+
+* [Data Format](DATA_FORMAT.md).
+* [GreenGuard folder structure](DATA_FORMAT.md#folder-structure).
 
 # Install
 
