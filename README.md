@@ -141,7 +141,7 @@ A part from the in-memory data format explained above, which is limited by the m
 allocation capabilities of the system where it is run, **GreenGuard** is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
-[project documentation site](https://signals-dev.github.io/GreenGuard/advanced_usage/csv.html).
+[project documentation site](DATA_FORMAT.md#csv-format).
 
 # Quickstart
 
