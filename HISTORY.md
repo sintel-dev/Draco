@@ -1,5 +1,9 @@
 # History
 
+## 0.2.4 - 2020-09-25
+
+* Fix dependency errors
+
 ## 0.2.3 - 2020-08-10
 
 * Added benchmarking module.
