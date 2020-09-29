@@ -16,6 +16,7 @@ except IOError:
     history = ''
 
 install_requires = [
+    'matplotlib<3.2.2',
     'Keras>=2.1.6,<2.4',
     'mlblocks>=0.3.4,<0.4',
     'mlprimitives>=0.2.5,<0.3',

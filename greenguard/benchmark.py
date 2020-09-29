@@ -1,10 +1,12 @@
+import argparse
 import logging
 import os
 import pickle
+import sys
+import warnings
 from itertools import product
 
 import pandas as pd
-from dask.distributed import Client, LocalCluster
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
@@ -15,12 +17,6 @@ from greenguard.pipeline import GreenGuardPipeline, generate_init_params, genera
 from greenguard.utils import as_list
 
 LOGGER = logging.getLogger(__name__)
-
-
-def _create_client(n_workers=16, dashboard_adress=':9792'):
-    cluster = LocalCluster(n_workers=n_workers, dashboard_adress=dashboard_adress)
-    client = Client(cluster)
-    return client
 
 
 def _build_init_params(template, window_size, rule, template_params):
@@ -287,9 +283,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1',
         return results
 
 
-def _generate_target_times_readings(target_times, readings_path, window_size, rule,
-                                    signals, aggregation, datetime_fmt='%m/%d/%y %H:%M:%S',
-                                    filename_fmt='%Y-%m.csv'):
+def _generate_target_times_readings(target_times, readings_path, window_size, rule, signals):
     """
     Returns:
         pandas.DataFrame:
@@ -299,17 +293,13 @@ def _generate_target_times_readings(target_times, readings_path, window_size, ru
     csv_loader = CSVLoader(
         readings_path,
         rule=rule,
-        aggregation=aggregation,
-        datetime_fmt=datetime_fmt,
-        filename_fmt=filename_fmt,
     )
 
     return csv_loader.load(target_times, window_size=window_size, signals=signals)
 
 
-def make_problem(target_times_paths, readings_path, window_size_resample_rule, output_path,
-                 signals=None, aggregation='mean', datetime_fmt='%m/%d/%y %H:%M:%S',
-                 filename_fmt='%Y-%m.csv', n_workers=16, dashboard_adress=':9792'):
+def make_problem(target_times_paths, readings_path, window_size_resample_rule,
+                 output_path, signals=None):
     """
     Args:
         target_times_paths (list):
@@ -323,30 +313,19 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule, o
         signals (str):
             List of signal names or csv file that has a `signal_id` column to use as the signal
             names list.
-        aggregation (str):
-            Aggregation to perform to the.
-        datetime_fmt (str):
-            Date format used by the column timestamp for the readings. Defaults
-            to `%m/%d/%y %H:%M:%S`.
-        filename_fmt (str):
-            Filename format. Defaults to `%Y-%m.csv`.
-        n_workers (int):
-        dashboard_adress (str):
     """
-    client = _create_client(n_workers, dashboard_adress)
     generated_problems = list()
     target_times_paths = as_list(target_times_paths)
 
-    for tt_path in tqdm(target_times_paths):
+    for target_time_path in tqdm(target_times_paths):
         for window_size, rule in window_size_resample_rule:
+            target_times = pd.read_csv(target_time_path, parse_dates=['cutoff_time'])
             new_target_times, readings = _generate_target_times_readings(
-                tt_path,
+                target_times,
                 readings_path,
+                window_size,
                 rule,
-                aggregation,
-                signals,
-                datetime_fmt,
-                filename_fmt
+                signals=signals,
             )
 
             problem_name = 'problem_{}_{}.pkl'.format(window_size, rule)
@@ -356,17 +335,13 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule, o
 
             generated_problems.append(output_pickle_path)
 
-    client.shutdown()
-
     return generated_problems
 
 
 def benchmark(templates, problem_paths=None, target_times_paths=None, readings_path=None,
-              window_size_resample_rule=None, signals=None, tuning_iterations=100, preprocessing=0,
-              init_params=None, aggregation='mean', cost=False, cv_splits=5, metric='f1',
-              test_size=0.33, random_state=0, cache_path=None, n_workers=16,
-              dashboard_adress=':9792', output_path=None, datetime_fmt='%m/%d/%y %H:%M:%S',
-              filename_fmt='%Y-%m.csv'):
+              window_size_resample_rule=None, signals=None, tuning_iterations=100,
+              preprocessing=None, init_params=None, cost=False, cv_splits=5, metric='f1',
+              test_size=0.33, random_state=0, cache_path=None, output_path=None):
     """
     Args:
         templates (list):
@@ -378,15 +353,6 @@ def benchmark(templates, problem_paths=None, target_times_paths=None, readings_p
         signals (str):
             List of signal names or csv file that has a `signal_id` column to use as the signal
             names list.
-        aggregation (str):
-            Aggregation to perform to the.
-        datetime_fmt (str):
-            Date format used by the column timestamp for the readings. Defaults
-            to `%m/%d/%y %H:%M:%S`.
-        n_workers
-        dashboard_adress
-        filename_fmt (str):
-            Filename format. Defaults to `%Y-%m.csv`.
         tuning_iterations (int):
         preprocessing :
         init_params :
@@ -394,7 +360,6 @@ def benchmark(templates, problem_paths=None, target_times_paths=None, readings_p
         test_size :
         cv_splits (int):
         cache_path (str):
-
         output_path (str):
     """
     templates = as_list(templates)
@@ -402,21 +367,17 @@ def benchmark(templates, problem_paths=None, target_times_paths=None, readings_p
 
     if target_times_paths:
         target_times_paths = as_list(target_times_paths)
-        if not readings_path:
+        if readings_path is None:
             raise ValueError('Missing readings path.')
-
-        client = _create_client(n_workers, dashboard_adress)
 
         for tt_path in tqdm(target_times_paths):
             for window_size, rule in window_size_resample_rule:
+                target_times = pd.read_csv(tt_path, parse_dates=['cutoff_time'])
                 target_times, readings = _generate_target_times_readings(
                     tt_path,
                     readings_path,
                     rule,
-                    aggregation,
                     signals,
-                    datetime_fmt,
-                    filename_fmt,
                 )
 
                 df = evaluate_templates(
@@ -438,37 +399,83 @@ def benchmark(templates, problem_paths=None, target_times_paths=None, readings_p
 
                 results.append(df)
 
-        client.shutdown()
-
     else:
-        problem_paths = as_list(problem_paths)
 
+        problem_paths = as_list(problem_paths)
         for problem_path in tqdm(problem_paths):
             with open(problem_path, 'rb') as pickle_file:
-                target_times, readings, window_size, rule = pickle.load(pickle_file)
+                target_times, readings, pickle_window_size, pickle_rule = pickle.load(pickle_file)
 
-            df = evaluate_templates(
-                templates,
-                [(window_size, rule)],
-                metric=metric,
-                tuning_iterations=tuning_iterations,
-                init_params=init_params,
-                target_times=target_times,
-                readings=readings,
-                preprocessing=preprocessing,
-                cost=cost,
-                test_size=test_size,
-                cv_splits=cv_splits,
-                random_state=random_state,
-                cache_path=cache_path,
-                output_path=None
-            )
+            if window_size_resample_rule is None:
+                window_size_resample_rule = [(pickle_window_size, pickle_rule)]
 
-            results.append(df)
+            for window_size, resample_rule in window_size_resample_rule:
+
+                # window_size can be only smaller than pickle window size
+                # resample rule can be only bigger than picke rule
+                if (pd.to_timedelta(pickle_window_size) >= pd.to_timedelta(window_size)
+                        and pd.to_timedelta(pickle_rule) <= pd.to_timedelta(resample_rule)): # noqa W503
+
+                    df = evaluate_templates(
+                        templates,
+                        [(window_size, rule)],
+                        metric=metric,
+                        tuning_iterations=tuning_iterations,
+                        init_params=init_params,
+                        target_times=target_times,
+                        readings=readings,
+                        preprocessing=preprocessing,
+                        cost=cost,
+                        test_size=test_size,
+                        cv_splits=cv_splits,
+                        random_state=random_state,
+                        cache_path=cache_path,
+                        output_path=None
+                    )
+
+                    results.append(df)
+
+                else:
+                    msg = (f'Invalid window size of {window_size} for {pickle_window_size}'
+                           f' or invalid resample rule {resample_rule} for {pickle_rule}.')
+                    LOGGER.info(msg)
 
     results = pd.concat(results, ignore_index=True)
 
     if output_path:
-        results.to_csv(output_path)
+        results.to_csv(output_path, index=False)
 
-    return results
+    else:
+        return results
+
+
+def _get_parser():
+    parser = argparse.ArgumentParser(description='GreenGuard Benchmark Command Line Interface.')
+    parser.set_defaults(action=benchmark)
+
+    # Add arguments
+    parser.add_argument('-t', '--templates', nargs='+', help='List of templates to try.')
+    parser.add_argument('-p', '--problems', nargs='+', help='Paths to problems to be benchmarked.')
+    parser.add_argument('-w', '--window-size-resample-rule', nargs='+',
+                        help='List of tuples with window size and resample rule to benchmark.')
+    parser.add_argument('-i', '--tuning-iterations', type=int, default=100,
+                        help='Number of tuning iterations to perform per problem per pipeline.')
+
+    return parser
+
+
+def main():
+    warnings.filterwarnings("ignore")
+
+    # Parse args
+    parser = _get_parser()
+    args = parser.parse_args()
+    if args.templates is None:
+        parser.print_help()
+        sys.exit(0)
+
+    args.action(**args)
+
+
+if __name__ == '__main__':
+    main()
