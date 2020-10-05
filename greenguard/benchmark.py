@@ -298,8 +298,8 @@ def _generate_target_times_readings(target_times, readings_path, window_size, ru
     return csv_loader.load(target_times, window_size=window_size, signals=signals)
 
 
-def make_problem(target_times_paths, readings_path, window_size_resample_rule,
-                 output_path, signals=None):
+def make_problems(target_times_paths, readings_path, window_size_resample_rule,
+                  output_path=None, signals=None):
     """
     Args:
         target_times_paths (list):
@@ -314,10 +314,17 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule,
             List of signal names or csv file that has a `signal_id` column to use as the signal
             names list.
     """
-    generated_problems = list()
-    target_times_paths = as_list(target_times_paths)
+    if isinstance(target_times_paths, str):
+        target_times_paths = [target_times_paths]
+    if isinstance(target_times_paths, list):
+        target_times_paths = {os.path.basename(path)[:-4]: path for path in target_times_paths}
 
-    for target_time_path in tqdm(target_times_paths):
+    if output_path:
+        generated_problems = list()
+    else:
+        generated_problems = {}
+
+    for name, target_time_path in tqdm(target_times_paths.values()):
         for window_size, rule in window_size_resample_rule:
             target_times = pd.read_csv(target_time_path, parse_dates=['cutoff_time'])
             new_target_times, readings = _generate_target_times_readings(
@@ -328,12 +335,17 @@ def make_problem(target_times_paths, readings_path, window_size_resample_rule,
                 signals=signals,
             )
 
-            problem_name = 'problem_{}_{}.pkl'.format(window_size, rule)
-            output_pickle_path = os.path.join(output_path, problem_name)
-            with open(output_pickle_path, 'wb') as pickle_file:
-                pickle.dump((new_target_times, readings, window_size, rule), pickle_file)
+            problem_name = '{}_{}_{}.pkl'.format(name, window_size, rule)
 
-            generated_problems.append(output_pickle_path)
+            if output_path:
+                output_pickle_path = os.path.join(output_path, problem_name)
+                with open(output_pickle_path, 'wb') as pickle_file:
+                    pickle.dump((new_target_times, readings, window_size, rule), pickle_file)
+
+                generated_problems.append(output_pickle_path)
+
+            else:
+                generated_problems[problem_name] = (new_target_times, readings, window_size, rule)
 
     return generated_problems
 
@@ -371,18 +383,18 @@ def benchmark(templates, problem_paths=None, target_times_paths=None, readings_p
             raise ValueError('Missing readings path.')
 
         for tt_path in tqdm(target_times_paths):
-            for window_size, rule in window_size_resample_rule:
+            for window_size, resample_rule in window_size_resample_rule:
                 target_times = pd.read_csv(tt_path, parse_dates=['cutoff_time'])
                 target_times, readings = _generate_target_times_readings(
                     tt_path,
                     readings_path,
-                    rule,
+                    resample_rule,
                     signals,
                 )
 
                 df = evaluate_templates(
                     templates,
-                    [(window_size, rule)],
+                    [(window_size, resample_rule)],
                     metric=metric,
                     tuning_iterations=tuning_iterations,
                     init_params=init_params,
@@ -418,7 +430,7 @@ def benchmark(templates, problem_paths=None, target_times_paths=None, readings_p
 
                     df = evaluate_templates(
                         templates,
-                        [(window_size, rule)],
+                        [(window_size, resample_rule)],
                         metric=metric,
                         tuning_iterations=tuning_iterations,
                         init_params=init_params,
