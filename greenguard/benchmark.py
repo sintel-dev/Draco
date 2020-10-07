@@ -416,11 +416,14 @@ def run_benchmark(templates, problems=None, window_size_resample_rule=None,
         problems = [problems]
     if isinstance(problems, list):
         problems = {
-            '_'.join(os.path.basename(problem).split('_')[:-2]): problem
+            os.path.basename(problem).replace('.pkl', ''): problem
             for problem in problems
         }
 
     for problem_name, problem in tqdm(problems.items()):
+        # remove window_size resample_rule nomenclature from the problem's name
+        problem_name = re.sub(r'\_\d+[DdHhMmSs]', r'', problem_name)
+
         if isinstance(problem, str):
             with open(problem, 'rb') as pickle_file:
                 target_times, readings, orig_window_size, orig_rule = pickle.load(pickle_file)
