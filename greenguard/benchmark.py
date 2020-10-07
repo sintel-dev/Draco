@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import pickle
+import re
 import sys
 import warnings
 from datetime import datetime
@@ -17,10 +18,24 @@ from greenguard.demo import load_demo
 from greenguard.loaders import CSVLoader
 from greenguard.metrics import METRICS
 from greenguard.pipeline import GreenGuardPipeline, generate_init_params, generate_preprocessing
-from greenguard.results import summarize_results
 from greenguard.utils import as_list
 
 LOGGER = logging.getLogger(__name__)
+
+LEADERBOARD_COLUMNS = [
+    'problem_name',
+    'window_size',
+    'resample_rule',
+    'template',
+    'default_test',
+    'default_cv',
+    'tuned_cv',
+    'tuned_test',
+    'fit_predict_time',
+    'cv_time',
+    'total_time',
+    'status',
+]
 
 
 def _build_init_params(template, window_size, rule, template_params):
@@ -241,7 +256,6 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
     3        normalize_dfs_xgb_classifier          7d            4h      0.581818    0.619698  0.650367    0.603774     OK
 
     """  # noqa
-
     if readings is None and target_times is None:
         target_times, readings = load_demo()
 
@@ -292,27 +306,13 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
                 template_name = os.path.basename(template_name).replace('.json', '')
 
             file_name = '{}_{}_{}_{}.csv'.format(problem_name, template_name, window_size, rule)
-            pd.DataFrame([scores]).to_csv(os.path.join(cache_results, file_name), index=False)
+            df = pd.DataFrame([scores]).reindex(LEADERBOARD_COLUMNS, axis=1)
+            df.to_csv(os.path.join(cache_results, file_name), index=False)
 
         scores_list.append(scores)
 
     results = pd.DataFrame.from_records(scores_list)
-    columns = [
-        'problem_name',
-        'window_size',
-        'resample_rule',
-        'template',
-        'default_test',
-        'default_cv',
-        'tuned_cv',
-        'tuned_test',
-        'fit_predict_time',
-        'cv_time',
-        'total_time',
-        'status',
-    ]
-
-    results = results.reindex(columns, axis=1)
+    results = results.reindex(LEADERBOARD_COLUMNS, axis=1)
 
     if output_path:
         LOGGER.info('Saving benchmark report to %s', output_path)
@@ -365,7 +365,7 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
     else:
         generated_problems = {}
 
-    for problem_name, target_time_path in tqdm(target_times_paths.values()):
+    for problem_name, target_time_path in tqdm(target_times_paths.items()):
         for window_size, rule in window_size_resample_rule:
             target_times = pd.read_csv(target_time_path, parse_dates=['cutoff_time'])
             new_target_times, readings = _generate_target_times_readings(
@@ -376,22 +376,22 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
                 signals=signals,
             )
 
-            problem_name = '{}_{}_{}.pkl'.format(problem_name, window_size, rule)
+            pickle_name = '{}_{}_{}'.format(problem_name, window_size, rule)
 
             if output_path:
-                output_pickle_path = os.path.join(output_path, problem_name)
+                output_pickle_path = os.path.join(output_path, pickle_name + '.pkl')
                 with open(output_pickle_path, 'wb') as pickle_file:
                     pickle.dump((new_target_times, readings, window_size, rule), pickle_file)
 
                 generated_problems.append(output_pickle_path)
 
             else:
-                generated_problems[problem_name] = (new_target_times, readings, window_size, rule)
+                generated_problems[pickle_name] = (new_target_times, readings, window_size, rule)
 
     return generated_problems
 
 
-def run_benchmark(templates, problem_paths=None, window_size_resample_rule=None,
+def run_benchmark(templates, problems=None, window_size_resample_rule=None,
                   tuning_iterations=100, preprocessing=0, init_params=None, cost=False,
                   cv_splits=5, metric='f1', test_size=0.33, random_state=0, cache_path=None,
                   output_path=None, cache_results=None):
@@ -412,23 +412,30 @@ def run_benchmark(templates, problem_paths=None, window_size_resample_rule=None,
     """
     templates = as_list(templates)
     results = list()
-    problem_paths = as_list(problem_paths)
+    if isinstance(problems, str):
+        problems = [problems]
+    if isinstance(problems, list):
+        problems = {
+            '_'.join(os.path.basename(problem).split('_')[:-2]): problem
+            for problem in problems
+        }
 
-    for problem_path in tqdm(problem_paths):
-        with open(problem_path, 'rb') as pickle_file:
-            target_times, readings, pickle_window_size, pickle_rule = pickle.load(pickle_file)
-
-        problem_name = '_'.join(os.path.basename(problem_path).split('_')[:-2])
+    for problem_name, problem in tqdm(problems.items()):
+        if isinstance(problem, str):
+            with open(problem, 'rb') as pickle_file:
+                target_times, readings, orig_window_size, orig_rule = pickle.load(pickle_file)
+        else:
+            target_times, readings, orig_window_size, orig_rule = problem
 
         if window_size_resample_rule is None:
-            window_size_resample_rule = [(pickle_window_size, pickle_rule)]
+            window_size_resample_rule = [(orig_window_size, orig_rule)]
 
         for window_size, resample_rule in window_size_resample_rule:
 
             # window_size can be only smaller than pickle window size
             # resample rule can be only bigger than picke rule
-            if (pd.to_timedelta(pickle_window_size) >= pd.to_timedelta(window_size)
-                    and pd.to_timedelta(pickle_rule) <= pd.to_timedelta(resample_rule)): # noqa W503
+            if (pd.to_timedelta(orig_window_size) >= pd.to_timedelta(window_size)
+                    and pd.to_timedelta(orig_rule) <= pd.to_timedelta(resample_rule)): # noqa W503
 
                 df = evaluate_templates(
                     templates,
@@ -457,7 +464,7 @@ def run_benchmark(templates, problem_paths=None, window_size_resample_rule=None,
 
             else:
                 msg = 'Invalid window size or resample rule {}.'.format(
-                    (window_size, pickle_window_size, resample_rule, pickle_rule))
+                    (window_size, orig_window_size, resample_rule, orig_rule))
 
                 LOGGER.info(msg)
 
@@ -484,13 +491,17 @@ def _run(args):
         args.templates = get_pipelines()
 
     window_size_resample_rule = None
-    if args.window_size:
-        window_size_resample_rule = list(product(args.window_size, args.resample_rule))
+    if args.window_size_resample_rule:
+        pattern = re.compile(r'\d+[DdHhMmSs]')
+        window_size_resample_rule = [
+            tuple(pattern.findall(item))
+            for item in args.window_size_resample_rule
+        ]
 
     # run
     results = run_benchmark(
         templates=args.templates,
-        problem_paths=args.problem_paths,
+        problems=args.problems,
         window_size_resample_rule=window_size_resample_rule,
         cv_splits=args.cv_splits,
         metric=args.metric,
@@ -508,6 +519,10 @@ def _run(args):
             tablefmt='github',
             headers=results.columns
         ))
+
+
+def summarize_results(input_path, output_path):
+    pass
 
 
 def _summary(args):
@@ -540,12 +555,10 @@ def _get_parser():
                      help='Be verbose. Use -vv for increased verbosity.')
     run.add_argument('-t', '--templates', nargs='+',
                      help='Perform benchmarking over the given list of templates.')
-    run.add_argument('-p', '--problem-paths', nargs='+', required=False,
+    run.add_argument('-p', '--problems', nargs='+', required=False,
                      help='Perform benchmarking over a list of pkl problems.')
-    run.add_argument('-w', '--window-size', nargs='+', required=False,
+    run.add_argument('-w', '--window-size-resample-rule', nargs='+', required=False,
                      help='List of window sizes values to benchmark.')
-    run.add_argument('-r', '--resample-rule', nargs='+', required=False,
-                     help='List of resample rule to benchmark.')
     run.add_argument('-o', '--output_path', type=str,
                      help='Output path where to store the results.')
     run.add_argument('-s', '--cv-splits', type=int, default=5,

@@ -16,10 +16,12 @@ except IOError:
     history = ''
 
 install_requires = [
+    'xlsxwriter>=1.3.6<1.4',
     'matplotlib<3.2.2',
     'boto3==1.14.44',
     'botocore==1.17.44',
     'baytune>=0.3.9,<0.4',
+    'tabulate>=0.8.3,<0.9',
     'Keras>=2.1.6,<2.4',
     'mlblocks>=0.3.4,<0.4',
     'mlprimitives>=0.2.5,<0.3',
