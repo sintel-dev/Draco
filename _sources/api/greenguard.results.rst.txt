@@ -1,0 +1,7 @@
+greenguard.results module
+=========================
+
+.. automodule:: greenguard.results
+   :members:
+   :undoc-members:
+   :show-inheritance:

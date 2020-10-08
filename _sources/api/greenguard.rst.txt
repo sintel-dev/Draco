@@ -18,6 +18,7 @@ Submodules
    greenguard.demo
    greenguard.metrics
    greenguard.pipeline
+   greenguard.results
    greenguard.targets
    greenguard.utils
 

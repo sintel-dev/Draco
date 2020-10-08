@@ -179,6 +179,7 @@
 <li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.results.html">greenguard.results module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.targets.html">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -325,11 +326,20 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code>(templates[, metric, …])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSVLoader</span></code>([readings_path, rule, …])</p></td>
+<td><p>Load the required readings from CSV files.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code>(templates[, metric, …])</p></td>
 <td><p>Main Machine Learning component in the GreenGuard project.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime</span></code>(year, month, day[, hour[, minute[, …)</p></td>
+<td><p>The year, month and day arguments are required.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">product</span></code></p></td>
 <td><p>product(<a href="#id1"><span class="problematic" id="id2">*</span></a>iterables, repeat=1) –&gt; product object</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tqdm</span></code>([iterable, desc, total, leave, file, …])</p></td>
+<td><p>Decorate an iterable object, returning an iterator which acts exactly like the original iterable, but prints a dynamically updating progressbar every time a value is requested.</p></td>
 </tr>
 </tbody>
 </table>
@@ -352,11 +362,32 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_preprocessing</span></code>(templates_names, …)</p></td>
 <td><p>Generate preprocessing dict.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_demo</span></code>([load_readings])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines</span></code>([pattern, path, unstacked])</p></td>
+<td><p>Get the list of available pipelines.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_demo</span></code>([load_readings])</p></td>
 <td><p>Load the demo included in the GreenGuard project.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_results</span></code>(files)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.benchmark.main" title="greenguard.benchmark.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.benchmark.make_problems" title="greenguard.benchmark.make_problems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_problems</span></code></a>(target_times_paths, …[, …])</p></td>
+<td><p>Make problems with the target times and readings for each window size and resample rule.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.benchmark.run_benchmark" title="greenguard.benchmark.run_benchmark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_benchmark</span></code></a>(templates, problems[, …])</p></td>
+<td><p>Execute the benchmark function and optionally store the result as a <code class="docutils literal notranslate"><span class="pre">CSV</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.benchmark.summarize_results" title="greenguard.benchmark.summarize_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summarize_results</span></code></a>(input_paths, output_path)</p></td>
+<td><p>Load multiple benchmark results CSV files and compile a summary.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_test_split</span></code>(*arrays, **options)</p></td>
 <td><p>Split arrays or matrices into random train and test subsets</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_results</span></code>(results, output)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -417,13 +448,13 @@ Defatuls to <code class="docutils literal notranslate"><span class="pre">None</s
 
 <dl class="function">
 <dt id="greenguard.benchmark.evaluate_templates">
-<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_templates</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">window_size_rule</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">cache_path=None</em>, <em class="sig-param">output_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_templates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">evaluate_templates</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">window_size_rule</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">target_times=None</em>, <em class="sig-param">readings=None</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">test_size=0.25</em>, <em class="sig-param">cv_splits=3</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">cache_path=None</em>, <em class="sig-param">cache_results=None</em>, <em class="sig-param">problem_name=None</em>, <em class="sig-param">output_path=None</em>, <em class="sig-param">progress_bar=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#evaluate_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.evaluate_templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the benchmark process and optionally store the result as a <code class="docutils literal notranslate"><span class="pre">CSV</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>templates</strong> (<em>list</em>) – List of templates to try.</p></li>
-<li><p><strong>window_size_rule</strong> (<em>list</em>) – List of tupples (int, str or Timedelta object).</p></li>
+<li><p><strong>window_size_rule</strong> (<em>list</em>) – List of tuples (int, str or Timedelta object).</p></li>
 <li><p><strong>metric</strong> (<em>function</em><em> or </em><em>str</em>) – Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics
 defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary.</p></li>
 <li><p><strong>tuning_iterations</strong> (<em>int</em>) – Number of iterations to be used.</p></li>
@@ -501,6 +532,144 @@ else it will dump the results in the specified <code class="docutils literal not
 1  unstack_lstm_timeseries_classifier          7d            4h      0.723404    0.597440  0.610766    0.745098     OK
 2        normalize_dfs_xgb_classifier         30d           12h      0.581818    0.619698  0.637123    0.596491     OK
 3        normalize_dfs_xgb_classifier          7d            4h      0.581818    0.619698  0.650367    0.603774     OK</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="greenguard.benchmark.main">
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.benchmark.make_problems">
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">make_problems</code><span class="sig-paren">(</span><em class="sig-param">target_times_paths</em>, <em class="sig-param">readings_path</em>, <em class="sig-param">window_size_resample_rule</em>, <em class="sig-param">output_path=None</em>, <em class="sig-param">signals=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#make_problems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.make_problems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make problems with the target times and readings for each window size and resample rule.</p>
+<p>Create problems in the accepted format by <code class="docutils literal notranslate"><span class="pre">run_benchmark</span></code> as pickle files containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">target_times</span></code>: <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing the target times.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">readings</span></code>: <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing the readings for the target times.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">window_size</span></code>: window size value used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resample_rule</span></code>: resample rule value used.</p></li>
+</ul>
+</div></blockquote>
+<p>Or return a <code class="docutils literal notranslate"><span class="pre">dict</span></code> containing as keys the names of the problems generated and tuples with
+the previously specified fields of target times, readings, window size and resample rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_times_paths</strong> (<em>list</em>) – List of paths to CSVs that contain target times.</p></li>
+<li><p><strong>readings_path</strong> (<em>str</em>) – Path to the folder where readings in raw CSV format can be found.</p></li>
+<li><p><strong>window_size_resample_rule</strong> (<em>list</em>) – List of tuples (int, str or Timedelta object).</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Path to save the generated problems.</p></li>
+<li><p><strong>signals</strong> (<em>str</em>) – List of signal names or csv file that has a <cite>signal_id</cite> column to use as the signal
+names list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="greenguard.benchmark.run_benchmark">
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">run_benchmark</code><span class="sig-paren">(</span><em class="sig-param">templates</em>, <em class="sig-param">problems</em>, <em class="sig-param">window_size_resample_rule=None</em>, <em class="sig-param">tuning_iterations=50</em>, <em class="sig-param">signals=None</em>, <em class="sig-param">preprocessing=0</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">metric='f1'</em>, <em class="sig-param">cost=False</em>, <em class="sig-param">cv_splits=5</em>, <em class="sig-param">test_size=0.33</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">cache_path=None</em>, <em class="sig-param">cache_results=None</em>, <em class="sig-param">output_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#run_benchmark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.run_benchmark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the benchmark function and optionally store the result as a <code class="docutils literal notranslate"><span class="pre">CSV</span></code>.</p>
+<p>This function provides a user-friendly interface to interact with the <code class="docutils literal notranslate"><span class="pre">evaluate_templates</span></code>
+function. It allows the user to specify an <code class="docutils literal notranslate"><span class="pre">output_path</span></code> where the results can be
+stored. If this path is not provided, a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> will be returned.</p>
+<p>This function evaluates each template against each problem for each window size and resample
+rule possible, and will tune each teamplate for the given amount of tuning iterations.</p>
+<p>The problems can be a pickle file that contains the following values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">target_times</span></code>: <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing the target times.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">readings</span></code>: <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing the readings for the target times.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">window_size</span></code>: window size value used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resample_rule</span></code>: resample rule value used.</p></li>
+</ul>
+</div></blockquote>
+<p>Or it can be dictionary containing the problem’s name and as values either a path to a pickle
+file or a tuple containing the previously specified fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>templates</strong> (<em>str</em><em> or </em><em>list</em>) – Name of the json pipelines that will be evaluated against the problems.</p></li>
+<li><p><strong>problems</strong> (<em>str</em><em>, </em><em>list</em><em> or </em><em>dict</em>) – <p>There are three possible values for problems:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: Path to a given problem stored as a pickle file (pkl).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>: List of paths to given problems stored as a pickle files (pkl).</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">dict</span></code>: A dict containing as keys the name of the problem and as value the</dt><dd><p>path to a pickle file or a tuple with target times and readings data
+frames and the window size and resample rule used to generate this
+problem.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The pickle files has to contain a tuple with target times and readings data frames and
+the window size and resample rule used to generate that problem. We recommend using
+the function <code class="docutils literal notranslate"><span class="pre">make_problems</span></code> to generate those files.</p>
+</p></li>
+<li><p><strong>window_size_resample_rule</strong> (<em>list</em>) – List of tuples (int, str or Timedelta object).</p></li>
+<li><p><strong>tuning_iterations</strong> (<em>int</em>) – Amount of tuning iterations to perfrom over each template.</p></li>
+<li><p><strong>signals</strong> (<em>str</em><em> or </em><em>list</em>) – Path to a csv file containing <code class="docutils literal notranslate"><span class="pre">signal_id</span></code> column that we would like to use or a
+<code class="docutils literal notranslate"><span class="pre">list</span></code> of signals that we would like to use. If <code class="docutils literal notranslate"><span class="pre">None</span></code> use all the signals from
+the readings.</p></li>
+<li><p><strong>preprocessing</strong> (<em>int</em><em>, </em><em>dict</em><em> or </em><em>list</em>) – <p>There are three possible values for preprocessing:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span></code>: the value will be used for all templates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> with the template name as a key and a number as a value, will
+be used for that template.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>: each value will be assigned to the corresponding position of
+self.templates.</p></li>
+</ul>
+</div></blockquote>
+<p>Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</p></li>
+<li><p><strong>init_params</strong> (<em>dict</em><em> or </em><em>list</em>) – <p>There are three possible values for init_params:</p>
+<blockquote>
+<div><ul>
+<li><p>Init params <code class="docutils literal notranslate"><span class="pre">dict</span></code>: It will be used for all templates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> with the name of the template as a key and dictionary with its
+init params.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>: each value will be assigned to the corresponding position of
+self.templates.</p></li>
+</ul>
+</div></blockquote>
+<p>Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</p></li>
+<li><p><strong>metric</strong> (<em>function</em><em> or </em><em>str</em>) – Metric to use. If an <code class="docutils literal notranslate"><span class="pre">str</span></code> is give it must be one of the metrics
+defined in the <code class="docutils literal notranslate"><span class="pre">greenguard.metrics.METRICS</span></code> dictionary.</p></li>
+<li><p><strong>cost</strong> (<em>bool</em>) – Whether the metric is a cost function (the lower the better) or not.
+Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>cv_splits</strong> (<em>int</em>) – Number of cross validation folds to use. Defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><strong>test_size</strong> (<em>float</em>) – Amount of data that will be saved for test, represented in percentage between 0 and 1.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em> or </em><em>RandomState</em>) – random state to use for the cross validation partitioning. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>cache_path</strong> (<em>str</em>) – If given, cache the generated cross validation splits in this folder.
+Defatuls to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>cache_results</strong> (<em>str</em>) – If provided, store the progress of each pipeline and each problem while runing.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – If provided, store the results to the given filename. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="greenguard.benchmark.summarize_results">
+<code class="sig-prename descclassname">greenguard.benchmark.</code><code class="sig-name descname">summarize_results</code><span class="sig-paren">(</span><em class="sig-param">input_paths</em>, <em class="sig-param">output_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/benchmark.html#summarize_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.benchmark.summarize_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load multiple benchmark results CSV files and compile a summary.</p>
+<p>The result is an Excel file with one tab for each results CSV file
+and an additional Number of Wins tab with a summary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs_paths</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of paths to CSV files where the benchmarks results are stored.
+These files must have one column per Tuner and one row per Challenge.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Path, including the filename, where the Excel file will be created.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

@@ -177,6 +177,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.results.html">greenguard.results module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.targets.html">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -285,17 +286,46 @@
            <div itemprop="articleBody">
             
   <h1>Source code for greenguard.benchmark</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tabulate</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
+<span class="kn">from</span> <span class="nn">greenguard</span> <span class="kn">import</span> <span class="n">get_pipelines</span>
 <span class="kn">from</span> <span class="nn">greenguard.demo</span> <span class="kn">import</span> <span class="n">load_demo</span>
+<span class="kn">from</span> <span class="nn">greenguard.loaders</span> <span class="kn">import</span> <span class="n">CSVLoader</span>
 <span class="kn">from</span> <span class="nn">greenguard.metrics</span> <span class="kn">import</span> <span class="n">METRICS</span>
 <span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span><span class="p">,</span> <span class="n">generate_init_params</span><span class="p">,</span> <span class="n">generate_preprocessing</span>
+<span class="kn">from</span> <span class="nn">greenguard.results</span> <span class="kn">import</span> <span class="n">load_results</span><span class="p">,</span> <span class="n">write_results</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">LEADERBOARD_COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;problem_name&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;window_size&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;resample_rule&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;template&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;default_test&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;default_cv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tuned_cv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tuned_test&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;metric&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fit_predict_time&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;default_cv_time&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;average_cv_time&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;total_time&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;status&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">_build_init_params</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">,</span> <span class="n">template_params</span><span class="p">):</span>
@@ -376,7 +406,10 @@
 <span class="sd">        scores (dict):</span>
 <span class="sd">            Stores the four types of scores that are being evaluate.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+
     <span class="n">scores</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;metric&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span>
 
     <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 
@@ -394,19 +427,25 @@
     <span class="p">)</span>
 
     <span class="c1"># Computing the default test score</span>
+    <span class="n">fit_predict_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
     <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
     <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
+    <span class="n">fit_predict_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">fit_predict_time</span>
 
     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;default_test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
 
     <span class="c1"># Computing the default cross validation score</span>
+    <span class="n">default_cv_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
     <span class="n">session</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">tune</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">default_cv_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">default_cv_time</span>
 
     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;default_cv&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">cv_score</span>
 
     <span class="c1"># Computing the cross validation score with tuned hyperparameters</span>
+    <span class="n">average_cv_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
     <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tuning_iterations</span><span class="p">)</span>
+    <span class="n">average_cv_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">average_cv_time</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span> <span class="o">/</span> <span class="n">tuning_iterations</span>
 
     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;tuned_cv&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">cv_score</span>
 
@@ -415,21 +454,25 @@
     <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">readings</span><span class="p">)</span>
 
     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;tuned_test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;fit_predict_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_predict_time</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;default_cv_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_cv_time</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;default_cv_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_cv_time</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;total_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 
     <span class="k">return</span> <span class="n">scores</span></div>
 
 
-<div class="viewcode-block" id="evaluate_templates"><a class="viewcode-back" href="../../api/greenguard.benchmark.html#greenguard.benchmark.evaluate_templates">[docs]</a><span class="k">def</span> <span class="nf">evaluate_templates</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">window_size_rule</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span>
-                       <span class="n">tuning_iterations</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
-                       <span class="n">cv_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cache_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="evaluate_templates"><a class="viewcode-back" href="../../api/greenguard.benchmark.html#greenguard.benchmark.evaluate_templates">[docs]</a><span class="k">def</span> <span class="nf">evaluate_templates</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">window_size_rule</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="n">tuning_iterations</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                       <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                       <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cache_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">cache_results</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">problem_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Execute the benchmark process and optionally store the result as a ``CSV``.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        templates (list):</span>
 <span class="sd">            List of templates to try.</span>
 <span class="sd">        window_size_rule (list):</span>
-<span class="sd">            List of tupples (int, str or Timedelta object).</span>
+<span class="sd">            List of tuples (int, str or Timedelta object).</span>
 <span class="sd">        metric (function or str):</span>
 <span class="sd">            Metric to use. If an ``str`` is give it must be one of the metrics</span>
 <span class="sd">            defined in the ``greenguard.metrics.METRICS`` dictionary.</span>
@@ -506,7 +549,6 @@
 <span class="sd">    3        normalize_dfs_xgb_classifier          7d            4h      0.581818    0.619698  0.650367    0.603774     OK</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
-
     <span class="k">if</span> <span class="n">readings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">target_times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span> <span class="o">=</span> <span class="n">load_demo</span><span class="p">()</span>
 
@@ -518,11 +560,15 @@
         <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span> <span class="o">=</span> <span class="n">window_rule</span>
 
         <span class="n">scores</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;problem_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">problem_name</span>
         <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;template&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span>
         <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;window_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">window_size</span>
         <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;resample_rule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule</span>
 
         <span class="k">try</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Evaluating template </span><span class="si">%s</span><span class="s1"> on problem </span><span class="si">%s</span><span class="s1"> (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span>
+                        <span class="n">template</span><span class="p">,</span> <span class="n">problem_name</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span>
+
             <span class="n">template_params</span> <span class="o">=</span> <span class="n">init_params</span><span class="p">[</span><span class="n">template</span><span class="p">]</span>
             <span class="n">template_params</span> <span class="o">=</span> <span class="n">_build_init_params</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">,</span> <span class="n">template_params</span><span class="p">)</span>
             <span class="n">template_preprocessing</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="p">[</span><span class="n">template</span><span class="p">]</span>
@@ -549,17 +595,449 @@
             <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ERRORED&#39;</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Could not score template </span><span class="si">%s</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">cache_results</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">cache_results</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">template_name</span> <span class="o">=</span> <span class="n">template</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">template_name</span><span class="p">):</span>
+                <span class="n">template_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">template_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">problem_name</span><span class="p">,</span> <span class="n">template_name</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">scores</span><span class="p">])</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">LEADERBOARD_COLUMNS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_results</span><span class="p">,</span> <span class="n">file_name</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="n">scores_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="n">progress_bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
     <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">scores_list</span><span class="p">)</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">reindex</span><span class="p">([</span><span class="s1">&#39;template&#39;</span><span class="p">,</span> <span class="s1">&#39;window_size&#39;</span><span class="p">,</span> <span class="s1">&#39;resample_rule&#39;</span><span class="p">,</span> <span class="s1">&#39;default_test&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;default_cv&#39;</span><span class="p">,</span> <span class="s1">&#39;tuned_cv&#39;</span><span class="p">,</span> <span class="s1">&#39;tuned_test&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">LEADERBOARD_COLUMNS</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">output_path</span><span class="p">:</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving benchmark report to </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
         <span class="n">results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">results</span></div>
+
+
+<span class="k">def</span> <span class="nf">_generate_target_times_readings</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">readings_path</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">,</span> <span class="n">signals</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame:</span>
+<span class="sd">            Table of readings for the target times, including the columns ``turbine_id``,</span>
+<span class="sd">            ``signal_id``, ``timestamp`` and ``value``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">csv_loader</span> <span class="o">=</span> <span class="n">CSVLoader</span><span class="p">(</span>
+        <span class="n">readings_path</span><span class="p">,</span>
+        <span class="n">rule</span><span class="o">=</span><span class="n">rule</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">csv_loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">target_times</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">signals</span><span class="o">=</span><span class="n">signals</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="make_problems"><a class="viewcode-back" href="../../api/greenguard.benchmark.html#greenguard.benchmark.make_problems">[docs]</a><span class="k">def</span> <span class="nf">make_problems</span><span class="p">(</span><span class="n">target_times_paths</span><span class="p">,</span> <span class="n">readings_path</span><span class="p">,</span> <span class="n">window_size_resample_rule</span><span class="p">,</span>
+                  <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">signals</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make problems with the target times and readings for each window size and resample rule.</span>
+
+<span class="sd">    Create problems in the accepted format by ``run_benchmark`` as pickle files containing:</span>
+
+<span class="sd">        * ``target_times``: ``pandas.DataFrame`` containing the target times.</span>
+<span class="sd">        * ``readings``: ``pandas.DataFrame`` containing the readings for the target times.</span>
+<span class="sd">        * ``window_size``: window size value used.</span>
+<span class="sd">        * ``resample_rule``: resample rule value used.</span>
+
+<span class="sd">    Or return a ``dict`` containing as keys the names of the problems generated and tuples with</span>
+<span class="sd">    the previously specified fields of target times, readings, window size and resample rule.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target_times_paths (list):</span>
+<span class="sd">            List of paths to CSVs that contain target times.</span>
+<span class="sd">        readings_path (str):</span>
+<span class="sd">            Path to the folder where readings in raw CSV format can be found.</span>
+<span class="sd">        window_size_resample_rule (list):</span>
+<span class="sd">            List of tuples (int, str or Timedelta object).</span>
+<span class="sd">        output_path (str):</span>
+<span class="sd">            Path to save the generated problems.</span>
+<span class="sd">        signals (str):</span>
+<span class="sd">            List of signal names or csv file that has a `signal_id` column to use as the signal</span>
+<span class="sd">            names list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_times_paths</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">target_times_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_times_paths</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target_times_paths</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">target_times_paths</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">path</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">target_times_paths</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">output_path</span><span class="p">:</span>
+        <span class="n">generated_problems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">generated_problems</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">signals</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">signals</span><span class="p">):</span>
+        <span class="n">signals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">signals</span><span class="p">)</span><span class="o">.</span><span class="n">signal_id</span>
+
+    <span class="k">for</span> <span class="n">problem_name</span><span class="p">,</span> <span class="n">target_time_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">target_times_paths</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">window_size_resample_rule</span><span class="p">:</span>
+            <span class="n">target_times</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">target_time_path</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cutoff_time&#39;</span><span class="p">])</span>
+            <span class="n">new_target_times</span><span class="p">,</span> <span class="n">readings</span> <span class="o">=</span> <span class="n">_generate_target_times_readings</span><span class="p">(</span>
+                <span class="n">target_times</span><span class="p">,</span>
+                <span class="n">readings_path</span><span class="p">,</span>
+                <span class="n">window_size</span><span class="p">,</span>
+                <span class="n">rule</span><span class="p">,</span>
+                <span class="n">signals</span><span class="o">=</span><span class="n">signals</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">pickle_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">problem_name</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">output_path</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">output_pickle_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">pickle_name</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_pickle_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pickle_file</span><span class="p">:</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="n">new_target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">),</span> <span class="n">pickle_file</span><span class="p">)</span>
+
+                <span class="n">generated_problems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_pickle_path</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">generated_problems</span><span class="p">[</span><span class="n">pickle_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">new_target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">rule</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">generated_problems</span></div>
+
+
+<div class="viewcode-block" id="run_benchmark"><a class="viewcode-back" href="../../api/greenguard.benchmark.html#greenguard.benchmark.run_benchmark">[docs]</a><span class="k">def</span> <span class="nf">run_benchmark</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="n">problems</span><span class="p">,</span> <span class="n">window_size_resample_rule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">tuning_iterations</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">signals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">preprocessing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cv_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                  <span class="n">cache_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cache_results</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Execute the benchmark function and optionally store the result as a ``CSV``.</span>
+
+<span class="sd">    This function provides a user-friendly interface to interact with the ``evaluate_templates``</span>
+<span class="sd">    function. It allows the user to specify an ``output_path`` where the results can be</span>
+<span class="sd">    stored. If this path is not provided, a ``pandas.DataFrame`` will be returned.</span>
+
+<span class="sd">    This function evaluates each template against each problem for each window size and resample</span>
+<span class="sd">    rule possible, and will tune each teamplate for the given amount of tuning iterations.</span>
+
+<span class="sd">    The problems can be a pickle file that contains the following values:</span>
+
+<span class="sd">        * ``target_times``: ``pandas.DataFrame`` containing the target times.</span>
+<span class="sd">        * ``readings``: ``pandas.DataFrame`` containing the readings for the target times.</span>
+<span class="sd">        * ``window_size``: window size value used.</span>
+<span class="sd">        * ``resample_rule``: resample rule value used.</span>
+
+<span class="sd">    Or it can be dictionary containing the problem&#39;s name and as values either a path to a pickle</span>
+<span class="sd">    file or a tuple containing the previously specified fields.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        templates (str or list):</span>
+<span class="sd">            Name of the json pipelines that will be evaluated against the problems.</span>
+<span class="sd">        problems (str, list or dict):</span>
+<span class="sd">            There are three possible values for problems:</span>
+
+<span class="sd">                * ``str``: Path to a given problem stored as a pickle file (pkl).</span>
+<span class="sd">                * ``list``: List of paths to given problems stored as a pickle files (pkl).</span>
+<span class="sd">                * ``dict``: A dict containing as keys the name of the problem and as value the</span>
+<span class="sd">                            path to a pickle file or a tuple with target times and readings data</span>
+<span class="sd">                            frames and the window size and resample rule used to generate this</span>
+<span class="sd">                            problem.</span>
+
+<span class="sd">            The pickle files has to contain a tuple with target times and readings data frames and</span>
+<span class="sd">            the window size and resample rule used to generate that problem. We recommend using</span>
+<span class="sd">            the function ``make_problems`` to generate those files.</span>
+
+<span class="sd">        window_size_resample_rule (list):</span>
+<span class="sd">            List of tuples (int, str or Timedelta object).</span>
+<span class="sd">        tuning_iterations (int):</span>
+<span class="sd">            Amount of tuning iterations to perfrom over each template.</span>
+<span class="sd">        signals (str or list):</span>
+<span class="sd">            Path to a csv file containing ``signal_id`` column that we would like to use or a</span>
+<span class="sd">            ``list`` of signals that we would like to use. If ``None`` use all the signals from</span>
+<span class="sd">            the readings.</span>
+<span class="sd">        preprocessing (int, dict or list):</span>
+<span class="sd">            There are three possible values for preprocessing:</span>
+
+<span class="sd">                * ``int``: the value will be used for all templates.</span>
+<span class="sd">                * ``dict`` with the template name as a key and a number as a value, will</span>
+<span class="sd">                  be used for that template.</span>
+<span class="sd">                * ``list``: each value will be assigned to the corresponding position of</span>
+<span class="sd">                  self.templates.</span>
+
+<span class="sd">            Defaults to ``0``.</span>
+<span class="sd">        init_params (dict or list):</span>
+<span class="sd">            There are three possible values for init_params:</span>
+
+<span class="sd">                * Init params ``dict``: It will be used for all templates.</span>
+<span class="sd">                * ``dict`` with the name of the template as a key and dictionary with its</span>
+<span class="sd">                  init params.</span>
+<span class="sd">                * ``list``: each value will be assigned to the corresponding position of</span>
+<span class="sd">                  self.templates.</span>
+
+<span class="sd">            Defaults to ``None``.</span>
+<span class="sd">        metric (function or str):</span>
+<span class="sd">            Metric to use. If an ``str`` is give it must be one of the metrics</span>
+<span class="sd">            defined in the ``greenguard.metrics.METRICS`` dictionary.</span>
+<span class="sd">        cost (bool):</span>
+<span class="sd">            Whether the metric is a cost function (the lower the better) or not.</span>
+<span class="sd">            Defaults to ``False``.</span>
+<span class="sd">        cv_splits (int):</span>
+<span class="sd">            Number of cross validation folds to use. Defaults to ``5``.</span>
+<span class="sd">        test_size (float):</span>
+<span class="sd">            Amount of data that will be saved for test, represented in percentage between 0 and 1.</span>
+<span class="sd">        random_state (int or RandomState):</span>
+<span class="sd">            random state to use for the cross validation partitioning. Defaults to ``0``.</span>
+<span class="sd">        cache_path (str):</span>
+<span class="sd">            If given, cache the generated cross validation splits in this folder.</span>
+<span class="sd">            Defatuls to ``None``.</span>
+<span class="sd">        cache_results (str):</span>
+<span class="sd">            If provided, store the progress of each pipeline and each problem while runing.</span>
+<span class="sd">        output_path (str):</span>
+<span class="sd">            If provided, store the results to the given filename. Defaults to ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">templates</span> <span class="o">=</span> <span class="n">templates</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">templates</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="p">[</span><span class="n">templates</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">problems</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">problems</span> <span class="o">=</span> <span class="p">[</span><span class="n">problems</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">problems</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">problems</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">problem</span>
+            <span class="k">for</span> <span class="n">problem</span> <span class="ow">in</span> <span class="n">problems</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">signals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">signals</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">signals</span><span class="p">):</span>
+            <span class="n">signals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">signals</span><span class="p">)</span><span class="o">.</span><span class="n">signal_id</span>
+
+    <span class="n">total_runs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">templates</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">problems</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">window_size_resample_rule</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_runs</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">problem_name</span><span class="p">,</span> <span class="n">problem</span> <span class="ow">in</span> <span class="n">problems</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># remove window_size resample_rule nomenclature from the problem&#39;s name</span>
+        <span class="n">problem_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\_\d+[DdHhMmSs]&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">problem_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pickle_file</span><span class="p">:</span>
+                <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">orig_window_size</span><span class="p">,</span> <span class="n">orig_rule</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pickle_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">orig_window_size</span><span class="p">,</span> <span class="n">orig_rule</span> <span class="o">=</span> <span class="n">problem</span>
+
+        <span class="k">if</span> <span class="n">signals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">readings</span> <span class="o">=</span> <span class="n">readings</span><span class="p">[</span><span class="n">readings</span><span class="o">.</span><span class="n">signal_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">signals</span><span class="p">)]</span>
+
+        <span class="n">wsrr</span> <span class="o">=</span> <span class="n">window_size_resample_rule</span> <span class="ow">or</span> <span class="p">[(</span><span class="n">orig_window_size</span><span class="p">,</span> <span class="n">orig_rule</span><span class="p">)]</span>
+
+        <span class="n">orig_window_size</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">orig_window_size</span><span class="p">)</span>
+        <span class="n">orig_rule</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">orig_rule</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">resample_rule</span> <span class="ow">in</span> <span class="n">wsrr</span><span class="p">:</span>
+
+            <span class="c1"># window_size can be only smaller than pickle window size</span>
+            <span class="c1"># resample rule can be only bigger than picke rule</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">orig_window_size</span> <span class="o">&gt;=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">window_size</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">orig_rule</span> <span class="o">&lt;=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">resample_rule</span><span class="p">)):</span> <span class="c1"># noqa W503</span>
+
+                <span class="n">df</span> <span class="o">=</span> <span class="n">evaluate_templates</span><span class="p">(</span>
+                    <span class="n">templates</span><span class="p">,</span>
+                    <span class="p">[(</span><span class="n">window_size</span><span class="p">,</span> <span class="n">resample_rule</span><span class="p">)],</span>
+                    <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span>
+                    <span class="n">tuning_iterations</span><span class="o">=</span><span class="n">tuning_iterations</span><span class="p">,</span>
+                    <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">,</span>
+                    <span class="n">target_times</span><span class="o">=</span><span class="n">target_times</span><span class="p">,</span>
+                    <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span>
+                    <span class="n">preprocessing</span><span class="o">=</span><span class="n">preprocessing</span><span class="p">,</span>
+                    <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span>
+                    <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span>
+                    <span class="n">cv_splits</span><span class="o">=</span><span class="n">cv_splits</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                    <span class="n">cache_path</span><span class="o">=</span><span class="n">cache_path</span><span class="p">,</span>
+                    <span class="n">cache_results</span><span class="o">=</span><span class="n">cache_results</span><span class="p">,</span>
+                    <span class="n">problem_name</span><span class="o">=</span><span class="n">problem_name</span><span class="p">,</span>
+                    <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">progress_bar</span><span class="o">=</span><span class="n">pbar</span>
+                <span class="p">)</span>
+
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">cache_results</span><span class="p">:</span>
+                    <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">problem_name</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">resample_rule</span><span class="p">)</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_results</span><span class="p">,</span> <span class="n">file_name</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Invalid window size or resample rule </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">window_size</span><span class="p">,</span> <span class="n">orig_window_size</span><span class="p">,</span> <span class="n">resample_rule</span><span class="p">,</span> <span class="n">orig_rule</span><span class="p">))</span>
+
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output_path</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+
+<span class="k">def</span> <span class="nf">_setup_logging</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># Logger setup</span>
+    <span class="n">log_level</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(process)d</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(module)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">logfile</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;botocore&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;tensorflow&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;urllib3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TF_CPP_MIN_LOG_LEVEL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>  <span class="c1"># FATAL</span>
+
+
+<span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">_setup_logging</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">templates</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="n">get_pipelines</span><span class="p">()</span>
+
+    <span class="n">window_size_resample_rule</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">window_size_resample_rule</span><span class="p">:</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+[DdHhMmSs]&#39;</span><span class="p">)</span>
+        <span class="n">window_size_resample_rule</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">window_size_resample_rule</span>
+        <span class="p">]</span>
+
+    <span class="c1"># run</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">run_benchmark</span><span class="p">(</span>
+        <span class="n">templates</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">templates</span><span class="p">,</span>
+        <span class="n">problems</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">problems</span><span class="p">,</span>
+        <span class="n">window_size_resample_rule</span><span class="o">=</span><span class="n">window_size_resample_rule</span><span class="p">,</span>
+        <span class="n">cv_splits</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">cv_splits</span><span class="p">,</span>
+        <span class="n">metric</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span>
+        <span class="n">test_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test_size</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">cache_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">cache_path</span><span class="p">,</span>
+        <span class="n">cache_results</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">cache_results</span><span class="p">,</span>
+        <span class="n">tuning_iterations</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">iterations</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
+        <span class="n">signals</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">signals</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span>
+            <span class="n">results</span><span class="p">,</span>
+            <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;github&#39;</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">))</span>
+
+
+<div class="viewcode-block" id="summarize_results"><a class="viewcode-back" href="../../api/greenguard.benchmark.html#greenguard.benchmark.summarize_results">[docs]</a><span class="k">def</span> <span class="nf">summarize_results</span><span class="p">(</span><span class="n">input_paths</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load multiple benchmark results CSV files and compile a summary.</span>
+
+<span class="sd">    The result is an Excel file with one tab for each results CSV file</span>
+<span class="sd">    and an additional Number of Wins tab with a summary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        inputs_paths (list[str]):</span>
+<span class="sd">            List of paths to CSV files where the benchmarks results are stored.</span>
+<span class="sd">            These files must have one column per Tuner and one row per Challenge.</span>
+<span class="sd">        output_path (str):</span>
+<span class="sd">            Path, including the filename, where the Excel file will be created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">load_results</span><span class="p">(</span><span class="n">input_paths</span><span class="p">)</span>
+    <span class="n">write_results</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_summarize_results</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">summarize_results</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_make_problems</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">window_size_resample_rule</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">window_size</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">resample_rule</span><span class="p">))</span>
+    <span class="n">make_problems</span><span class="p">(</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">target_times_paths</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">readings_path</span><span class="p">,</span>
+        <span class="n">window_size_resample_rule</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
+        <span class="n">signals</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">signals</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_parser</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;GreenGuard Benchmark Command Line Interface.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;action&#39;</span><span class="p">)</span>
+    <span class="n">action</span><span class="o">.</span><span class="n">required</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Run action</span>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Run the GreenGuard Benchmark&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">_run</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Be verbose. Use -vv for increased verbosity.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--logfile&#39;</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Log file.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--templates&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perform benchmarking over the given list of templates.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--problems&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perform benchmarking over a list of pkl problems.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;--window-size-resample-rule&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of window sizes values to benchmark.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output path where to store the results.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--cv-splits&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Amount of cross validation splits to use.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--metric&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of metric function to be used during benchmarking.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--random-state&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Random state for the cv splits.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--test-size&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percentage of the data set to be used for the test.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--cache-path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to cache the generated cross validation splits in.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-R&#39;</span><span class="p">,</span> <span class="s1">&#39;--cache-results&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to store the csv files for each problem and template.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--iterations&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of iterations to perform per challenge with each candidate.&#39;</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-S&#39;</span><span class="p">,</span> <span class="s1">&#39;--signals&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to csv file that has signal_id column to use as the signal&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Summarize action</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;summarize-results&#39;</span><span class="p">,</span>
+                                <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Summarize the GreenGuard Benchmark results&#39;</span><span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">_summarize_results</span><span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input path with results.&#39;</span><span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Make problems action</span>
+    <span class="n">problems</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;make-problems&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Create GreenGuard problems&#39;</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">_make_problems</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;target-times-paths&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of target times paths.&#39;</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;readings-path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the readings folder.&#39;</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;--window-size&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of window sizes values to benchmark.&#39;</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--resample-rule&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of resample rule to benchmark.&#39;</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output path where to save the generated problems.&#39;</span><span class="p">)</span>
+    <span class="n">problems</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--signals&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to csv file that has signal_id column to use as the signal&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/greenguard.benchmark.html#greenguard.benchmark.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Parse args</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">_get_parser</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
            </div>

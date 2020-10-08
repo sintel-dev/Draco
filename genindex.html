@@ -178,6 +178,7 @@
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.demo.html">greenguard.demo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/greenguard.results.html">greenguard.results module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.targets.html">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -293,7 +294,8 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#C"><strong>C</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
@@ -308,6 +310,18 @@
  | <a href="#W"><strong>W</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.results.html#greenguard.results.add_sheet">add_sheet() (in module greenguard.results)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.utils.html#greenguard.utils.as_list">as_list() (in module greenguard.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -401,6 +415,8 @@
 </li>
       <li><a href="api/greenguard.demo.html#greenguard.demo.generate_raw_readings">generate_raw_readings() (in module greenguard.demo)</a>
 </li>
+      <li><a href="api/greenguard.results.html#greenguard.results.get_exclusive_wins">get_exclusive_wins() (in module greenguard.results)</a>
+</li>
       <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.get_hyperparameters">get_hyperparameters() (greenguard.GreenGuardPipeline method)</a>
 
       <ul>
@@ -413,6 +429,8 @@
         <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.get_pipelines">(in module greenguard.pipeline)</a>
 </li>
       </ul></li>
+      <li><a href="api/greenguard.results.html#greenguard.results.get_wins_by_problems">get_wins_by_problems() (in module greenguard.results)</a>
+</li>
       <li><a href="api/greenguard.html#module-greenguard">greenguard (module)</a>
 </li>
       <li><a href="api/greenguard.benchmark.html#module-greenguard.benchmark">greenguard.benchmark (module)</a>
@@ -430,6 +448,8 @@
       <li><a href="api/greenguard.metrics.html#module-greenguard.metrics">greenguard.metrics (module)</a>
 </li>
       <li><a href="api/greenguard.pipeline.html#module-greenguard.pipeline">greenguard.pipeline (module)</a>
+</li>
+      <li><a href="api/greenguard.results.html#module-greenguard.results">greenguard.results (module)</a>
 </li>
       <li><a href="api/greenguard.targets.html#module-greenguard.targets">greenguard.targets (module)</a>
 </li>
@@ -473,6 +493,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.demo.html#greenguard.demo.load_demo">load_demo() (in module greenguard.demo)</a>
 </li>
+      <li><a href="api/greenguard.results.html#greenguard.results.load_results">load_results() (in module greenguard.results)</a>
+</li>
       <li><a href="api/greenguard.db.html#greenguard.db.MongoDB.load_template">load_template() (greenguard.db.MongoDB method)</a>
 </li>
       <li><a href="api/greenguard.utils.html#greenguard.utils.logging_setup">logging_setup() (in module greenguard.utils)</a>
@@ -483,10 +505,14 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/greenguard.targets.html#greenguard.targets.make_target_times">make_target_times() (in module greenguard.targets)</a>
+      <li><a href="api/greenguard.benchmark.html#greenguard.benchmark.main">main() (in module greenguard.benchmark)</a>
+</li>
+      <li><a href="api/greenguard.benchmark.html#greenguard.benchmark.make_problems">make_problems() (in module greenguard.benchmark)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.targets.html#greenguard.targets.make_target_times">make_target_times() (in module greenguard.targets)</a>
+</li>
       <li><a href="api/greenguard.targets.html#greenguard.targets.make_targets">make_targets() (in module greenguard.targets)</a>
 </li>
       <li><a href="api/greenguard.db.html#greenguard.db.MongoDB">MongoDB (class in greenguard.db)</a>
@@ -523,6 +549,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.utils.html#greenguard.utils.restore_dots">restore_dots() (in module greenguard.utils)</a>
 </li>
+      <li><a href="api/greenguard.benchmark.html#greenguard.benchmark.run_benchmark">run_benchmark() (in module greenguard.benchmark)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -537,20 +565,22 @@
       </ul></li>
       <li><a href="api/greenguard.targets.html#greenguard.targets.select_valid_targets">select_valid_targets() (in module greenguard.targets)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.static">static (greenguard.GreenGuardPipeline attribute)</a>
 
       <ul>
         <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.static">(greenguard.pipeline.GreenGuardPipeline attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.html#greenguard.GreenGuardPipeline.steps">steps (greenguard.GreenGuardPipeline attribute)</a>
 
       <ul>
         <li><a href="api/greenguard.pipeline.html#greenguard.pipeline.GreenGuardPipeline.steps">(greenguard.pipeline.GreenGuardPipeline attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/greenguard.benchmark.html#greenguard.benchmark.summarize_results">summarize_results() (in module greenguard.benchmark)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -590,6 +620,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/greenguard.utils.html#greenguard.utils.walk">walk() (in module greenguard.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/greenguard.results.html#greenguard.results.write_results">write_results() (in module greenguard.results)</a>
 </li>
   </ul></td>
 </tr></table>

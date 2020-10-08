@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>greenguard.metrics module &mdash; GreenGuard 0.2.5.dev0 documentation</title>
+  <title>greenguard.results module &mdash; GreenGuard 0.2.5.dev0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="greenguard.pipeline module" href="greenguard.pipeline.html" />
-    <link rel="prev" title="greenguard.demo module" href="greenguard.demo.html" /> 
+    <link rel="next" title="greenguard.targets module" href="greenguard.targets.html" />
+    <link rel="prev" title="greenguard.pipeline module" href="greenguard.pipeline.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -177,9 +177,9 @@
 <li class="toctree-l3"><a class="reference internal" href="greenguard.benchmark.html">greenguard.benchmark module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.db.html">greenguard.db module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.demo.html">greenguard.demo module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.metrics module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="greenguard.metrics.html">greenguard.metrics module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.pipeline.html">greenguard.pipeline module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="greenguard.results.html">greenguard.results module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">greenguard.results module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.targets.html">greenguard.targets module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="greenguard.utils.html">greenguard.utils module</a></li>
 </ul>
@@ -272,14 +272,14 @@
         
           <li><a href="greenguard.html">greenguard package</a> &raquo;</li>
         
-      <li>greenguard.metrics module</li>
+      <li>greenguard.results module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.metrics.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/api/greenguard.results.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -317,8 +317,8 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-greenguard.metrics">
-<span id="greenguard-metrics-module"></span><h1>greenguard.metrics module<a class="headerlink" href="#module-greenguard.metrics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-greenguard.results">
+<span id="greenguard-results-module"></span><h1>greenguard.results module<a class="headerlink" href="#module-greenguard.results" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -326,29 +326,46 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">accuracy_score</span></code>(y_true, y_pred[, normalize, …])</p></td>
-<td><p>Accuracy classification score.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.metrics.f1_macro" title="greenguard.metrics.f1_macro"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f1_macro</span></code></a>(exp, obs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.results.add_sheet" title="greenguard.results.add_sheet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_sheet</span></code></a>(dfs, name, writer, cell_fmt, …)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">f1_score</span></code>(y_true, y_pred[, labels, …])</p></td>
-<td><p>Compute the F1 score, also known as balanced F-score or F-measure</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.results.get_exclusive_wins" title="greenguard.results.get_exclusive_wins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exclusive_wins</span></code></a>(scores, column[, …])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_absolute_error</span></code>(y_true, y_pred[, …])</p></td>
-<td><p>Mean absolute error regression loss</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.results.get_wins_by_problems" title="greenguard.results.get_wins_by_problems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_wins_by_problems</span></code></a>(results)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean_squared_error</span></code>(y_true, y_pred[, …])</p></td>
-<td><p>Mean squared error regression loss</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greenguard.results.load_results" title="greenguard.results.load_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_results</span></code></a>(files)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">r2_score</span></code>(y_true, y_pred[, sample_weight, …])</p></td>
-<td><p>R^2 (coefficient of determination) regression score function.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greenguard.results.write_results" title="greenguard.results.write_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_results</span></code></a>(results, output)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
-<dt id="greenguard.metrics.f1_macro">
-<code class="sig-prename descclassname">greenguard.metrics.</code><code class="sig-name descname">f1_macro</code><span class="sig-paren">(</span><em class="sig-param">exp</em>, <em class="sig-param">obs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/metrics.html#f1_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.metrics.f1_macro" title="Permalink to this definition">¶</a></dt>
+<dt id="greenguard.results.add_sheet">
+<code class="sig-prename descclassname">greenguard.results.</code><code class="sig-name descname">add_sheet</code><span class="sig-paren">(</span><em class="sig-param">dfs</em>, <em class="sig-param">name</em>, <em class="sig-param">writer</em>, <em class="sig-param">cell_fmt</em>, <em class="sig-param">index_fmt</em>, <em class="sig-param">header_fmt</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/results.html#add_sheet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.results.add_sheet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.results.get_exclusive_wins">
+<code class="sig-prename descclassname">greenguard.results.</code><code class="sig-name descname">get_exclusive_wins</code><span class="sig-paren">(</span><em class="sig-param">scores, column, pivot_columns=['window_size', 'resample_rule']</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/results.html#get_exclusive_wins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.results.get_exclusive_wins" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.results.get_wins_by_problems">
+<code class="sig-prename descclassname">greenguard.results.</code><code class="sig-name descname">get_wins_by_problems</code><span class="sig-paren">(</span><em class="sig-param">results</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/results.html#get_wins_by_problems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.results.get_wins_by_problems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.results.load_results">
+<code class="sig-prename descclassname">greenguard.results.</code><code class="sig-name descname">load_results</code><span class="sig-paren">(</span><em class="sig-param">files</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/results.html#load_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.results.load_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="greenguard.results.write_results">
+<code class="sig-prename descclassname">greenguard.results.</code><code class="sig-name descname">write_results</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">output</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greenguard/results.html#write_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#greenguard.results.write_results" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -361,10 +378,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="greenguard.pipeline.html" class="btn btn-neutral float-right" title="greenguard.pipeline module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="greenguard.targets.html" class="btn btn-neutral float-right" title="greenguard.targets module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="greenguard.demo.html" class="btn btn-neutral float-left" title="greenguard.demo module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="greenguard.pipeline.html" class="btn btn-neutral float-left" title="greenguard.pipeline module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
