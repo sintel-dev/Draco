@@ -18,6 +18,7 @@ from greenguard.demo import load_demo
 from greenguard.loaders import CSVLoader
 from greenguard.metrics import METRICS
 from greenguard.pipeline import GreenGuardPipeline, generate_init_params, generate_preprocessing
+from greenguard.results import load_results, write_results
 
 LOGGER = logging.getLogger(__name__)
 
@@ -597,6 +598,7 @@ def _setup_logging(args):
 
 
 def _run(args):
+    _setup_logging(args)
     if args.templates is None:
         args.templates = get_pipelines()
 
@@ -632,8 +634,21 @@ def _run(args):
         ))
 
 
-def summarize_results(input_path, output_path):
-    pass
+def summarize_results(input_paths, output_path):
+    """Load multiple benchmark results CSV files and compile a summary.
+
+    The result is an Excel file with one tab for each results CSV file
+    and an additional Number of Wins tab with a summary.
+
+    Args:
+        inputs_paths (list[str]):
+            List of paths to CSV files where the benchmarks results are stored.
+            These files must have one column per Tuner and one row per Challenge.
+        output_path (str):
+            Path, including the filename, where the Excel file will be created.
+    """
+    results = load_results(input_paths)
+    write_results(results, output_path)
 
 
 def _summarize_results(args):
@@ -723,7 +738,6 @@ def main():
         sys.exit(0)
 
     args = parser.parse_args()
-    _setup_logging(args)
     args.action(args)
 
 
