@@ -280,7 +280,6 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             template_params = _build_init_params(template, window_size, rule, template_params)
             template_preprocessing = preprocessing[template]
 
-
             result = evaluate_template(
                 template=template,
                 target_times=target_times,
@@ -414,7 +413,7 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
 def run_benchmark(templates, problems, window_size_resample_rule=None,
                   tuning_iterations=50, signals=None, preprocessing=0, init_params=None,
                   metric='f1', cost=False, cv_splits=5, test_size=0.33, random_state=0,
-                  cache_path=None,cache_results=None, output_path=None):
+                  cache_path=None, cache_results=None, output_path=None):
     """Execute the benchmark function and optionally store the result as a ``CSV``.
 
     This function provides a user-friendly interface to interact with the ``evaluate_templates``
