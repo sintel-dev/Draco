@@ -33,7 +33,8 @@ LEADERBOARD_COLUMNS = [
     'tuned_test',
     'metric',
     'fit_predict_time',
-    'cv_time',
+    'default_cv_time',
+    'average_cv_time',
     'total_time',
     'status',
 ]
@@ -146,15 +147,17 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
     scores['default_test'] = metric(test['target'], predictions)
 
     # Computing the default cross validation score
-    cv_time = datetime.utcnow()
+    default_cv_time = datetime.utcnow()
     session = pipeline.tune(train, readings)
     session.run(1)
-    cv_time = datetime.utcnow() - cv_time
+    default_cv_time = datetime.utcnow() - default_cv_time
 
     scores['default_cv'] = pipeline.cv_score
 
     # Computing the cross validation score with tuned hyperparameters
+    average_cv_time = datetime.utcnow()
     session.run(tuning_iterations)
+    average_cv_time = (average_cv_time - datetime.utcnow()) / tuning_iterations
 
     scores['tuned_cv'] = pipeline.cv_score
 
@@ -164,7 +167,8 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
 
     scores['tuned_test'] = metric(test['target'], predictions)
     scores['fit_predict_time'] = fit_predict_time
-    scores['cv_time'] = cv_time
+    scores['default_cv_time'] = default_cv_time
+    scores['default_cv_time'] = default_cv_time
     scores['total_time'] = datetime.utcnow() - start_time
 
     return scores

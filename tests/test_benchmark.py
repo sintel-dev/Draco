@@ -42,7 +42,8 @@ def test_predict():
         'tuned_test',
         'metric',
         'fit_predict_time',
-        'cv_time',
+        'default_cv_time',
+        'average_cv_time',
         'total_time',
         'status'
     ]
@@ -52,6 +53,7 @@ def test_predict():
         'object',
         'object',
         'object',
+        'float64',
         'float64',
         'float64',
         'float64',
