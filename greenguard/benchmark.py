@@ -169,6 +169,7 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
     scores['fit_predict_time'] = fit_predict_time
     scores['default_cv_time'] = default_cv_time
     scores['default_cv_time'] = default_cv_time
+    scores['average_cv_time'] = average_cv_time
     scores['total_time'] = datetime.utcnow() - start_time
 
     return scores
