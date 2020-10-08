@@ -18,7 +18,6 @@ from greenguard.demo import load_demo
 from greenguard.loaders import CSVLoader
 from greenguard.metrics import METRICS
 from greenguard.pipeline import GreenGuardPipeline, generate_init_params, generate_preprocessing
-from greenguard.utils import as_list
 
 LOGGER = logging.getLogger(__name__)
 
@@ -31,6 +30,7 @@ LEADERBOARD_COLUMNS = [
     'default_cv',
     'tuned_cv',
     'tuned_test',
+    'metric',
     'fit_predict_time',
     'cv_time',
     'total_time',
@@ -172,14 +172,14 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
 def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iterations=50,
                        init_params=None, target_times=None, readings=None, preprocessing=0,
                        cost=False, test_size=0.25, cv_splits=3, random_state=0, cache_path=None,
-                       cache_results=None, problem_name=None, output_path=None):
+                       cache_results=None, problem_name=None, output_path=None, progress_bar=None):
     """Execute the benchmark process and optionally store the result as a ``CSV``.
 
     Args:
         templates (list):
             List of templates to try.
         window_size_rule (list):
-            List of tupples (int, str or Timedelta object).
+            List of tuples (int, str or Timedelta object).
         metric (function or str):
             Metric to use. If an ``str`` is give it must be one of the metrics
             defined in the ``greenguard.metrics.METRICS`` dictionary.
@@ -273,9 +273,13 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
         scores['resample_rule'] = rule
 
         try:
+            LOGGER.info('Evaluating template %s on problem %s (%s, %s)',
+                        template, problem_name, window_size, rule)
+
             template_params = init_params[template]
             template_params = _build_init_params(template, window_size, rule, template_params)
             template_preprocessing = preprocessing[template]
+
 
             result = evaluate_template(
                 template=template,
@@ -310,6 +314,7 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             df.to_csv(os.path.join(cache_results, file_name), index=False)
 
         scores_list.append(scores)
+        progress_bar.update(1)
 
     results = pd.DataFrame.from_records(scores_list)
     results = results.reindex(LEADERBOARD_COLUMNS, axis=1)
@@ -338,14 +343,25 @@ def _generate_target_times_readings(target_times, readings_path, window_size, ru
 
 def make_problems(target_times_paths, readings_path, window_size_resample_rule,
                   output_path=None, signals=None):
-    """
+    """Make problems with the target times and readings for each window size and resample rule.
+
+    Create problems in the accepted format by ``run_benchmark`` as pickle files containing:
+
+        * ``target_times``: ``pandas.DataFrame`` containing the target times.
+        * ``readings``: ``pandas.DataFrame`` containing the readings for the target times.
+        * ``window_size``: window size value used.
+        * ``resample_rule``: resample rule value used.
+
+    Or return a ``dict`` containing as keys the names of the problems generated and tuples with
+    the previously specified fields of target times, readings, window size and resample rule.
+
     Args:
         target_times_paths (list):
             List of paths to CSVs that contain target times.
         readings_path (str):
             Path to the folder where readings in raw CSV format can be found.
         window_size_resample_rule (list):
-            List of tupples (int, str or Timedelta object).
+            List of tuples (int, str or Timedelta object).
         output_path (str):
             Path to save the generated problems.
         signals (str):
@@ -365,6 +381,9 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
     else:
         generated_problems = {}
 
+    if isinstance(signals, str) and os.path.exists(signals):
+        signals = pd.read_csv(signals).signal_id
+
     for problem_name, target_time_path in tqdm(target_times_paths.items()):
         for window_size, rule in window_size_resample_rule:
             target_times = pd.read_csv(target_time_path, parse_dates=['cutoff_time'])
@@ -379,6 +398,7 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
             pickle_name = '{}_{}_{}'.format(problem_name, window_size, rule)
 
             if output_path:
+                os.makedirs(output_path, exist_ok=True)
                 output_pickle_path = os.path.join(output_path, pickle_name + '.pkl')
                 with open(output_pickle_path, 'wb') as pickle_file:
                     pickle.dump((new_target_times, readings, window_size, rule), pickle_file)
@@ -391,26 +411,95 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
     return generated_problems
 
 
-def run_benchmark(templates, problems=None, window_size_resample_rule=None,
-                  tuning_iterations=100, preprocessing=0, init_params=None, cost=False,
-                  cv_splits=5, metric='f1', test_size=0.33, random_state=0, cache_path=None,
-                  output_path=None, cache_results=None):
-    """
+def run_benchmark(templates, problems, window_size_resample_rule=None,
+                  tuning_iterations=50, signals=None, preprocessing=0, init_params=None,
+                  metric='f1', cost=False, cv_splits=5, test_size=0.33, random_state=0,
+                  cache_path=None,cache_results=None, output_path=None):
+    """Execute the benchmark function and optionally store the result as a ``CSV``.
+
+    This function provides a user-friendly interface to interact with the ``evaluate_templates``
+    function. It allows the user to specify an ``output_path`` where the results can be
+    stored. If this path is not provided, a ``pandas.DataFrame`` will be returned.
+
+    This function evaluates each template against each problem for each window size and resample
+    rule possible, and will tune each teamplate for the given amount of tuning iterations.
+
+    The problems can be a pickle file that contains the following values:
+
+        * ``target_times``: ``pandas.DataFrame`` containing the target times.
+        * ``readings``: ``pandas.DataFrame`` containing the readings for the target times.
+        * ``window_size``: window size value used.
+        * ``resample_rule``: resample rule value used.
+
+    Or it can be dictionary containing the problem's name and as values either a path to a pickle
+    file or a tuple containing the previously specified fields.
+
     Args:
-        templates (list):
-        problem_paths (list):
+        templates (str or list):
+            Name of the json pipelines that will be evaluated against the problems.
+        problems (str, list or dict):
+            There are three possible values for problems:
+
+                * ``str``: Path to a given problem stored as a pickle file (pkl).
+                * ``list``: List of paths to given problems stored as a pickle files (pkl).
+                * ``dict``: A dict containing as keys the name of the problem and as value the
+                            path to a pickle file or a tuple with target times and readings data
+                            frames and the window size and resample rule used to generate this
+                            problem.
+
+            The pickle files has to contain a tuple with target times and readings data frames and
+            the window size and resample rule used to generate that problem. We recommend using
+            the function ``make_problems`` to generate those files.
+
         window_size_resample_rule (list):
-            List of tupples (int, str or Timedelta object).
+            List of tuples (int, str or Timedelta object).
         tuning_iterations (int):
-        preprocessing :
-        init_params :
-        cost :
-        test_size :
+            Amount of tuning iterations to perfrom over each template.
+        signals (str or list):
+            Path to a csv file containing ``signal_id`` column that we would like to use or a
+            ``list`` of signals that we would like to use. If ``None`` use all the signals from
+            the readings.
+        preprocessing (int, dict or list):
+            There are three possible values for preprocessing:
+
+                * ``int``: the value will be used for all templates.
+                * ``dict`` with the template name as a key and a number as a value, will
+                  be used for that template.
+                * ``list``: each value will be assigned to the corresponding position of
+                  self.templates.
+
+            Defaults to ``0``.
+        init_params (dict or list):
+            There are three possible values for init_params:
+
+                * Init params ``dict``: It will be used for all templates.
+                * ``dict`` with the name of the template as a key and dictionary with its
+                  init params.
+                * ``list``: each value will be assigned to the corresponding position of
+                  self.templates.
+
+            Defaults to ``None``.
+        metric (function or str):
+            Metric to use. If an ``str`` is give it must be one of the metrics
+            defined in the ``greenguard.metrics.METRICS`` dictionary.
+        cost (bool):
+            Whether the metric is a cost function (the lower the better) or not.
+            Defaults to ``False``.
         cv_splits (int):
+            Number of cross validation folds to use. Defaults to ``5``.
+        test_size (float):
+            Amount of data that will be saved for test, represented in percentage between 0 and 1.
+        random_state (int or RandomState):
+            random state to use for the cross validation partitioning. Defaults to ``0``.
         cache_path (str):
+            If given, cache the generated cross validation splits in this folder.
+            Defatuls to ``None``.
+        cache_results (str):
+            If provided, store the progress of each pipeline and each problem while runing.
         output_path (str):
+            If provided, store the results to the given filename. Defaults to ``None``.
     """
-    templates = as_list(templates)
+    templates = templates if isinstance(templates, (list, tuple)) else [templates]
     results = list()
     if isinstance(problems, str):
         problems = [problems]
@@ -420,7 +509,14 @@ def run_benchmark(templates, problems=None, window_size_resample_rule=None,
             for problem in problems
         }
 
-    for problem_name, problem in tqdm(problems.items()):
+    if signals is not None:
+        if isinstance(signals, str) and os.path.exists(signals):
+            signals = pd.read_csv(signals).signal_id
+
+    total_runs = len(templates) * len(problems) * len(window_size_resample_rule or [1])
+    pbar = tqdm(total=total_runs)
+
+    for problem_name, problem in problems.items():
         # remove window_size resample_rule nomenclature from the problem's name
         problem_name = re.sub(r'\_\d+[DdHhMmSs]', r'', problem_name)
 
@@ -430,15 +526,20 @@ def run_benchmark(templates, problems=None, window_size_resample_rule=None,
         else:
             target_times, readings, orig_window_size, orig_rule = problem
 
-        if window_size_resample_rule is None:
-            window_size_resample_rule = [(orig_window_size, orig_rule)]
+        if signals is not None:
+            readings = readings[readings.signal_id.isin(signals)]
 
-        for window_size, resample_rule in window_size_resample_rule:
+        wsrr = window_size_resample_rule or [(orig_window_size, orig_rule)]
+
+        orig_window_size = pd.to_timedelta(orig_window_size)
+        orig_rule = pd.to_timedelta(orig_rule)
+
+        for window_size, resample_rule in wsrr:
 
             # window_size can be only smaller than pickle window size
             # resample rule can be only bigger than picke rule
-            if (pd.to_timedelta(orig_window_size) >= pd.to_timedelta(window_size)
-                    and pd.to_timedelta(orig_rule) <= pd.to_timedelta(resample_rule)): # noqa W503
+            if (orig_window_size >= pd.to_timedelta(window_size)
+                    and orig_rule <= pd.to_timedelta(resample_rule)): # noqa W503
 
                 df = evaluate_templates(
                     templates,
@@ -456,7 +557,8 @@ def run_benchmark(templates, problems=None, window_size_resample_rule=None,
                     cache_path=cache_path,
                     cache_results=cache_results,
                     problem_name=problem_name,
-                    output_path=None
+                    output_path=None,
+                    progress_bar=pbar
                 )
 
                 results.append(df)
@@ -466,30 +568,36 @@ def run_benchmark(templates, problems=None, window_size_resample_rule=None,
                     df.to_csv(os.path.join(cache_results, file_name), index=False)
 
             else:
+                pbar.update(1)
+
                 msg = 'Invalid window size or resample rule {}.'.format(
                     (window_size, orig_window_size, resample_rule, orig_rule))
 
-                LOGGER.info(msg)
+                LOGGER.warn(msg)
+
+    pbar.close()
 
     results = pd.concat(results, ignore_index=True)
-
     if output_path:
+        os.makedirs(output_path, exist_ok=True)
         results.to_csv(output_path, index=False)
 
     else:
         return results
 
 
-def _run(args):
+def _setup_logging(args):
     # Logger setup
     log_level = (3 - args.verbose) * 10
     fmt = '%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(module)s - %(message)s'
-    logging.basicConfig(level=log_level, format=fmt)
+    logging.basicConfig(filename=args.logfile, level=log_level, format=fmt)
     logging.getLogger("botocore").setLevel(logging.ERROR)
-    logging.getLogger("hyperopt").setLevel(logging.ERROR)
-    logging.getLogger("ax").setLevel(logging.ERROR)
+    logging.getLogger("tensorflow").setLevel(logging.ERROR)
     logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 
+
+def _run(args):
     if args.templates is None:
         args.templates = get_pipelines()
 
@@ -514,6 +622,7 @@ def _run(args):
         cache_results=args.cache_results,
         tuning_iterations=args.iterations,
         output_path=args.output_path,
+        signals=args.signals,
     )
 
     if not args.output_path:
@@ -528,11 +637,11 @@ def summarize_results(input_path, output_path):
     pass
 
 
-def _summary(args):
+def _summarize_results(args):
     summarize_results(args.input, args.output)
 
 
-def _create(args):
+def _make_problems(args):
     window_size_resample_rule = list(product(args.window_size, args.resample_rule))
     make_problems(
         args.target_times_paths,
@@ -556,6 +665,8 @@ def _get_parser():
 
     run.add_argument('-v', '--verbose', action='count', default=0,
                      help='Be verbose. Use -vv for increased verbosity.')
+    run.add_argument('-l', '--logfile',
+                     help='Log file.')
     run.add_argument('-t', '--templates', nargs='+',
                      help='Perform benchmarking over the given list of templates.')
     run.add_argument('-p', '--problems', nargs='+', required=False,
@@ -578,33 +689,34 @@ def _get_parser():
                      help='Path to store the csv files for each problem and template.')
     run.add_argument('-i', '--iterations', type=int, default=100,
                      help='Number of iterations to perform per challenge with each candidate.')
+    run.add_argument('-S', '--signals', type=str,
+                     help='Path to csv file that has signal_id column to use as the signal')
 
     # Summarize action
-    summary = action.add_parser('summary', help='Summarize the GreenGuard Benchmark results')
-    summary.set_defaults(action=_summary)
+    summary = action.add_parser('summarize-results',
+                                help='Summarize the GreenGuard Benchmark results')
+    summary.set_defaults(action=_summarize_results)
     summary.add_argument('input', nargs='+', help='Input path with results.')
     summary.add_argument('output', help='Output file.')
 
-    # Create action
-    create = action.add_parser('create', help='Create GreenGuard problems')
-    create.set_defaults(action=_create)
-    create.add_argument('target-times-paths', nargs='+', help='List of target times paths.')
-    create.add_argument('readings-path', type=str, help='Path to the readings folder.')
-    create.add_argument('-w', '--window-size', nargs='+', required=False,
-                        help='List of window sizes values to benchmark.')
-    create.add_argument('-r', '--resample-rule', nargs='+', required=False,
-                        help='List of resample rule to benchmark.')
-    create.add_argument('-o', '--output', type=str,
-                        help='Output path where to save the generated problems.')
-    create.add_argument('-s', '--signals', type=str,
-                        help='Path to csv file that has signal_id column to use as the signal')
+    # Make problems action
+    problems = action.add_parser('make-problems', help='Create GreenGuard problems')
+    problems.set_defaults(action=_make_problems)
+    problems.add_argument('target-times-paths', nargs='+', help='List of target times paths.')
+    problems.add_argument('readings-path', type=str, help='Path to the readings folder.')
+    problems.add_argument('-w', '--window-size', nargs='+', required=False,
+                          help='List of window sizes values to benchmark.')
+    problems.add_argument('-r', '--resample-rule', nargs='+', required=False,
+                          help='List of resample rule to benchmark.')
+    problems.add_argument('-o', '--output', type=str,
+                          help='Output path where to save the generated problems.')
+    problems.add_argument('-s', '--signals', type=str,
+                          help='Path to csv file that has signal_id column to use as the signal')
 
     return parser
 
 
 def main():
-    warnings.filterwarnings("ignore")
-
     # Parse args
     parser = _get_parser()
     if len(sys.argv) < 2:
@@ -612,8 +724,10 @@ def main():
         sys.exit(0)
 
     args = parser.parse_args()
+    _setup_logging(args)
     args.action(args)
 
 
 if __name__ == '__main__':
+    warnings.filterwarnings("ignore")
     main()
