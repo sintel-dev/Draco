@@ -16,17 +16,22 @@ except IOError:
     history = ''
 
 install_requires = [
-    'boto3==1.14.44',
-    'botocore==1.17.44',
     'baytune>=0.3.9,<0.4',
-    'Keras>=2.1.6,<2.4',
     'mlblocks>=0.3.4,<0.4',
     'mlprimitives>=0.2.5,<0.3',
+    'pymongo>=3.7.2,<4',
+    'scikit-learn>=0.20.0,<0.21',
+    'tqdm<4.50.0,>=4.36.1',
+    'cloudpickle>=1.6,<2',
     'scipy>=1.0.1,<1.4.0',
     'numpy>=1.15.4,<1.17',
-    'pymongo>=3.7.2,<4',
-    'scikit-learn>=0.20.1,<0.21',
-    'dask>=2.6.0,<3'
+    'pandas>=0.23.4,<0.25',
+    'dask>=2.6.0,<3',
+    'Keras>=2.1.6,<2.4',
+    'tabulate>=0.8.3,<0.9',
+    'xlsxwriter>=1.3.6<1.4',
+    'boto3==1.14.44',
+    'botocore==1.17.44',
 ]
 
 setup_requires = [
@@ -68,6 +73,7 @@ development_requires = [
     # Advanced testing
     'coverage>=4.5.1,<6',
     'tox>=2.9.1,<4',
+    'importlib-metadata<2,>=0.12',
 ]
 
 setup(

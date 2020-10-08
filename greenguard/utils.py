@@ -53,3 +53,11 @@ def logging_setup(verbosity=1, logfile=None, logger_name=None):
         console_handler.setLevel(log_level)
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
+
+
+def as_list(param):
+    """Make sure that param is a ``list``."""
+    if isinstance(param, (list, tuple)):
+        return param
+
+    return [param]
