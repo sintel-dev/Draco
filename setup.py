@@ -30,7 +30,6 @@ install_requires = [
     'Keras>=2.1.6,<2.4',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
-    #'matplotlib<3.2.2',
     'boto3==1.14.44',
     'botocore==1.17.44',
 ]

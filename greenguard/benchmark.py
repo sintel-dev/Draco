@@ -314,7 +314,9 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             df.to_csv(os.path.join(cache_results, file_name), index=False)
 
         scores_list.append(scores)
-        progress_bar.update(1)
+
+        if progress_bar:
+            progress_bar.update(1)
 
     results = pd.DataFrame.from_records(scores_list)
     results = results.reindex(LEADERBOARD_COLUMNS, axis=1)
