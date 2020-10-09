@@ -32,13 +32,19 @@ def test_predict():
 
     # assert
     expected_columns = [
-        'template',
+        'problem_name',
         'window_size',
         'resample_rule',
+        'template',
         'default_test',
         'default_cv',
         'tuned_cv',
         'tuned_test',
+        'metric',
+        'fit_predict_time',
+        'default_cv_time',
+        'average_cv_time',
+        'total_time',
         'status'
     ]
 
@@ -46,11 +52,17 @@ def test_predict():
         'object',
         'object',
         'object',
+        'object',
         'float64',
         'float64',
         'float64',
         'float64',
-        'object'
+        'float64',
+        'float64',
+        'float64',
+        'float64',
+        'float64',
+        'object',
     ]
 
     assert (scores_df.columns.to_list() == expected_columns)

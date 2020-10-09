@@ -283,7 +283,11 @@ class GreenGuardPipeline(object):
         for template in templates:
             if isinstance(template, str):
                 template_name = template
-                template = deepcopy(load_pipeline(template_name))
+                if os.path.isfile(template):
+                    with open(template, 'r') as json_file:
+                        template = json.load(json_file)
+                else:
+                    template = deepcopy(load_pipeline(template_name))
             else:
                 template_name = md5(json.dumps(template)).digest()
 

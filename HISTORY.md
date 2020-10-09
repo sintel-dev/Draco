@@ -1,5 +1,14 @@
 # History
 
+## 0.2.5 - 2020-10-09
+
+With this release we include:
+
+* `run_benchmark`: A function within the module `benchmark` that allows the user to evaluate
+templates against problems with different window size and resample rules.
+* `summarize_results`: A function that given a `csv` file generates a `xlsx` file with a summary
+tab and a deatailed tab with the results from `run_benchmark`.
+
 ## 0.2.4 - 2020-09-25
 
 * Fix dependency errors
