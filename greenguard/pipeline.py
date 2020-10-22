@@ -556,7 +556,7 @@ class GreenGuardPipeline(object):
         return out
 
     def predict(self, target_times=None, readings=None, turbines=None,
-                start_=None, output_=None, **kwargs):
+                start_=None, output_='default', **kwargs):
         """Make predictions using this pipeline.
 
         Args:
