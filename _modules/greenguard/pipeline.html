@@ -816,7 +816,8 @@
         <span class="n">tunables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tunables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_template_dicts</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">BTBSession</span><span class="p">(</span><span class="n">tunables</span><span class="p">,</span> <span class="n">scoring_function</span><span class="p">,</span> <span class="n">maximize</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GreenGuardPipeline.fit"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit this pipeline to the given data.</span>
 
 <span class="sd">        Args:</span>
@@ -828,12 +829,23 @@
 <span class="sd">            turbines (pandas.DataFrame):</span>
 <span class="sd">                ``turbines`` table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">X</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">]]</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">True</span></div>
+        <span class="k">if</span> <span class="n">target_times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">]]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">,</span>
+                                 <span class="n">start_</span><span class="o">=</span><span class="n">start_</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="n">output_</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="GreenGuardPipeline.predict"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_times</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Make predictions using this pipeline.</span>
 
 <span class="sd">        Args:</span>
@@ -853,7 +865,8 @@
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">()</span>
 
         <span class="n">X</span> <span class="o">=</span> <span class="n">target_times</span><span class="p">[[</span><span class="s1">&#39;turbine_id&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">]]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">readings</span><span class="o">=</span><span class="n">readings</span><span class="p">,</span> <span class="n">turbines</span><span class="o">=</span><span class="n">turbines</span><span class="p">,</span>
+                                      <span class="n">start_</span><span class="o">=</span><span class="n">start_</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="n">output_</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GreenGuardPipeline.save"><a class="viewcode-back" href="../../api/greenguard.pipeline.html#greenguard.GreenGuardPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Serialize and save this pipeline using cloudpickle.</span>
