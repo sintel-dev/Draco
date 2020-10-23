@@ -1,5 +1,14 @@
 # History
 
+## 0.2.6 - 2020-10-23
+
+* Fix ``mkdir`` when exporting to ``csv`` file the benchmark results.
+* Intermediate steps for the pipelines with demo notebooks for each pipeline.
+
+### Resolved Issues
+
+* Issue #50: Expose partial outputs and executions in the ``GreenGuardPipeline``.
+
 ## 0.2.5 - 2020-10-09
 
 With this release we include:
