@@ -527,7 +527,8 @@ class GreenGuardPipeline(object):
         tunables = self._get_tunables(self._template_dicts)
         return BTBSession(tunables, scoring_function, maximize=not self._cost)
 
-    def fit(self, target_times, readings, turbines=None):
+    def fit(self, target_times=None, readings=None, turbines=None,
+            start_=None, output_=None, **kwargs):
         """Fit this pipeline to the given data.
 
         Args:
@@ -539,12 +540,23 @@ class GreenGuardPipeline(object):
             turbines (pandas.DataFrame):
                 ``turbines`` table.
         """
-        X = target_times[['turbine_id', 'cutoff_time']]
-        y = target_times['target']
-        self._pipeline.fit(X, y, readings=readings, turbines=turbines)
-        self.fitted = True
+        if target_times is None:
+            X = kwargs.pop('X')
+            y = kwargs.pop('y')
+        else:
+            X = target_times[['turbine_id', 'cutoff_time']]
+            y = target_times['target']
 
-    def predict(self, target_times, readings, turbines=None):
+        out = self._pipeline.fit(X, y, readings=readings, turbines=turbines,
+                                 start_=start_, output_=output_, **kwargs)
+
+        if output_ is None:
+            self.fitted = True
+
+        return out
+
+    def predict(self, target_times=None, readings=None, turbines=None,
+                start_=None, output_='default', **kwargs):
         """Make predictions using this pipeline.
 
         Args:
@@ -564,7 +576,8 @@ class GreenGuardPipeline(object):
             raise NotFittedError()
 
         X = target_times[['turbine_id', 'cutoff_time']]
-        return self._pipeline.predict(X, readings=readings, turbines=turbines)
+        return self._pipeline.predict(X, readings=readings, turbines=turbines,
+                                      start_=start_, output_=output_, **kwargs)
 
     def save(self, path):
         """Serialize and save this pipeline using cloudpickle.

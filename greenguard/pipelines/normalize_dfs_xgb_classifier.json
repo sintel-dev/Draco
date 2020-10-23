@@ -44,7 +44,7 @@
             "encode": false,
             "max_depth": -1,
             "copy": true,
-            "verbose": true,
+            "verbose": false,
             "n_jobs": 1,
             "training_window": "1d"
         }

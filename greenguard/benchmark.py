@@ -586,7 +586,8 @@ def run_benchmark(templates, problems, window_size_resample_rule=None,
 
     results = pd.concat(results, ignore_index=True)
     if output_path:
-        os.makedirs(output_path, exist_ok=True)
+        if os.path.dirname(output_path):
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
         results.to_csv(output_path, index=False)
 
     else:
