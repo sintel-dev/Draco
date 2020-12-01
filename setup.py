@@ -111,6 +111,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/D3-AI/GreenGuard',
-    version='0.2.7.dev1',
+    version='0.2.7.dev2',
     zip_safe=False,
 )
