@@ -1,7 +1,0 @@
-greenguard.targets module
-=========================
-
-.. automodule:: greenguard.targets
-   :members:
-   :undoc-members:
-   :show-inheritance:

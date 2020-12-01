@@ -1,7 +1,0 @@
-greenguard.utils module
-=======================
-
-.. automodule:: greenguard.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:

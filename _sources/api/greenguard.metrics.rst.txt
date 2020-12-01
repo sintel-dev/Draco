@@ -1,7 +1,0 @@
-greenguard.metrics module
-=========================
-
-.. automodule:: greenguard.metrics
-   :members:
-   :undoc-members:
-   :show-inheritance:

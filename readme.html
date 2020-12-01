@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Extract Readings" href="tutorials/02_Extract_Readings.html" />
+    <link rel="next" title="Concepts" href="advanced_usage/concepts.html" />
     <link rel="prev" title="GreenGuard" href="index.html" /> 
 </head>
 
@@ -112,26 +112,6 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/02_Extract_Readings.html">Extract Readings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#0.-Setup-the-logging">0. Setup the logging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#1.-Generate-Raw-Readings">1. Generate Raw Readings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/02_Extract_Readings.html#Readings-Format">Readings Format</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/02_Extract_Readings.html#Target-Times">Target Times</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#2.-CSVLoader">2. CSVLoader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#3.-Preprocessing-the-data">3. Preprocessing the data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#4.-Unstacking">4. Unstacking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#5.-Saving-the-readings">5. Saving the readings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/02_Extract_Readings.html#Using-CSV">Using CSV</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/02_Extract_Readings.html#Using-Pickle">Using Pickle</a></li>
-</ul>
-</li>
-</ul>
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage/concepts.html">Concepts</a><ul>
@@ -164,29 +144,6 @@
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/greenguard.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.loaders.html">greenguard.loaders package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/greenguard.loaders.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/greenguard.loaders.html#module-greenguard.loaders">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.benchmark.html">greenguard.benchmark module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.db.html">greenguard.db module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.demo.html">greenguard.demo module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.metrics.html">greenguard.metrics module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.pipeline.html">greenguard.pipeline module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.results.html">greenguard.results module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.targets.html">greenguard.targets module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/greenguard.utils.html">greenguard.utils module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/greenguard.html#module-greenguard">Module contents</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of Contributions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#report-bugs">Report Bugs</a></li>
@@ -371,7 +328,7 @@ vetted through testing across multiple publicly available datasets for the same 
 <h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p><strong>GreenGuard</strong> has been developed and runs on Python 3.6 and 3.7.</p>
+<p><strong>GreenGuard</strong> has been developed and runs on Python 3.6, 3.7 and 3.8.</p>
 <p>Also, although it is not strictly required, the usage of a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a> is highly recommended in order to avoid interfering
 with other software installed in the system where you are trying to run <strong>GreenGuard</strong>.</p>
 </div>
@@ -722,7 +679,7 @@ Also do not forget to have a look at the <a class="reference external" href="htt
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tutorials/02_Extract_Readings.html" class="btn btn-neutral float-right" title="Extract Readings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="advanced_usage/concepts.html" class="btn btn-neutral float-right" title="Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="GreenGuard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
