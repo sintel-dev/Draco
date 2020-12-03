@@ -1,0 +1,40 @@
+{
+    "name": "numpy.transpose_getitem",
+    "contributors": [
+        "Carles Sala <csala@csail.mit.edu>"
+    ],
+    "documentation": "https://docs.scipy.org/doc/numpy/reference/",
+    "description": "Slice 2D array with the given index.",
+    "classifiers": {
+        "type": "postprocessor"
+    },
+    "modalities": [],
+    "primitive": "greenguard.primitives.numpy.slice_by_index",
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "keyword": "array",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "axes": {
+                "type": "tuple",
+                "default": null
+            },
+            "index": {
+                "type": "int",
+                "default": 0
+            }
+        }
+    }
+}
