@@ -232,7 +232,8 @@ class GreenGuardPipeline(object):
             If given, cache the generated cross validation splits in this folder.
             Defatuls to ``None``.
         threshold (float):
-            If given, compute the `False Positive Rate`.
+            If given, return predictions as `True` or `False` whether or not they are close
+            to this `threshold` or not. If `None` return the raw predictions.
     """
 
     template = None
@@ -574,6 +575,9 @@ class GreenGuardPipeline(object):
                 ``readings`` table.
             turbines (pandas.DataFrame):
                 ``turbines`` table.
+            threshold (float):
+                If given, return predictions as `True` or `False` whether or not they are close
+                to this `threshold` or not. If `None` return the raw predictions.
 
         Returns:
             numpy.ndarray:
