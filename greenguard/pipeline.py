@@ -150,6 +150,9 @@ def generate_preprocessing(templates_names, preprocessing):
     return preprocessing
 
 
+SELF_THRESHOLD = object()
+
+
 class GreenGuardPipeline(object):
     """Main Machine Learning component in the GreenGuard project.
 
@@ -228,6 +231,11 @@ class GreenGuardPipeline(object):
         cache_path (str):
             If given, cache the generated cross validation splits in this folder.
             Defatuls to ``None``.
+        threshold (float):
+            If ``None``, return the raw predictions as given by the pipeline. If not ``None``,
+            use the given value as a threshold to convert the predicted probabilities into
+            a binary output that indicates whether the probability is above the threshold (not
+            strict) or below the threshold (strict). Defaults to ``None``.
     """
 
     template = None
@@ -304,8 +312,9 @@ class GreenGuardPipeline(object):
 
         self.fitted = False
 
-    def __init__(self, templates, metric='accuracy', cost=False, init_params=None, stratify=True,
-                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0, cache_path=None):
+    def __init__(self, templates, metric='accuracy', cost=False, init_params=None,
+                 stratify=True, cv_splits=5, shuffle=True, random_state=0, preprocessing=0,
+                 cache_path=None, threshold=None):
 
         if isinstance(metric, str):
             metric, cost = METRICS[metric]
@@ -314,6 +323,7 @@ class GreenGuardPipeline(object):
         self._cost = cost
         self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)
         self.cv_score = np.inf if cost else -np.inf
+        self.threshold = threshold
 
         if not isinstance(templates, list):
             templates = [templates]
@@ -556,7 +566,7 @@ class GreenGuardPipeline(object):
         return out
 
     def predict(self, target_times=None, readings=None, turbines=None,
-                start_=None, output_='default', **kwargs):
+                start_=None, output_='default', threshold=SELF_THRESHOLD, **kwargs):
         """Make predictions using this pipeline.
 
         Args:
@@ -567,6 +577,13 @@ class GreenGuardPipeline(object):
                 ``readings`` table.
             turbines (pandas.DataFrame):
                 ``turbines`` table.
+            threshold (float):
+                If not given, use the threshold specified upon instance creation in the
+                ``__init__``. If ``None``, return the raw predictions as given by the pipeline.
+                If not ``None``, use the given value as a threshold to convert the predicted
+                probabilities into a binary output that indicates whether the probability is above
+                the threshold (not strict) or below the threshold (strict).
+                Defaults to ``self.threshold``.
 
         Returns:
             numpy.ndarray:
@@ -576,8 +593,15 @@ class GreenGuardPipeline(object):
             raise NotFittedError()
 
         X = target_times[['turbine_id', 'cutoff_time']]
-        return self._pipeline.predict(X, readings=readings, turbines=turbines,
-                                      start_=start_, output_=output_, **kwargs)
+        predictions = self._pipeline.predict(X, readings=readings, turbines=turbines,
+                                             start_=start_, output_=output_, **kwargs)
+        if threshold is SELF_THRESHOLD:
+            threshold = self.threshold
+
+        if threshold is not None:
+            predictions = predictions >= threshold
+
+        return predictions
 
     def save(self, path):
         """Serialize and save this pipeline using cloudpickle.
