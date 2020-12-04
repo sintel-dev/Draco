@@ -1,39 +1,39 @@
 {
-    "name": "numpy.transpose_getitem",
+    "name": "numpy.take",
     "contributors": [
         "Carles Sala <csala@csail.mit.edu>"
     ],
     "documentation": "https://docs.scipy.org/doc/numpy/reference/",
-    "description": "Slice 2D array with the given index.",
+    "description": "Take elements from an array along an axis.",
     "classifiers": {
         "type": "postprocessor"
     },
     "modalities": [],
-    "primitive": "greenguard.primitives.numpy.slice_by_index",
+    "primitive": "numpy.take",
     "produce": {
         "args": [
             {
                 "name": "y",
-                "keyword": "array",
+                "keyword": "a",
                 "type": "ndarray"
             }
         ],
         "output": [
             {
-                "name": "X",
+                "name": "y",
                 "type": "ndarray"
             }
         ]
     },
     "hyperparameters": {
         "fixed": {
-            "axes": {
-                "type": "tuple",
-                "default": null
-            },
-            "index": {
+            "indices": {
                 "type": "int",
                 "default": 0
+            },
+            "axis": {
+                "type": "int",
+                "default": null
             }
         }
     }

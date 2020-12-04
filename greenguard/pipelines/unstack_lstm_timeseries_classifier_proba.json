@@ -11,7 +11,7 @@
         "pandas.DataFrame.set",
         "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
         "keras.Sequential.LSTMTimeSeriesClassifier",
-        "numpy.slice_by_index"
+        "numpy.take"
     ],
     "init_params": {
         "pandas.DataFrame.resample#1": {
@@ -60,8 +60,9 @@
             "verbose": false,
             "classification": false
         },
-        "numpy.slice_by_index#1": {
-            "index": 1
+        "numpy.take#1": {
+            "indices": 1,
+            "axis": 1
         }
     },
     "input_names": {
