@@ -232,8 +232,10 @@ class GreenGuardPipeline(object):
             If given, cache the generated cross validation splits in this folder.
             Defatuls to ``None``.
         threshold (float):
-            If given, return predictions as `True` or `False` whether or not they are close
-            to this `threshold` or not. If `None` return the raw predictions.
+            If ``None``, return the raw predictions as given by the pipeline. If not ``None``,
+            use the given value as a threshold to convert the predicted probabilities into
+            a binary output that indicates whether the probability is above the threshold (not
+            strict) or below the threshold (strict). Defaults to ``None``.
     """
 
     template = None
@@ -564,7 +566,7 @@ class GreenGuardPipeline(object):
         return out
 
     def predict(self, target_times=None, readings=None, turbines=None,
-                start_=None, output_='default', threshold=None, **kwargs):
+                start_=None, output_='default', threshold=SELF_THRESHOLD, **kwargs):
         """Make predictions using this pipeline.
 
         Args:
@@ -576,8 +578,12 @@ class GreenGuardPipeline(object):
             turbines (pandas.DataFrame):
                 ``turbines`` table.
             threshold (float):
-                If given, return predictions as `True` or `False` whether or not they are close
-                to this `threshold` or not. If `None` return the raw predictions.
+                If not given, use the threshold specified upon instance creation in the
+                ``__init__``. If ``None``, return the raw predictions as given by the pipeline.
+                If not ``None``, use the given value as a threshold to convert the predicted
+                probabilities into a binary output that indicates whether the probability is above
+                the threshold (not strict) or below the threshold (strict).
+                Defaults to ``self.threshold``.
 
         Returns:
             numpy.ndarray:
