@@ -6,7 +6,7 @@
         "featuretools.EntitySet.normalize_entity",
         "featuretools.dfs",
         "mlprimitives.custom.feature_extraction.CategoricalEncoder",
-        "xgboost.XGBClassifier_proba",
+        "xgboost.XGBClassifier:probabilities",
         "numpy.take"
     ],
     "init_params": {

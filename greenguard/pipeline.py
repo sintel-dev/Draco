@@ -77,15 +77,19 @@ def get_pipelines(pattern='', path=False, unstacked=False):
             names as keys and their absolute paths as values.
     """
     pipelines = dict()
-    pipelines_dir = PIPELINES_DIR
-    if unstacked:
-        pipelines_dir = os.path.join(pipelines_dir, 'unstacked')
+    pipelines_dirs = os.listdir(PIPELINES_DIR)
 
-    for filename in os.listdir(pipelines_dir):
-        if filename.endswith('.json') and pattern in filename:
-            name = os.path.basename(filename)[:-len('.json')]
-            pipeline_path = os.path.join(PIPELINES_DIR, filename)
-            pipelines[name] = pipeline_path
+    if unstacked:
+        pipelines_dirs = ['unstacked']
+
+    for pipelines_dir in pipelines_dirs:
+        pipelines_dir = os.path.join(PIPELINES_DIR, pipelines_dir)
+        for filename in os.listdir(pipelines_dir):
+            if filename.endswith('.json') and pattern in filename:
+                name = os.path.basename(filename)[:-len('.json')]
+                name = f'{os.path.basename(pipelines_dir)}.{name}'
+                pipeline_path = os.path.join(pipelines_dir, filename)
+                pipelines[name] = pipeline_path
 
     if not path:
         pipelines = list(pipelines)
