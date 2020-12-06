@@ -36,4 +36,4 @@ def test_fpr_score_predict_one_third():
     true_probs = [0.3, 0.4, 0.5, 0.7, 0.8, 0.9]
     probs = np.concatenate([false_probs, true_probs])
     score = fpr_score(truth, probs, tpr=1)
-    assert round(score, 4) == round(1/3, 4)
+    assert round(score, 4) == 0.3333
