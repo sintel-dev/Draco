@@ -12,17 +12,6 @@ def f1_macro(exp, obs):
     return f1_score(exp, obs, average='macro')
 
 
-METRICS = {
-    'accuracy': (accuracy_score, False),
-    'f1': (f1_score, False),
-    'f1_macro': (f1_macro, False),
-    'r2': (r2_score, False),
-    'mse': (mean_squared_error, True),
-    'mae': (mean_absolute_error, True),
-    'fpr_score'; (fpr_score, False)
-}
-
-
 def fpr_score(ground_true, probabilities, tpr=1):
     """
     Args:
@@ -46,3 +35,14 @@ def fpr_score(ground_true, probabilities, tpr=1):
         index = -1
 
     return 1 - roc_fpr[index]
+
+
+METRICS = {
+    'accuracy': (accuracy_score, False),
+    'f1': (f1_score, False),
+    'f1_macro': (f1_macro, False),
+    'r2': (r2_score, False),
+    'mse': (mean_squared_error, True),
+    'mae': (mean_absolute_error, True),
+    'fpr_score': (fpr_score, False)
+}
