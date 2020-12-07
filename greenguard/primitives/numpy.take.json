@@ -1,7 +1,7 @@
 {
     "name": "numpy.take",
     "contributors": [
-        "Carles Sala <csala@csail.mit.edu>"
+        "Plamen Valentinov Kolev <plamen@csail.mit.edu>"
     ],
     "documentation": "https://docs.scipy.org/doc/numpy/reference/",
     "description": "Take elements from an array along an axis.",
