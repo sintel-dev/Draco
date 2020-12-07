@@ -12,10 +12,17 @@ def f1_macro(exp, obs):
     return f1_score(exp, obs, average='macro')
 
 
-def fpr_score(ground_true, probabilities, tpr=1):
-    """
+def fpr_score(ground_truth, probabilities, tpr=1):
+    """Compute the False Positive Rate associated with the given True Positive Rate.
+
+    This metric computes the False Positive Rate that needs to be assumed in order
+    to achieve the desired True Positive Rate.
+    The metric is computed by finding the minimum necessary threshold to ensure
+    that the TPR is satisfied and then computing the associated FPR. The final output
+    is 1 minus the found FPR to produce a maximization score between 0 and 1.
+
     Args:
-        ground_true (numpy.ndarray):
+        ground_truth (numpy.ndarray):
             ``numpy.ndarray`` of the known values for the given predictions.
         probabilities (numpy.ndarray):
             ``numpy.ndarray`` with the generated predictions in probability.
@@ -24,10 +31,10 @@ def fpr_score(ground_true, probabilities, tpr=1):
             to be satisfied.
 
     Returns:
-        ``float``:
-            The percentage on base 1 of the false positive rate regarding the specified ``tpr``.
+        float:
+            Value between 0 and 1, where bigger is better.
     """
-    roc_fpr, roc_tpr, roc_threshold = roc_curve(ground_true, probabilities, pos_label=1)
+    roc_fpr, roc_tpr, roc_threshold = roc_curve(ground_truth, probabilities, pos_label=1)
     try:
         index = np.where(roc_tpr >= tpr)[0][0]
     except:
