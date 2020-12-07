@@ -233,7 +233,7 @@ available in the GreenGuard system:
 ```
 
 For the rest of this tutorial, we will select and use the pipeline
-`normalize_dfs_xgb_classifier` as our template.
+`classes.normalize_dfs_xgb_classifier` as our template.
 
 ```python3
 pipeline_name = 'classes.normalize_dfs_xgb_classifier'
