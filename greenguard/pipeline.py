@@ -54,7 +54,7 @@ Sequential.__getstate__ = __getstate__
 Sequential.__setstate__ = __setstate__
 
 
-def get_pipelines(pattern='', path=False, unstacked=False):
+def get_pipelines(pattern='', path=False, pipeline_type='classes'):
     """Get the list of available pipelines.
 
     Optionally filter the names using a patter or obtain
@@ -66,9 +66,9 @@ def get_pipelines(pattern='', path=False, unstacked=False):
         path (bool):
             Whether to return a dictionary containing the pipeline
             paths instead of only a list with the names.
-        unstacked (bool):
-            Whether to load the pipelines that expect the readings
-            to be already unstacked by signal_id. Defaults to ``False``.
+        pipeline_type (str):
+            The pipeline category to filter by (`classes`, `probability` and `unstacked`).
+            Defaults to `classes`.
 
     Return:
         list or dict:
@@ -77,14 +77,13 @@ def get_pipelines(pattern='', path=False, unstacked=False):
             names as keys and their absolute paths as values.
     """
     pipelines = dict()
-    pipelines_dir = PIPELINES_DIR
-    if unstacked:
-        pipelines_dir = os.path.join(pipelines_dir, 'unstacked')
+    pipelines_dir = os.path.join(PIPELINES_DIR, pipeline_type)
 
     for filename in os.listdir(pipelines_dir):
         if filename.endswith('.json') and pattern in filename:
             name = os.path.basename(filename)[:-len('.json')]
-            pipeline_path = os.path.join(PIPELINES_DIR, filename)
+            name = f'{pipeline_type}.{name}'
+            pipeline_path = os.path.join(pipelines_dir, filename)
             pipelines[name] = pipeline_path
 
     if not path:

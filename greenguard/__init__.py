@@ -12,6 +12,7 @@ from greenguard.pipeline import GreenGuardPipeline, get_pipelines
 
 _BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 MLBLOCKS_PIPELINES = os.path.join(_BASE_PATH, 'pipelines')
+MLBLOCKS_PRIMITIVES = os.path.join(_BASE_PATH, 'primitives')
 
 
 __all__ = (

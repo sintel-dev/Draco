@@ -91,7 +91,8 @@ setup(
     description='AutoML for Renewable Energy Industries.',
     entry_points={
         'mlblocks': [
-            'pipelines=greenguard:MLBLOCKS_PIPELINES'
+            'pipelines=greenguard:MLBLOCKS_PIPELINES',
+            'primitives=greenguard:MLBLOCKS_PRIMITIVES'
         ],
     },
     extras_require={
