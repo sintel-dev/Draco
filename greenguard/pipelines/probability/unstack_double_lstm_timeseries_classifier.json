@@ -58,7 +58,8 @@
         "keras.Sequential.DoubleLSTMTimeSeriesClassifier#1": {
             "epochs": 35,
             "verbose": false,
-            "classification": false
+            "classification": false,
+            "loss": "keras.losses.binary_crossentropy"
         },
         "numpy.take#1": {
             "indices": 1,
