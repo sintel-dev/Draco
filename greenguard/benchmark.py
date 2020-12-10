@@ -109,8 +109,8 @@ def _build_init_params(template, window_size, rule, template_params):
         }
 
     for primitive, params in window_size_rule_params.items():
-        primitive_params = template_params.get(primitive, {})
-        primitive_params.update(params)
+        template_params[primitive] = template_params.get(primitive, {})
+        template_params[primitive].update(params)
 
     return template_params
 
@@ -263,8 +263,7 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
 def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iterations=50,
                        init_params=None, target_times=None, readings=None, preprocessing=0,
                        cost=False, test_size=0.25, cv_splits=3, random_state=0, cache_path=None,
-                       cache_results=None, problem_name=None, output_path=None, progress_bar=None
-                       distributed=None):
+                       cache_results=None, problem_name=None, output_path=None, distributed=None):
     """Execute the benchmark process and optionally store the result as a ``CSV``.
 
     Args:
@@ -377,8 +376,9 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
             problem_name=problem_name,
         )
 
-        scores_list.append(scores)
-        delayed.extend(result)
+        scores_list.append(result)
+
+    delayed.extend(scores_list)
 
     if distributed:
         persisted = dask.persist(*delayed)
