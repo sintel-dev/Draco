@@ -8,6 +8,7 @@ import warnings
 from datetime import datetime
 from itertools import product
 
+import dask
 import pandas as pd
 import tabulate
 from sklearn.model_selection import train_test_split
@@ -40,6 +41,50 @@ LEADERBOARD_COLUMNS = [
 ]
 
 
+def progress(*futures):
+    """Track progress of dask computation in a remote cluster.
+
+    LogProgressBar is defined inside here to avoid having to import
+    its dependencies if not used.
+    """
+    # Import distributed only when used
+    from distributed.client import futures_of  # pylint: disable=C0415
+    from distributed.diagnostics.progressbar import TextProgressBar  # pylint: disable=c0415
+
+    class LogProgressBar(TextProgressBar):
+        """Dask progress bar based on logging instead of stdout."""
+
+        last = 0
+        logger = logging.getLogger('distributed')
+
+        def _draw_bar(self, remaining, all, **kwargs):   # pylint: disable=W0221,W0622
+            frac = (1 - remaining / all) if all else 0
+
+            if frac > self.last + 0.01:
+                self.last = int(frac * 100) / 100
+                bar = "#" * int(self.width * frac)
+                percent = int(100 * frac)
+
+                time_per_task = self.elapsed / (all - remaining)
+                remaining_time = timedelta(seconds=time_per_task * remaining)
+                eta = datetime.utcnow() + remaining_time
+
+                elapsed = timedelta(seconds=self.elapsed)
+                msg = "[{0:<{1}}] | {2}% Completed | {3} | {4} | {5}".format(
+                    bar, self.width, percent, elapsed, remaining_time, eta
+                )
+                self.logger.info(msg)
+
+        def _draw_stop(self, **kwargs):
+            pass
+
+    futures = futures_of(futures)
+    if not isinstance(futures, (set, list)):
+        futures = [futures]
+
+    LogProgressBar(futures)
+
+
 def _build_init_params(template, window_size, rule, template_params):
     if 'dfs' in template:
         window_size_rule_params = {
@@ -67,9 +112,11 @@ def _build_init_params(template, window_size, rule, template_params):
     return template_params
 
 
+
 def evaluate_template(template, target_times, readings, metric='f1', tuning_iterations=50,
-                      preprocessing=0, init_params=None, cost=False, test_size=0.25,
-                      cv_splits=3, random_state=0, cache_path=None):
+                      preprocessing=None, init_params=None, cost=False, test_size=0.25,
+                      cv_splits=3, random_state=0, cache_path=None, window_rule=None,
+                      problem_name=None, cache_results=None):
     """Returns the scores for a given template.
 
     Args:
@@ -118,67 +165,103 @@ def evaluate_template(template, target_times, readings, metric='f1', tuning_iter
         scores (dict):
             Stores the four types of scores that are being evaluate.
     """
-    start_time = datetime.utcnow()
+    try:
+        window_size, rule = window_rule
+        LOGGER.info('Evaluating template %s on problem %s (%s, %s)',
+                    template, problem_name, window_size, rule)
 
-    scores = dict()
-    scores['metric'] = metric
+        template_params = init_params[template]
+        template_params = _build_init_params(template, window_size, rule, template_params)
+        template_preprocessing = preprocessing[template]
 
-    train, test = train_test_split(target_times, test_size=test_size, random_state=random_state)
+        start_time = datetime.utcnow()
 
-    if isinstance(metric, str):
-        metric, cost = METRICS[metric]
+        scores = dict()
+        scores['problem_name'] = problem_name
+        scores['template'] = template
+        scores['window_size'] = window_size
+        scores['resample_rule'] = rule
 
-    pipeline = GreenGuardPipeline(
-        template,
-        metric,
-        cost=cost,
-        cv_splits=cv_splits,
-        init_params=init_params,
-        preprocessing=preprocessing,
-        cache_path=cache_path
-    )
+        scores['metric'] = metric
 
-    # Computing the default test score
-    fit_predict_time = datetime.utcnow()
-    pipeline.fit(train, readings)
-    predictions = pipeline.predict(test, readings)
-    fit_predict_time = datetime.utcnow() - fit_predict_time
+        train, test = train_test_split(target_times, test_size=test_size, random_state=random_state)
 
-    scores['default_test'] = metric(test['target'], predictions)
+        if isinstance(metric, str):
+            metric, cost = METRICS[metric]
 
-    # Computing the default cross validation score
-    default_cv_time = datetime.utcnow()
-    session = pipeline.tune(train, readings)
-    session.run(1)
-    default_cv_time = datetime.utcnow() - default_cv_time
+        pipeline = GreenGuardPipeline(
+            template,
+            metric,
+            cost=cost,
+            cv_splits=cv_splits,
+            init_params=template_params,
+            preprocessing=template_preprocessing,
+            cache_path=cache_path
+        )
 
-    scores['default_cv'] = pipeline.cv_score
+        # Computing the default test score
+        fit_predict_time = datetime.utcnow()
+        pipeline.fit(train, readings)
+        predictions = pipeline.predict(test, readings)
+        fit_predict_time = datetime.utcnow() - fit_predict_time
 
-    # Computing the cross validation score with tuned hyperparameters
-    average_cv_time = datetime.utcnow()
-    session.run(tuning_iterations)
-    average_cv_time = (average_cv_time - datetime.utcnow()) / tuning_iterations
+        scores['default_test'] = metric(test['target'], predictions)
 
-    scores['tuned_cv'] = pipeline.cv_score
+        # Computing the default cross validation score
+        default_cv_time = datetime.utcnow()
+        session = pipeline.tune(train, readings)
+        session.run(1)
+        default_cv_time = datetime.utcnow() - default_cv_time
 
-    # Computing the test score with tuned hyperparameters
-    pipeline.fit(train, readings)
-    predictions = pipeline.predict(test, readings)
+        scores['default_cv'] = pipeline.cv_score
 
-    scores['tuned_test'] = metric(test['target'], predictions)
-    scores['fit_predict_time'] = fit_predict_time
-    scores['default_cv_time'] = default_cv_time
-    scores['default_cv_time'] = default_cv_time
-    scores['average_cv_time'] = average_cv_time
-    scores['total_time'] = datetime.utcnow() - start_time
+        # Computing the cross validation score with tuned hyperparameters
+        average_cv_time = datetime.utcnow()
+        session.run(tuning_iterations)
+        average_cv_time = (datetime.utcnow() - average_cv_time) / tuning_iterations
+
+        scores['tuned_cv'] = pipeline.cv_score
+
+        # Computing the test score with tuned hyperparameters
+        pipeline.fit(train, readings)
+        predictions = pipeline.predict(test, readings)
+
+        scores['tuned_test'] = metric(test['target'], predictions)
+        scores['fit_predict_time'] = fit_predict_time
+        scores['default_cv_time'] = default_cv_time
+        scores['average_cv_time'] = average_cv_time
+        scores['total_time'] = datetime.utcnow() - start_time
+        scores['status'] = 'OK'
+
+    except Exception:
+        scores = dict()
+        scores['problem_name'] = problem_name
+        scores['template'] = template
+        scores['window_size'] = window_size
+        scores['resample_rule'] = rule
+
+        scores['status'] = 'ERRORED'
+        LOGGER.exception('Could not score template %s ', template)
+
+    if cache_results:
+        os.makedirs(cache_results, exist_ok=True)
+        template_name = template
+        if os.path.isfile(template_name):
+            template_name = os.path.basename(template_name).replace('.json', '')
+
+        file_name = '{}_{}_{}_{}.csv'.format(problem_name, template_name, window_size, rule)
+        df = pd.DataFrame([scores]).reindex(LEADERBOARD_COLUMNS, axis=1)
+        df.to_csv(os.path.join(cache_results, file_name), index=False)
 
     return scores
+
 
 
 def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iterations=50,
                        init_params=None, target_times=None, readings=None, preprocessing=0,
                        cost=False, test_size=0.25, cv_splits=3, random_state=0, cache_path=None,
-                       cache_results=None, problem_name=None, output_path=None, progress_bar=None):
+                       cache_results=None, problem_name=None, output_path=None, progress_bar=None
+                       distributed=None):
     """Execute the benchmark process and optionally store the result as a ``CSV``.
 
     Args:
@@ -265,63 +348,44 @@ def evaluate_templates(templates, window_size_rule, metric='f1', tuning_iteratio
     if readings is None and target_times is None:
         target_times, readings = load_demo()
 
+    if distributed:
+        evaluate_template = dask.delayed(evaluate_template)
+
     init_params = generate_init_params(templates, init_params)
     preprocessing = generate_preprocessing(templates, preprocessing)
 
     scores_list = []
+    delayed = []
     for template, window_rule in product(templates, window_size_rule):
-        window_size, rule = window_rule
-
-        scores = dict()
-        scores['problem_name'] = problem_name
-        scores['template'] = template
-        scores['window_size'] = window_size
-        scores['resample_rule'] = rule
-
-        try:
-            LOGGER.info('Evaluating template %s on problem %s (%s, %s)',
-                        template, problem_name, window_size, rule)
-
-            template_params = init_params[template]
-            template_params = _build_init_params(template, window_size, rule, template_params)
-            template_preprocessing = preprocessing[template]
-
-            result = evaluate_template(
-                template=template,
-                target_times=target_times,
-                readings=readings,
-                metric=metric,
-                tuning_iterations=tuning_iterations,
-                preprocessing=template_preprocessing,
-                init_params=template_params,
-                cost=cost,
-                test_size=test_size,
-                cv_splits=cv_splits,
-                random_state=random_state,
-                cache_path=cache_path
-            )
-
-            scores.update(result)
-            scores['status'] = 'OK'
-
-        except Exception:
-            scores['status'] = 'ERRORED'
-            LOGGER.exception('Could not score template %s ', template)
-
-        if cache_results:
-            os.makedirs(cache_results, exist_ok=True)
-            template_name = template
-            if os.path.isfile(template_name):
-                template_name = os.path.basename(template_name).replace('.json', '')
-
-            file_name = '{}_{}_{}_{}.csv'.format(problem_name, template_name, window_size, rule)
-            df = pd.DataFrame([scores]).reindex(LEADERBOARD_COLUMNS, axis=1)
-            df.to_csv(os.path.join(cache_results, file_name), index=False)
+        result = evaluate_template(
+            template=template,
+            target_times=target_times,
+            readings=readings,
+            metric=metric,
+            tuning_iterations=tuning_iterations,
+            preprocessing=preprocessing,
+            init_params=init_params,
+            cost=cost,
+            test_size=test_size,
+            cv_splits=cv_splits,
+            random_state=random_state,
+            cache_path=cache_path,
+            window_rule=window_rule,
+            problem_name=problem_name,
+        )
 
         scores_list.append(scores)
+        delayed.extend(result)
 
-        if progress_bar:
-            progress_bar.update(1)
+    if distributed:
+        persisted = dask.persist(*delayed)
+        try:
+            progress(persisted)
+        except ValueError:
+            # Using local client. No progress bar needed.
+            pass
+
+        scores_list = dask.compute(*persisted)
 
     results = pd.DataFrame.from_records(scores_list)
     results = results.reindex(LEADERBOARD_COLUMNS, axis=1)
@@ -421,7 +485,7 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
 def run_benchmark(templates, problems, window_size_resample_rule=None,
                   tuning_iterations=50, signals=None, preprocessing=0, init_params=None,
                   metric='f1', cost=False, cv_splits=5, test_size=0.33, random_state=0,
-                  cache_path=None, cache_results=None, output_path=None):
+                  cache_path=None, cache_results=None, output_path=None, distributed=None):
     """Execute the benchmark function and optionally store the result as a ``CSV``.
 
     This function provides a user-friendly interface to interact with the ``evaluate_templates``
@@ -565,7 +629,7 @@ def run_benchmark(templates, problems, window_size_resample_rule=None,
                     cache_results=cache_results,
                     problem_name=problem_name,
                     output_path=None,
-                    progress_bar=pbar
+                    distributed=distributed
                 )
 
                 results.append(df)
@@ -619,6 +683,10 @@ def _run(args):
         ]
 
     # run
+    if args.distributed:
+        from dask.distributed import Client, LocalCluster  # pylint: disable=C0415
+        Client(LocalCluster(n_workers=4, threads_per_worker=2))
+
     results = run_benchmark(
         templates=args.templates,
         problems=args.problems,
@@ -632,6 +700,7 @@ def _run(args):
         tuning_iterations=args.iterations,
         output_path=args.output_path,
         signals=args.signals,
+        distributed=args.distributed,
     )
 
     if not args.output_path:
@@ -713,6 +782,8 @@ def _get_parser():
                      help='Number of iterations to perform per challenge with each candidate.')
     run.add_argument('-S', '--signals', type=str,
                      help='Path to csv file that has signal_id column to use as the signal')
+    run.add_argument('-d', '--distributed', action='store_true',
+                     help='Run distributed.')
 
     # Summarize action
     summary = action.add_parser('summarize-results',
