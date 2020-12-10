@@ -86,6 +86,9 @@ def progress(*futures):
 
 
 def _build_init_params(template, window_size, rule, template_params):
+    if pd.to_timedelta('12h') > pd.to_timedelta(rule):
+        rule = '12h'
+
     if 'dfs' in template:
         window_size_rule_params = {
             'pandas.DataFrame.resample#1': {
