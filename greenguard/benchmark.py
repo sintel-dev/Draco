@@ -61,7 +61,7 @@ def _build_init_params(template, window_size, rule, template_params):
         }
 
     for primitive, params in window_size_rule_params.items():
-        primitive_params = template_params.get(primitive, {})
+        primitive_params = template_params.setdefault(primitive, {})
         primitive_params.update(params)
 
     return template_params
