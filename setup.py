@@ -16,9 +16,9 @@ except IOError:
     history = ''
 
 install_requires = [
-    'baytune>=0.3.13.dev0,<0.4',
-    'mlblocks>=0.3.4,<0.4',
-    'mlprimitives>=0.2.6.dev0,<0.3',
+    'baytune>=0.4.0,<0.5',
+    'mlprimitives>=0.3.0.dev1,<0.4',
+    'mlblocks>=0.4.0.dev0,<0.5',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21',
     'tqdm<4.50.0,>=4.36.1',
@@ -27,11 +27,10 @@ install_requires = [
     'numpy<1.19.0,>=1.16.0',
     'pandas>=1,<2',
     'dask>=2.6.0,<3',
+    'distributed>=2.6.0,<3',
     'Keras>=2.4',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
-    'boto3==1.14.44',
-    'botocore==1.17.44',
 ]
 
 setup_requires = [
