@@ -2,8 +2,8 @@
 import logging
 
 import numpy as np
-from sklearn.metrics import (
-    accuracy_score, f1_score, mean_absolute_error, mean_squared_error, roc_curve, r2_score)
+from sklearn.metrics import (accuracy_score, f1_score, mean_absolute_error,
+                             mean_squared_error, roc_curve, roc_auc_score, r2_score)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -12,7 +12,29 @@ def f1_macro(exp, obs):
     return f1_score(exp, obs, average='macro')
 
 
-def fpr_score(ground_truth, probabilities, tpr=1):
+def threshold_score(ground_truth, probabilities, tpr):
+    roc_fpr, roc_tpr, roc_threshold = roc_curve(ground_truth, probabilities, pos_label=1)
+    try:
+        index = np.where(roc_tpr >= tpr)[0][0]
+    except:
+        LOGGER.warn('Could not find a threshold that satisfies the requested True Positive Rate')
+        index = -1
+
+    return roc_threshold[index]
+
+
+def tpr_score(ground_truth, probabilities, threshold):
+    roc_fpr, roc_tpr, roc_threshold = roc_curve(ground_truth, probabilities, pos_label=1)
+    try:
+        index = np.where(roc_threshold >= threshold)[0][0]
+    except:
+        LOGGER.warn('Could not find a tpr that satisfies the requested threshold')
+        index = -1
+
+    return roc_tpr[index]
+
+
+def fpr_score(ground_truth, probabilities, tpr=None, threshold=None):
     """Compute the False Positive Rate associated with the given True Positive Rate.
 
     This metric computes the False Positive Rate that needs to be assumed in order
@@ -36,7 +58,11 @@ def fpr_score(ground_truth, probabilities, tpr=1):
     """
     roc_fpr, roc_tpr, roc_threshold = roc_curve(ground_truth, probabilities, pos_label=1)
     try:
-        index = np.where(roc_tpr >= tpr)[0][0]
+        if tpr:
+            index = np.where(roc_tpr >= tpr)[0][0]
+        elif threshold:
+            index = np.where(roc_threshold >= threshold)[0][0]
+
     except:
         LOGGER.warn('Could not find a threshold that satisfies the requested True Positive Rate')
         index = -1
@@ -51,5 +77,6 @@ METRICS = {
     'r2': (r2_score, False),
     'mse': (mean_squared_error, True),
     'mae': (mean_absolute_error, True),
-    'fpr_score': (fpr_score, False)
+    'fpr': (fpr_score, False),
+    'roc_auc_score': (roc_auc_score, False)
 }

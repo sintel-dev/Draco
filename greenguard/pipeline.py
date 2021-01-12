@@ -403,6 +403,7 @@ class GreenGuardPipeline(object):
             if self._cache_path:
                 split_name = '{}_{}.pkl'.format(template_name, fold)
                 split_path = os.path.join(self._cache_path, split_name)
+                os.makedirs(split_path, exist_ok=True)
 
                 with open(split_path, 'wb') as split_file:
                     pickle.dump(split, split_file)
