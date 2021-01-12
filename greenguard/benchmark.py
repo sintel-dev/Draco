@@ -33,7 +33,7 @@ LEADERBOARD_COLUMNS = [
     'default_cv',
     'tuned_cv',
     'tuned_test',
-    'metric',
+    'tuning_metric',
     'fit_predict_time',
     'default_cv_time',
     'average_cv_time',
