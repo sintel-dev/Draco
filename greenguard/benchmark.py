@@ -358,7 +358,6 @@ def evaluate_templates(templates, window_size_rule, metrics='f1', tuning_metric=
                 metrics=metrics,
                 tuning_metric=tuning_metric,
                 tuning_metric_kwargs=tuning_metric_kwargs,
-                tpr=tpr,
                 threshold=threshold,
                 tuning_iterations=tuning_iterations,
                 preprocessing=template_preprocessing,
@@ -636,7 +635,6 @@ def run_benchmark(templates, problems, window_size_resample_rule=None, tuning_it
                     problem_name=problem_name,
                     output_path=None,
                     threshold=threshold,
-                    tpr=tpr,
                     progress_bar=pbar
                 )
 
@@ -698,7 +696,6 @@ def _run(args):
         cv_splits=args.cv_splits,
         metrics=args.metric,
         threshold=args.threshold,
-        tpr=args.tpr,
         test_size=args.test_size,
         random_state=args.random_state,
         cache_path=args.cache_path,
