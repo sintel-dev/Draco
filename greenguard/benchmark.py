@@ -207,18 +207,18 @@ def evaluate_template(
         tpr = tpr if isinstance(tpr, list) else [tpr]
         for value in tpr:
             threshold = threshold_score(ground_truth, predictions, tpr)
-            scores[f'fpr_tpr={value}'] = fpr_score(ground_truth, predictions, tpr=tpr)
+            scores[f'fpr_tpr/{value}'] = fpr_score(ground_truth, predictions, tpr=tpr)
             predictions_classes = predictions >= threshold
-            scores[f'accuracy_tpr={value}'] = accuracy_score(ground_truth, predictions_classes)
-            scores[f'f1_tpr={value}'] = f1_score(ground_truth, predictions_classes)
-            scores[f'threshold_tpr={value}'] = threshold_score(ground_truth, predictions, value)
+            scores[f'accuracy_tpr/{value}'] = accuracy_score(ground_truth, predictions_classes)
+            scores[f'f1_tpr/{value}'] = f1_score(ground_truth, predictions_classes)
+            scores[f'threshold_tpr/{value}'] = threshold_score(ground_truth, predictions, value)
 
-            if f'accuracy_tpr={value}' not in LEADERBOARD_COLUMNS:
+            if f'accuracy_tpr/{value}' not in LEADERBOARD_COLUMNS:
                 LEADERBOARD_COLUMNS.extend([
-                    f'accuracy_tpr={value}',
-                    f'f1_tpr={value}',
-                    f'fpr_tpr={value}',
-                    f'threshold_tpr={value}',
+                    f'accuracy_tpr/{value}',
+                    f'f1_tpr/{value}',
+                    f'fpr_tpr/{value}',
+                    f'threshold_tpr/{value}',
                 ])
 
     else:
@@ -226,22 +226,22 @@ def evaluate_template(
         threshold = threshold if isinstance(threshold, list) else [threshold]
 
         for value in threshold:
-            scores[f'fpr_threshold={value}'] = fpr_score(
+            scores[f'fpr_threshold/{value}'] = fpr_score(
                 ground_truth, predictions, threshold=value)
 
             predictions_classes = predictions >= threshold
-            scores[f'accuracy_threshold={value}'] = accuracy_score(
+            scores[f'accuracy_threshold/{value}'] = accuracy_score(
                 ground_truth, predictions_classes)
 
-            scores[f'f1_threshold={value}'] = f1_score(ground_truth, predictions_classes)
-            scores[f'tpr_threshold={value}'] = tpr_score(ground_truth, predictions, value)
+            scores[f'f1_threshold/{value}'] = f1_score(ground_truth, predictions_classes)
+            scores[f'tpr_threshold/{value}'] = tpr_score(ground_truth, predictions, value)
 
-            if f'accuracy_threshold={value}' not in LEADERBOARD_COLUMNS:
+            if f'accuracy_threshold/{value}' not in LEADERBOARD_COLUMNS:
                 LEADERBOARD_COLUMNS.extend([
-                    f'accuracy_threshold={value}',
-                    f'f1_threshold={value}',
-                    f'fpr_threshold={value}',
-                    f'tpr_threshold={value}',
+                    f'accuracy_threshold/{value}',
+                    f'f1_threshold/{value}',
+                    f'fpr_threshold/{value}',
+                    f'tpr_threshold/{value}',
                 ])
 
     scores['tuned_test'] = tuning_metric(test['target'], predictions)
