@@ -1,5 +1,6 @@
 import argparse
 import logging
+import multiprocessing as mp
 import os
 import pickle
 import re
@@ -34,6 +35,7 @@ LEADERBOARD_COLUMNS = [
     'tuned_cv',
     'tuned_test',
     'tuning_metric',
+    'tuning_metric_kwargs',
     'fit_predict_time',
     'default_cv_time',
     'average_cv_time',
@@ -88,11 +90,25 @@ def _build_init_params(template, window_size, rule, template_params):
     return template_params
 
 
-def evaluate_template(template, target_times, readings, metrics='f1',
-                      tuning_metric='roc_auc_score', tuning_metric_kwargs=None,
-                      tpr=[1, 0.9, 0.85, 0.75], threshold=None, tuning_iterations=50,
-                      preprocessing=0, init_params=None, cost=False, test_size=0.25,
-                      cv_splits=3, random_state=0, cache_path=None):
+def evaluate_template(
+    template,
+    target_times,
+    readings,
+    tuning_iterations=50,
+    init_params=None,
+    preprocessing=0,
+    metrics=None,
+    threshold=None,
+    tpr=None,
+    tuning_metric='roc_auc_score',
+    tuning_metric_kwargs=DEFAULT_TUNING_METRIC_KWARGS,
+    cost=False,
+    cv_splits=3,
+    test_size=0.25,
+    random_state=0,
+    cache_path=None,
+    scores={}
+):
     """Returns the scores for a given template.
 
     Args:
@@ -142,9 +158,8 @@ def evaluate_template(template, target_times, readings, metrics='f1',
             Stores the four types of scores that are being evaluate.
     """
     start_time = datetime.utcnow()
-
-    scores = dict()
     scores['tuning_metric'] = str(tuning_metric)
+    scores['tuning_metric_kwargs'] = tuning_metric_kwargs
     tuning_metric = _scorer(tuning_metric, tuning_metric_kwargs)
 
     train, test = train_test_split(target_times, test_size=test_size, random_state=random_state)
@@ -238,12 +253,30 @@ def evaluate_template(template, target_times, readings, metrics='f1',
     return scores
 
 
-def evaluate_templates(templates, window_size_rule, metrics='f1', tuning_metric='roc_auc_score',
-                       tuning_metric_kwargs=DEFAULT_TUNING_METRIC_KWARGS, tpr=None,
-                       threshold=None, tuning_iterations=50, init_params=None, target_times=None,
-                       readings=None, preprocessing=0, cost=False, test_size=0.25, cv_splits=3,
-                       random_state=0, cache_path=None, cache_results=None, problem_name=None,
-                       output_path=None, progress_bar=None):
+def evaluate_templates(
+    templates,
+    window_size_rule,
+    tuning_iterations=50,
+    init_params=None,
+    preprocessing=0,
+    metrics=None,
+    threshold=None,
+    tpr=None,
+    tuning_metric='roc_auc_score',
+    tuning_metric_kwargs=DEFAULT_TUNING_METRIC_KWARGS,
+    target_times=None,
+    readings=None,
+    cost=False,
+    test_size=0.25,
+    cv_splits=3,
+    random_state=0,
+    cache_path=None,
+    cache_results=None,
+    problem_name=None,
+    output_path=None,
+    progress_bar=None,
+    multiprocess=False
+):
     """Execute the benchmark process and optionally store the result as a ``CSV``.
 
     Args:
@@ -337,11 +370,6 @@ def evaluate_templates(templates, window_size_rule, metrics='f1', tuning_metric=
     for template, window_rule in product(templates, window_size_rule):
         window_size, rule = window_rule
 
-        scores = dict()
-        scores['problem_name'] = problem_name
-        scores['template'] = template
-        scores['window_size'] = window_size
-        scores['resample_rule'] = rule
 
         try:
             LOGGER.info('Evaluating template %s on problem %s (%s, %s)',
@@ -350,27 +378,65 @@ def evaluate_templates(templates, window_size_rule, metrics='f1', tuning_metric=
             template_params = init_params[template]
             template_params = _build_init_params(template, window_size, rule, template_params)
             template_preprocessing = preprocessing[template]
+            if multiprocess:
+                manager = mp.Manager()
+                scores = manager.dict()
+                process = mp.Process(
+                    target=evaluate_tempalte,
+                    args=(
+                        template,
+                        target_times,
+                        readings,
+                        tuning_iterations,
+                        init_params,
+                        preprocessing,
+                        metrics,
+                        threshold,
+                        tpr,
+                        tuning_metric,
+                        tuning_metric_kwargs,
+                        cost,
+                        cv_splits,
+                        test_size,
+                        random_state,
+                        cache_path,
+                        scores
+                    )
+                )
 
-            result = evaluate_template(
-                template=template,
-                target_times=target_times,
-                readings=readings,
-                metrics=metrics,
-                tuning_metric=tuning_metric,
-                tuning_metric_kwargs=tuning_metric_kwargs,
-                threshold=threshold,
-                tuning_iterations=tuning_iterations,
-                preprocessing=template_preprocessing,
-                init_params=template_params,
-                cost=cost,
-                test_size=test_size,
-                cv_splits=cv_splits,
-                random_state=random_state,
-                cache_path=cache_path
-            )
+                process.start()
+                process.join()
+                if 'tuned_test' not in scores:
+                    scores['status'] = 'ERRORED'
 
-            scores.update(result)
-            scores['status'] = 'OK'
+                scores = dict(scores)  # parse the managed dict to dict for pandas.
+
+            else:
+                scores = dict()
+                scores['problem_name'] = problem_name
+                scores['template'] = template
+                scores['window_size'] = window_size
+                scores['resample_rule'] = rule
+                result = evaluate_template(
+                    template=template,
+                    target_times=target_times,
+                    readings=readings,
+                    metrics=metrics,
+                    tuning_metric=tuning_metric,
+                    tuning_metric_kwargs=tuning_metric_kwargs,
+                    threshold=threshold,
+                    tuning_iterations=tuning_iterations,
+                    preprocessing=template_preprocessing,
+                    init_params=template_params,
+                    cost=cost,
+                    test_size=test_size,
+                    cv_splits=cv_splits,
+                    random_state=random_state,
+                    cache_path=cache_path
+                )
+
+                scores.update(result)
+                scores['status'] = 'OK'
 
         except Exception:
             scores['status'] = 'ERRORED'
@@ -486,11 +552,12 @@ def make_problems(target_times_paths, readings_path, window_size_resample_rule,
     return generated_problems
 
 
-def run_benchmark(templates, problems, window_size_resample_rule=None, tuning_iterations=50,
-                  signals=None, preprocessing=0, init_params=None, metrics='f1',
-                  tuning_metric='roc_auc_score', tuning_metric_kwargs=DEFAULT_TUNING_METRIC_KWARGS,
-                  cost=False, cv_splits=5, test_size=0.33, random_state=0, cache_path=None,
-                  cache_results=None, threshold=None, tpr=None, output_path=None):
+def run_benchmark(templates, problems, window_size_resample_rule=None,
+                  tuning_iterations=50, signals=None, preprocessing=0, init_params=None,
+                  metrics=None, threshold=None, tpr=None, tuning_metric='roc_auc_score',
+                  tuning_metric_kwargs=DEFAULT_TUNING_METRIC_KWARGS, cost=False, cv_splits=5,
+                  test_size=0.33, random_state=0, cache_path=None, cache_results=None,
+                  output_path=None, multiprocess=False):
     """Execute the benchmark function and optionally store the result as a ``CSV``.
 
     This function provides a user-friendly interface to interact with the ``evaluate_templates``
@@ -635,7 +702,8 @@ def run_benchmark(templates, problems, window_size_resample_rule=None, tuning_it
                     problem_name=problem_name,
                     output_path=None,
                     threshold=threshold,
-                    progress_bar=pbar
+                    progress_bar=pbar,
+                    multiprocess=multiprocess,
                 )
 
                 results.append(df)
@@ -688,14 +756,23 @@ def _run(args):
             for item in args.window_size_resample_rule
         ]
 
+    if args.tuning_metric_kwargs:
+        args.tuning_metric_kwargs = json.loads(args.tuning_metric_kwargs)
+
+    else:
+        args.tuning_metric_kwargs = DEFAULT_TUNING_METRIC_KWARGS
+
     # run
     results = run_benchmark(
         templates=args.templates,
         problems=args.problems,
         window_size_resample_rule=window_size_resample_rule,
         cv_splits=args.cv_splits,
-        metrics=args.metric,
+        metrics=args.metrics,
         threshold=args.threshold,
+        tpr=args.tpr,
+        tuning_metric=args.tuning_metric,
+        tuning_metric_kwargs=args.tuning_metric_kwargs,
         test_size=args.test_size,
         random_state=args.random_state,
         cache_path=args.cache_path,
@@ -703,6 +780,7 @@ def _run(args):
         tuning_iterations=args.iterations,
         output_path=args.output_path,
         signals=args.signals,
+        multiprocess=args.multiprocess
     )
 
     if not args.output_path:
@@ -770,12 +848,12 @@ def _get_parser():
                      help='Output path where to store the results.')
     run.add_argument('-s', '--cv-splits', type=int, default=5,
                      help='Amount of cross validation splits to use.')
-    run.add_argument('-m', '--metric', nargs='+', default='fpr',
-                     help='Name of metric function to be used during benchmarking.')
-    run.add_argument('-T', '--threshold', nargs='+', default=0.5,
+    run.add_argument('-m', '--metrics', nargs='+',
+                     help='Names of metric functions to be used for the benchmarking.')
+    run.add_argument('-T', '--threshold', nargs='+',
                      help='Threhshold values for the metrics.')
     run.add_argument('-P', '--tpr', nargs='+',
-                     help='True positive rate vales for the metrics.')
+                     help='TPR vales for the metrics, if provided threshold will be ignored.')
     run.add_argument('-n', '--random-state', type=int, default=0,
                      help='Random state for the cv splits.')
     run.add_argument('-e', '--test-size', type=float, default=0.33,
@@ -788,6 +866,13 @@ def _get_parser():
                      help='Number of iterations to perform per challenge with each candidate.')
     run.add_argument('-S', '--signals', type=str,
                      help='Path to csv file that has signal_id column to use as the signal')
+    run.add_argument('-k', '--tuning-metric', type=str, default='roc_auc_score',
+                     help='Tuning metric to be used.')
+    run.add_argument('-K', '--tuning-metric-kwargs', type=str,
+                     help='Tuning metric args to be used with the metric.')
+    run.add_argument('-u', '--multiprocess', action='store_true',
+                     help='Wether or not to spawn a separate process and avoid crashing.')
+
 
     # Summarize action
     summary = action.add_parser('summarize-results',

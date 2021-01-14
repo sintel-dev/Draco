@@ -17,8 +17,8 @@ except IOError:
 
 install_requires = [
     'baytune>=0.4.0,<0.5',
-    'mlprimitives>=0.3.0.dev1,<0.4',
-    'mlblocks>=0.4.0.dev0,<0.5',
+    'mlprimitives>=0.3.0,<0.4',
+    'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21',
     'tqdm<4.50.0,>=4.36.1',
