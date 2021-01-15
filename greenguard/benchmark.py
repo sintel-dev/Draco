@@ -382,7 +382,7 @@ def evaluate_templates(
                 manager = mp.Manager()
                 scores = manager.dict()
                 process = mp.Process(
-                    target=evaluate_tempalte,
+                    target=evaluate_template,
                     args=(
                         template,
                         target_times,
