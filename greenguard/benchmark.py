@@ -850,9 +850,9 @@ def _get_parser():
                      help='Amount of cross validation splits to use.')
     run.add_argument('-m', '--metrics', nargs='+',
                      help='Names of metric functions to be used for the benchmarking.')
-    run.add_argument('-T', '--threshold', nargs='+',
+    run.add_argument('-T', '--threshold', nargs='+', type=float,
                      help='Threhshold values for the metrics.')
-    run.add_argument('-P', '--tpr', nargs='+',
+    run.add_argument('-P', '--tpr', nargs='+', type=float,
                      help='TPR vales for the metrics, if provided threshold will be ignored.')
     run.add_argument('-n', '--random-state', type=int, default=0,
                      help='Random state for the cv splits.')
