@@ -49,9 +49,7 @@ clean-pyc: ## remove Python file artifacts
 
 .PHONY: clean-docs
 clean-docs: ## remove previously built docs
-	rm -f docs/api/*.rst
-	rm -rf docs/tutorials
-	-$(MAKE) -C docs clean 2>/dev/null  # this fails if sphinx is not yet installed
+	rm -rf docs/api/ docs/api_reference/api/ docs/tutorials docs/build docs/_build
 
 .PHONY: clean-coverage
 clean-coverage: ## remove coverage artifacts
@@ -82,20 +80,37 @@ install-test: clean-build clean-pyc ## install the package and test dependencies
 install-develop: clean-build clean-pyc ## install the package in editable mode and dependencies for development
 	pip install -e .[dev]
 
+MINIMUM := $(shell sed -n '/install_requires = \[/,/]/p' setup.py | grep -v -e '[][]' | sed 's/ *\(.*\),$?$$/\1/g' | tr '>' '=')
+
+.PHONY: install-minimum
+install-minimum: ## install the minimum supported versions of the package dependencies
+	echo pip install $(MINIMUM)
+
 
 # LINT TARGETS
 
+.PHONY: lint-greenguard
+lint-btb: ## check style with flake8 and isort
+	flake8 greenguard
+	isort -c --recursive greenguard
+
+.PHONY: lint-tests
+lint-tests: ## check style with flake8 and isort
+	flake8 --ignore=D,SFS2 tests
+	isort -c --recursive tests
+
+.PHONY: check-dependencies
+check-dependencies: ## test if there are any broken dependencies
+	pip check
+
 .PHONY: lint
-lint: ## check style with flake8 and isort
-	flake8 greenguard tests
-	isort -c --recursive greenguard tests
+lint: check-dependencies lint-greenguard lint-tests ## Run all code style and static testing validations
 
 .PHONY: fix-lint
 fix-lint: ## fix lint issues using autoflake, autopep8, and isort
-	find greenguard tests -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
-	autopep8 --in-place --recursive --aggressive greenguard tests
+	find greenguard -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+	autopep8 --in-place --recursive --aggressive greenguard
 	isort --apply --atomic --recursive greenguard tests
-
 
 # TEST TARGETS
 
@@ -111,13 +126,14 @@ test-readme: ## run the readme snippets
 
 .PHONY: test-tutorials
 test-tutorials: ## run the tutorial notebooks
-	jupyter nbconvert --execute --ExecutePreprocessor.timeout=600 tutorials/*.ipynb --stdout > /dev/null
+	find tutorials -path "*/.ipynb_checkpoints" -prune -false -o -name "*.ipynb" -exec \
+		jupyter nbconvert --execute --ExecutePreprocessor.timeout=3600 --to=html --stdout {} > /dev/null \;
 
 .PHONY: test
-test: test-unit test-readme ## test everything that needs test dependencies
+test: test-unit test-readme test-tutorials ## test everything that needs test dependencies
 
-.PHONY: test-devel
-test-devel: lint docs ## test everything that needs development dependencies
+.PHONY: test-minimum
+test-minimum: install-minimum check-dependencies test-unit ## run tests using the minimum supported dependencies
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
@@ -130,17 +146,14 @@ coverage: ## check code coverage quickly with the default Python
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
-
 # DOCS TARGETS
 
 .PHONY: docs
 docs: clean-docs ## generate Sphinx HTML documentation, including API docs
-	cp -r tutorials docs/tutorials
-	sphinx-apidoc --separate --no-toc -o docs/api/ greenguard
 	$(MAKE) -C docs html
 
 .PHONY: view-docs
-view-docs: docs ## view docs in browser
+view-docs: ## view the docs in a browser
 	$(BROWSER) docs/_build/html/index.html
 
 .PHONY: serve-docs

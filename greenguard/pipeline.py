@@ -54,7 +54,7 @@ Sequential.__getstate__ = __getstate__
 Sequential.__setstate__ = __setstate__
 
 
-def get_pipelines(pattern='', path=False, unstacked=False):
+def get_pipelines(pattern='', path=False, pipeline_type='classes'):
     """Get the list of available pipelines.
 
     Optionally filter the names using a patter or obtain
@@ -66,9 +66,9 @@ def get_pipelines(pattern='', path=False, unstacked=False):
         path (bool):
             Whether to return a dictionary containing the pipeline
             paths instead of only a list with the names.
-        unstacked (bool):
-            Whether to load the pipelines that expect the readings
-            to be already unstacked by signal_id. Defaults to ``False``.
+        pipeline_type (str):
+            The pipeline category to filter by (`classes`, `probability` and `unstacked`).
+            Defaults to `classes`.
 
     Return:
         list or dict:
@@ -77,14 +77,13 @@ def get_pipelines(pattern='', path=False, unstacked=False):
             names as keys and their absolute paths as values.
     """
     pipelines = dict()
-    pipelines_dir = PIPELINES_DIR
-    if unstacked:
-        pipelines_dir = os.path.join(pipelines_dir, 'unstacked')
+    pipelines_dir = os.path.join(PIPELINES_DIR, pipeline_type)
 
     for filename in os.listdir(pipelines_dir):
         if filename.endswith('.json') and pattern in filename:
             name = os.path.basename(filename)[:-len('.json')]
-            pipeline_path = os.path.join(PIPELINES_DIR, filename)
+            name = f'{pipeline_type}.{name}'
+            pipeline_path = os.path.join(pipelines_dir, filename)
             pipelines[name] = pipeline_path
 
     if not path:
@@ -148,6 +147,9 @@ def generate_preprocessing(templates_names, preprocessing):
             for name in templates_names
         }
     return preprocessing
+
+
+SELF_THRESHOLD = object()
 
 
 class GreenGuardPipeline(object):
@@ -228,6 +230,11 @@ class GreenGuardPipeline(object):
         cache_path (str):
             If given, cache the generated cross validation splits in this folder.
             Defatuls to ``None``.
+        threshold (float):
+            If ``None``, return the raw predictions as given by the pipeline. If not ``None``,
+            use the given value as a threshold to convert the predicted probabilities into
+            a binary output that indicates whether the probability is above the threshold (not
+            strict) or below the threshold (strict). Defaults to ``None``.
     """
 
     template = None
@@ -304,8 +311,9 @@ class GreenGuardPipeline(object):
 
         self.fitted = False
 
-    def __init__(self, templates, metric='accuracy', cost=False, init_params=None, stratify=True,
-                 cv_splits=5, shuffle=True, random_state=0, preprocessing=0, cache_path=None):
+    def __init__(self, templates, metric='accuracy', cost=False, init_params=None,
+                 stratify=True, cv_splits=5, shuffle=True, random_state=0, preprocessing=0,
+                 cache_path=None, threshold=None):
 
         if isinstance(metric, str):
             metric, cost = METRICS[metric]
@@ -314,6 +322,7 @@ class GreenGuardPipeline(object):
         self._cost = cost
         self._cv = self._get_cv(stratify, cv_splits, shuffle, random_state)
         self.cv_score = np.inf if cost else -np.inf
+        self.threshold = threshold
 
         if not isinstance(templates, list):
             templates = [templates]
@@ -394,6 +403,7 @@ class GreenGuardPipeline(object):
             if self._cache_path:
                 split_name = '{}_{}.pkl'.format(template_name, fold)
                 split_path = os.path.join(self._cache_path, split_name)
+                os.makedirs(os.path.dirname(split_path), exist_ok=True)
 
                 with open(split_path, 'wb') as split_file:
                     pickle.dump(split, split_file)
@@ -556,7 +566,7 @@ class GreenGuardPipeline(object):
         return out
 
     def predict(self, target_times=None, readings=None, turbines=None,
-                start_=None, output_='default', **kwargs):
+                start_=None, output_='default', threshold=SELF_THRESHOLD, **kwargs):
         """Make predictions using this pipeline.
 
         Args:
@@ -567,6 +577,13 @@ class GreenGuardPipeline(object):
                 ``readings`` table.
             turbines (pandas.DataFrame):
                 ``turbines`` table.
+            threshold (float):
+                If not given, use the threshold specified upon instance creation in the
+                ``__init__``. If ``None``, return the raw predictions as given by the pipeline.
+                If not ``None``, use the given value as a threshold to convert the predicted
+                probabilities into a binary output that indicates whether the probability is above
+                the threshold (not strict) or below the threshold (strict).
+                Defaults to ``self.threshold``.
 
         Returns:
             numpy.ndarray:
@@ -576,8 +593,15 @@ class GreenGuardPipeline(object):
             raise NotFittedError()
 
         X = target_times[['turbine_id', 'cutoff_time']]
-        return self._pipeline.predict(X, readings=readings, turbines=turbines,
-                                      start_=start_, output_=output_, **kwargs)
+        predictions = self._pipeline.predict(X, readings=readings, turbines=turbines,
+                                             start_=start_, output_=output_, **kwargs)
+        if threshold is SELF_THRESHOLD:
+            threshold = self.threshold
+
+        if threshold is not None:
+            predictions = predictions >= threshold
+
+        return predictions
 
     def save(self, path):
         """Serialize and save this pipeline using cloudpickle.

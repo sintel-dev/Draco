@@ -16,22 +16,24 @@ except IOError:
     history = ''
 
 install_requires = [
-    'baytune>=0.3.9,<0.4',
-    'mlblocks>=0.3.4,<0.4',
-    'mlprimitives>=0.2.5,<0.3',
+    'baytune>=0.4.0,<0.5',
+    'mlprimitives>=0.3.0,<0.4',
+    'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
-    'scikit-learn>=0.20.0,<0.21',
+    'scikit-learn>=0.21',
     'tqdm<4.50.0,>=4.36.1',
     'cloudpickle>=1.6,<2',
-    'scipy>=1.0.1,<1.4.0',
-    'numpy>=1.15.4,<1.17',
-    'pandas>=0.23.4,<0.25',
+    'scipy>=1.0.1,<2',
+    'numpy<1.19.0,>=1.16.0',
+    'pandas>=1,<2',
+    'partd>=1.1.0,<2',
+    'fsspec>=0.8.5,<0.9',
     'dask>=2.6.0,<3',
-    'Keras>=2.1.6,<2.4',
+    'distributed>=2.6.0,<3',
+    'h5py<2.11.0,>=2.10.0',  # fix tensorflow requirement
+    'Keras>=2.4',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
-    'boto3==1.14.44',
-    'botocore==1.17.44',
 ]
 
 setup_requires = [
@@ -87,11 +89,13 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     description='AutoML for Renewable Energy Industries.',
     entry_points={
         'mlblocks': [
-            'pipelines=greenguard:MLBLOCKS_PIPELINES'
+            'pipelines=greenguard:MLBLOCKS_PIPELINES',
+            'primitives=greenguard:MLBLOCKS_PRIMITIVES'
         ],
     },
     extras_require={
@@ -106,11 +110,11 @@ setup(
     long_description_content_type='text/markdown',
     name='greenguard',
     packages=find_packages(include=['greenguard', 'greenguard.*']),
-    python_requires='>=3.6,<3.8',
+    python_requires='>=3.6,<3.9',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/D3-AI/GreenGuard',
-    version='0.2.6',
+    version='1.0.0.dev0',
     zip_safe=False,
 )

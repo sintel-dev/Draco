@@ -1,5 +1,20 @@
 # History
 
+## 0.3.0 - 2021-01-22
+
+This release increases the supported version of python to `3.8` and also includes changes
+in the installation requirements, where ``pandas`` and ``scikit-optimize`` packages have
+been updated to support higher versions. This changes come together with the newer versions
+of ``MLBlocks`` and ``MLPrimitives``.
+
+### Internal Improvements
+
+* Fix ``run_benchmark`` generating properly the ``init_hyperparameters`` for the pipelines.
+* New ``FPR`` metric.
+* New ``roc_auc_score`` metric.
+* Multiple benchmarking metrics allowed.
+* Multiple ``tpr`` or ``threshold`` values allowed for the benchmark.
+
 ## 0.2.6 - 2020-10-23
 
 * Fix ``mkdir`` when exporting to ``csv`` file the benchmark results.
@@ -16,7 +31,7 @@ With this release we include:
 * `run_benchmark`: A function within the module `benchmark` that allows the user to evaluate
 templates against problems with different window size and resample rules.
 * `summarize_results`: A function that given a `csv` file generates a `xlsx` file with a summary
-tab and a deatailed tab with the results from `run_benchmark`.
+tab and a detailed tab with the results from `run_benchmark`.
 
 ## 0.2.4 - 2020-09-25
 
@@ -28,7 +43,7 @@ tab and a deatailed tab with the results from `run_benchmark`.
 
 ## 0.2.2 - 2020-07-10
 
-### Internal Imrpovements
+### Internal Improvements
 
 * Added github actions.
 

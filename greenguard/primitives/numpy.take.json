@@ -1,0 +1,40 @@
+{
+    "name": "numpy.take",
+    "contributors": [
+        "Plamen Valentinov Kolev <plamen@csail.mit.edu>"
+    ],
+    "documentation": "https://docs.scipy.org/doc/numpy/reference/",
+    "description": "Take elements from an array along an axis.",
+    "classifiers": {
+        "type": "postprocessor"
+    },
+    "modalities": [],
+    "primitive": "numpy.take",
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "keyword": "a",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "indices": {
+                "type": "int",
+                "default": 0
+            },
+            "axis": {
+                "type": "int",
+                "default": null
+            }
+        }
+    }
+}
