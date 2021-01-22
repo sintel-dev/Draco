@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>History &mdash; GreenGuard 0.2.7.dev2 documentation</title>
+  <title>History &mdash; GreenGuard 1.0.1.dev0 documentation</title>
   
 
   
@@ -164,26 +164,30 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.2.6 - 2020-10-23</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.3.0 - 2021-01-22</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#internal-improvements">Internal Improvements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.2.6 - 2020-10-23</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#resolved-issues">Resolved Issues</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">0.2.5 - 2020-10-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">0.2.4 - 2020-09-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">0.2.3 - 2020-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id5">0.2.2 - 2020-07-10</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#internal-imrpovements">Internal Imrpovements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id6">Resolved Issues</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#id7">0.2.1 - 2020-06-16</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#internal-improvements">Internal Improvements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">0.2.5 - 2020-10-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.2.4 - 2020-09-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">0.2.3 - 2020-08-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">0.2.2 - 2020-07-10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Internal Improvements</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id8">Resolved Issues</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id9">0.2.0 - 2020-02-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id10">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">0.2.1 - 2020-06-16</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Internal Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Resolved Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">0.2.0 - 2020-02-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">0.1.0</a></li>
 </ul>
 </li>
 </ul>
@@ -279,7 +283,24 @@
 <div class="section" id="history">
 <h1>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.2.6 - 2020-10-23<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>0.3.0 - 2021-01-22<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>This release increases the supported version of python to <code class="docutils literal notranslate"><span class="pre">3.8</span></code> and also includes changes
+in the installation requirements, where <code class="docutils literal notranslate"><span class="pre">pandas</span></code> and <code class="docutils literal notranslate"><span class="pre">scikit-optimize</span></code> packages have
+been updated to support higher versions. This changes come together with the newer versions
+of <code class="docutils literal notranslate"><span class="pre">MLBlocks</span></code> and <code class="docutils literal notranslate"><span class="pre">MLPrimitives</span></code>.</p>
+<div class="section" id="internal-improvements">
+<h3>Internal Improvements<a class="headerlink" href="#internal-improvements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">run_benchmark</span></code> generating properly the <code class="docutils literal notranslate"><span class="pre">init_hyperparameters</span></code> for the pipelines.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">FPR</span></code> metric.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">roc_auc_score</span></code> metric.</p></li>
+<li><p>Multiple benchmarking metrics allowed.</p></li>
+<li><p>Multiple <code class="docutils literal notranslate"><span class="pre">tpr</span></code> or <code class="docutils literal notranslate"><span class="pre">threshold</span></code> values allowed for the benchmark.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>0.2.6 - 2020-10-23<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fix <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> when exporting to <code class="docutils literal notranslate"><span class="pre">csv</span></code> file the benchmark results.</p></li>
 <li><p>Intermediate steps for the pipelines with demo notebooks for each pipeline.</p></li>
@@ -291,51 +312,51 @@
 </ul>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>0.2.5 - 2020-10-09<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>0.2.5 - 2020-10-09<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>With this release we include:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">run_benchmark</span></code>: A function within the module <code class="docutils literal notranslate"><span class="pre">benchmark</span></code> that allows the user to evaluate
 templates against problems with different window size and resample rules.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">summarize_results</span></code>: A function that given a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file generates a <code class="docutils literal notranslate"><span class="pre">xlsx</span></code> file with a summary
-tab and a deatailed tab with the results from <code class="docutils literal notranslate"><span class="pre">run_benchmark</span></code>.</p></li>
+tab and a detailed tab with the results from <code class="docutils literal notranslate"><span class="pre">run_benchmark</span></code>.</p></li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h2>0.2.4 - 2020-09-25<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.2.4 - 2020-09-25<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fix dependency errors</p></li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>0.2.3 - 2020-08-10<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.2.3 - 2020-08-10<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added benchmarking module.</p></li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h2>0.2.2 - 2020-07-10<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="internal-imrpovements">
-<h3>Internal Imrpovements<a class="headerlink" href="#internal-imrpovements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h2>0.2.2 - 2020-07-10<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Internal Improvements<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Added github actions.</p></li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>Resolved Issues<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Resolved Issues<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Issue #27: Cache Splits pre-processed data on disk</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id7">
-<h2>0.2.1 - 2020-06-16<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h2>0.2.1 - 2020-06-16<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <p>With this release we give the possibility to the user to specify more than one template when
 creating a GreenGuardPipeline. When the <code class="docutils literal notranslate"><span class="pre">tune</span></code> method of this is called, an instance of BTBSession
 is returned and it is in charge of selecting the templates and tuning their hyperparameters until
 achieving the best pipeline.</p>
-<div class="section" id="internal-improvements">
-<h3>Internal Improvements<a class="headerlink" href="#internal-improvements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Internal Improvements<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Resample by filename inside the <code class="docutils literal notranslate"><span class="pre">CSVLoader</span></code> to avoid oversampling of data that will not be used.</p></li>
 <li><p>Select targets now allows them to be equal.</p></li>
@@ -349,8 +370,8 @@ achieving the best pipeline.</p>
 <li><p>Issue #33: Wrong default datetime format</p></li>
 </ul>
 </div>
-<div class="section" id="id8">
-<h3>Resolved Issues<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Resolved Issues<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Issue #35: Select targets is too strict</p></li>
 <li><p>Issue #36: resample by filename inside csvloader</p></li>
@@ -359,8 +380,8 @@ achieving the best pipeline.</p>
 </ul>
 </div>
 </div>
-<div class="section" id="id9">
-<h2>0.2.0 - 2020-02-14<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h2>0.2.0 - 2020-02-14<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <p>First stable release:</p>
 <ul class="simple">
 <li><p>efficient data loading and preprocessing</p></li>
@@ -369,8 +390,8 @@ achieving the best pipeline.</p>
 <li><p>documentation and tutorials</p></li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h2>0.1.0<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h2>0.1.0<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>First release on PyPI</p></li>
 </ul>
