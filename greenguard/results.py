@@ -1,4 +1,5 @@
 import os
+from random import random
 
 import pandas as pd
 
@@ -7,15 +8,15 @@ def load_results(files):
     problems_results = dict()
     for filename in files:
         problem = os.path.basename(filename).replace('.csv', '')
-        problems_results[problem] = pd.read_csv(filename, index_col=0).round(6)
+        problems_results[problem] = pd.read_csv(filename).round(6)
 
     return problems_results
 
 
 def get_wins_by_problems(results):
-    df = results.groupby('problem_name')['template', 'window_size', 'resample_rule', 'tuned_test']
+    df = results.groupby('problem_name')['template', 'window_size', 'resample_rule', 'fpr_threshold=0.5']
     df = df.apply(max)
-    df = df.rename(columns={'tuned_test': 'score'})
+    df = df.rename(columns={'fpr_threshold=0.5': 'score'})
 
     return df
 
@@ -25,8 +26,8 @@ def get_exclusive_wins(scores, column, pivot_columns=['window_size', 'resample_r
     for problem in scores.problem_name.unique():
         df = scores[scores['problem_name'] == problem]
         df['wr'] = df.apply(
-            lambda row: '{}_{}'.format(row[pivot_columns[0]], row[pivot_columns[1]]), axis=1)
-        df = df.pivot(index='wr', columns=column, values='tuned_test')
+            lambda row: '{}_{}_{}'.format(row[pivot_columns[0]], row[pivot_columns[1]], random()), axis=1)
+        df = df.pivot(index='wr', columns=column, values='fpr_threshold=0.5')
 
         is_winner = df.T.rank(method='min', ascending=False) == 1
         num_winners = is_winner.sum()
@@ -93,9 +94,9 @@ def write_results(results, output):
     if isinstance(results, dict):
         results = pd.concat(list(results.values()), ignore_index=True)
 
-    window = get_exclusive_wins(results, 'window_size', ['window_size', 'tuned_test'])
+    window = get_exclusive_wins(results, 'window_size', ['window_size', 'fpr_threshold=0.5'])
 
-    resample_pivots = ['resample_rule', ['problem_name', 'tuned_test']]
+    resample_pivots = ['resample_rule', ['problem_name', 'fpr_threshold=0.5']]
     resample = get_exclusive_wins(results, 'resample_rule', resample_pivots)
 
     summary = {
