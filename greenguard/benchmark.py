@@ -24,7 +24,7 @@ from greenguard.results import load_results, write_results
 
 LOGGER = logging.getLogger(__name__)
 
-DEFAULT_TUNING_METRIC_KWARGS = {'threshold': 0.5}
+DEFAULT_TUNING_METRIC_KWARGS = {}
 LEADERBOARD_COLUMNS = [
     'problem_name',
     'window_size',
@@ -107,7 +107,8 @@ def evaluate_template(
     test_size=0.25,
     random_state=0,
     cache_path=None,
-    scores={}
+    scores={},
+    problem_name=None,
 ):
     """Returns the scores for a given template.
 
@@ -202,24 +203,33 @@ def evaluate_template(
     predictions = pipeline.predict(test, readings)
     ground_truth = test['target']
 
+    if cache_path:
+        if os.path.isfile(template):
+            template = os.path.basename(template).replace('.json', '')
+
+        output_file = f'{template}_{problem_name}_predictions.csv'
+        cache_predictions = pd.DataFrame({
+            'predictions': predictions,
+            'ground_truth': ground_truth
+        })
+
+        cache_predictions.to_csv(os.path.join(cache_path, output_file), index=False)
+
     # compute different metrics
     if tpr:
         tpr = tpr if isinstance(tpr, list) else [tpr]
         for value in tpr:
             threshold = threshold_score(ground_truth, predictions, tpr)
-            scores[f'fpr_tpr/{value}'] = fpr_score(ground_truth, predictions, tpr=tpr)
+            scores[f'fpr (with tpr={value})'] = fpr_score(ground_truth, predictions, tpr=tpr)
             predictions_classes = predictions >= threshold
-            scores[f'accuracy_tpr/{value}'] = accuracy_score(ground_truth, predictions_classes)
-            scores[f'f1_tpr/{value}'] = f1_score(ground_truth, predictions_classes)
-            scores[f'threshold_tpr/{value}'] = threshold_score(ground_truth, predictions, value)
+            scores[f'f1 (with tpr={value})'] = f1_score(ground_truth, predictions_classes)
 
-            if f'accuracy_tpr/{value}' not in LEADERBOARD_COLUMNS:
-                LEADERBOARD_COLUMNS.extend([
-                    f'accuracy_tpr/{value}',
-                    f'f1_tpr/{value}',
-                    f'fpr_tpr/{value}',
-                    f'threshold_tpr/{value}',
-                ])
+            scores[f'accuracy (with tpr={value})'] = accuracy_score(
+                ground_truth, predictions_classes)
+
+            scores[f'threshold (with tpr={value})'] = threshold_score(
+                ground_truth, predictions, value)
+
 
     else:
         threshold = 0.5 if threshold is None else threshold
@@ -235,14 +245,6 @@ def evaluate_template(
 
             scores[f'f1_threshold/{value}'] = f1_score(ground_truth, predictions_classes)
             scores[f'tpr_threshold/{value}'] = tpr_score(ground_truth, predictions, value)
-
-            if f'accuracy_threshold/{value}' not in LEADERBOARD_COLUMNS:
-                LEADERBOARD_COLUMNS.extend([
-                    f'accuracy_threshold/{value}',
-                    f'f1_threshold/{value}',
-                    f'fpr_threshold/{value}',
-                    f'tpr_threshold/{value}',
-                ])
 
     scores['tuned_test'] = tuning_metric(test['target'], predictions)
     scores['fit_predict_time'] = fit_predict_time
@@ -365,11 +367,20 @@ def evaluate_templates(
 
     init_params = generate_init_params(templates, init_params)
     preprocessing = generate_preprocessing(templates, preprocessing)
+    for value in tpr:
+        if f'accuracy (with tpr={value})' not in LEADERBOARD_COLUMNS:
+            LEADERBOARD_COLUMNS.extend([
+                f'accuracy (with tpr={value})',
+                f'f1 (with tpr={value})',
+                f'fpr (with tpr={value})',
+                f'threshold (with tpr={value})',
+            ])
 
     scores_list = []
     for template, window_rule in product(templates, window_size_rule):
         window_size, rule = window_rule
 
+        _problem_name = f'{problem_name}_{window_size}_{rule}'
 
         try:
             LOGGER.info('Evaluating template %s on problem %s (%s, %s)',
@@ -381,6 +392,11 @@ def evaluate_templates(
             if multiprocess:
                 manager = mp.Manager()
                 scores = manager.dict()
+                scores['problem_name'] = problem_name
+                scores['template'] = template
+                scores['window_size'] = window_size
+                scores['resample_rule'] = rule
+
                 process = mp.Process(
                     target=evaluate_template,
                     args=(
@@ -400,7 +416,8 @@ def evaluate_templates(
                         test_size,
                         random_state,
                         cache_path,
-                        scores
+                        scores,
+                        _problem_name
                     )
                 )
 
@@ -408,6 +425,8 @@ def evaluate_templates(
                 process.join()
                 if 'tuned_test' not in scores:
                     scores['status'] = 'ERRORED'
+                else:
+                    scores['status'] = 'OK'
 
                 scores = dict(scores)  # parse the managed dict to dict for pandas.
 
@@ -433,7 +452,8 @@ def evaluate_templates(
                     test_size=test_size,
                     cv_splits=cv_splits,
                     random_state=random_state,
-                    cache_path=cache_path
+                    cache_path=cache_path,
+                    problem_name=_problem_name,
                 )
 
                 scores.update(result)
