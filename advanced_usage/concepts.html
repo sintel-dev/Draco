@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Concepts &mdash; GreenGuard 0.3.1.dev0 documentation</title>
@@ -112,7 +113,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#primitive">Primitive</a></li>
@@ -142,7 +143,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../contributing.html#types-of-contributions">Types of Contributions</a><ul>
@@ -281,11 +282,11 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="concepts">
+<section id="concepts">
 <h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>
 <p>Here we briefly explain some of the concepts and terminology used within the GreenGuard
 project and documentation.</p>
-<div class="section" id="primitive">
+<section id="primitive">
 <h2>Primitive<a class="headerlink" href="#primitive" title="Permalink to this headline">¶</a></h2>
 <p>We call the smallest computational blocks used in a Machine Learning process
 <strong>primitives</strong>, which:</p>
@@ -294,8 +295,8 @@ project and documentation.</p>
 <li><p>Have some initialization arguments, which MLBlocks calls <code class="docutils literal notranslate"><span class="pre">init_params</span></code>.</p></li>
 <li><p>Have some tunable hyperparameters, which have types and a list or range of valid values.</p></li>
 </ul>
-</div>
-<div class="section" id="template">
+</section>
+<section id="template">
 <h2>Template<a class="headerlink" href="#template" title="Permalink to this headline">¶</a></h2>
 <p>Primitives can be combined to form what we call <strong>Templates</strong>, which:</p>
 <ul class="simple">
@@ -305,8 +306,8 @@ of their primitives.</p></li>
 <li><p>Have some tunable hyperparameters, which correspond to the tunable hyperparameters
 of their primitives.</p></li>
 </ul>
-</div>
-<div class="section" id="pipeline">
+</section>
+<section id="pipeline">
 <h2>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h2>
 <p>Templates can be used to build <strong>Pipelines</strong> by taking and fixing a set of valid
 hyperparameters for a Template. Hence, Pipelines:</p>
@@ -318,8 +319,8 @@ of their template.</p></li>
 hyperparameters of their template.</p></li>
 </ul>
 <p>A pipeline can be fitted and evaluated directly using <a class="reference external" href="https://hdi-project.github.io/MLBlocks">MLBlocks</a>, or using the <strong>GreenGuardPipeline</strong>.</p>
-</div>
-<div class="section" id="tuning">
+</section>
+<section id="tuning">
 <h2>Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h2>
 <p>We call tuning the process of, given a dataset and a collection of templates, finding the pipeline
 derived from the templates that gets the best possible score on the dataset.</p>
@@ -330,15 +331,15 @@ which hyperparameters are more likely to get the best results in the next iterat
 <p>The process of selecting and tuning the templates is handled by a <a class="reference external" href="https://hdi-project.github.io/BTB/tutorials/03_Session.html">BTBSession</a>, which is responsible for
 discarding the templates that do not work on the given data and for keeping
 track of the template and hyperparameters that obtain the best performance.</p>
-</div>
-<div class="section" id="greenguardpipeline">
+</section>
+<section id="greenguardpipeline">
 <h2>GreenGuardPipeline<a class="headerlink" href="#greenguardpipeline" title="Permalink to this headline">¶</a></h2>
 <p>This class is the one in charge of loading the <strong>MLBlocks Pipelines</strong> configured in the
 system and use them to learn from the data and make predictions.</p>
 <p>This class is also responsible for creating the BTBSession that will handle the
 selection and tuning of the templates.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
