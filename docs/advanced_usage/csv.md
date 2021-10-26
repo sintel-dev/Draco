@@ -13,7 +13,7 @@ of the system on which **GreenGuard** is being run, so loading all the data in a
 `pandas.DataFrame` will not be possible.
 
 In order to solve this situation, **GreenGuard** provides a [CSVLoader](
-https://d3-ai.github.io/GreenGuard/api/greenguard.loaders.csv.html#greenguard.loaders.csv.CSVLoader)
+https://sintel-dev.github.io/GreenGuard/api/greenguard.loaders.csv.html#greenguard.loaders.csv.CSVLoader)
 class which can be used to load data from what we call the **Raw Data Format**.
 
 ## Raw Data Format

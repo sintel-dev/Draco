@@ -232,6 +232,6 @@ or in command line::
     pip install 'greenguard>=X.Y.Z.dev'
 
 
-.. _GitHub issues page: https://github.com/D3-AI/GreenGuard/issues
-.. _Travis Build Status page: https://travis-ci.org/D3-AI/GreenGuard/pull_requests
+.. _GitHub issues page: https://github.com/sintel-dev/GreenGuard/issues
+.. _Travis Build Status page: https://travis-ci.org/sintel-dev/GreenGuard/pull_requests
 .. _Google docstrings style: https://google.github.io/styleguide/pyguide.html?showone=Comments#Comments

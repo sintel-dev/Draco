@@ -64,7 +64,7 @@ title = project + ' Documentation',
 copyright = '2018, MIT Data To AI Lab'
 author = 'MIT Data To AI Lab'
 description = 'AutoML for Renewable Energy Industries'
-user = 'D3-AI'
+user = 'sintel-dev'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
