@@ -70,7 +70,7 @@ you will need to:
 1. Clone the repository
 
 ```bash
-git clone git@github.com:signals-dev/GreenGuard.git
+git clone git@github.com:sintel-dev/GreenGuard.git
 cd GreenGuard
 ```
 
@@ -83,4 +83,4 @@ make docker-build
 ## What's next?
 
 For more details about **GreenGuard** and all its possibilities and features, please check the
-[project documentation site](https://signals-dev.github.io/GreenGuard/)!
+[project documentation site](https://sintel-dev.github.io/GreenGuard/)!

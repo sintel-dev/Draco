@@ -13,18 +13,18 @@ AutoML for Renewable Energy Industries.
 
 
 [![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
-[![Travis CI Shield](https://travis-ci.org/signals-dev/GreenGuard.svg?branch=master)](https://travis-ci.org/signals-dev/GreenGuard)
+[![Travis CI Shield](https://travis-ci.org/sintel-dev/GreenGuard.svg?branch=master)](https://travis-ci.org/sintel-dev/GreenGuard)
 [![Downloads](https://pepy.tech/badge/greenguard)](https://pepy.tech/project/greenguard)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/signals-dev/GreenGuard/master?filepath=tutorials)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sintel-dev/GreenGuard/master?filepath=tutorials)
 <!--
-[![Coverage Status](https://codecov.io/gh/signals-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/signals-dev/GreenGuard)
+[![Coverage Status](https://codecov.io/gh/sintel-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/sintel-dev/GreenGuard)
 -->
 
 # GreenGuard
 
-- License: [MIT](https://github.com/signals-dev/GreenGuard/blob/master/LICENSE)
-- Documentation: https://signals-dev.github.io/GreenGuard
-- Homepage: https://github.com/signals-dev/GreenGuard
+- License: [MIT](https://github.com/sintel-dev/GreenGuard/blob/master/LICENSE)
+- Documentation: https://sintel-dev.github.io/GreenGuard
+- Homepage: https://github.com/sintel-dev/GreenGuard
 
 ## Overview
 
@@ -71,7 +71,7 @@ pip install greenguard
 This will pull and install the latest stable release from [PyPi](https://pypi.org/).
 
 If you want to install from source or contribute to the project please read the
-[Contributing Guide](https://signals-dev.github.io/GreenGuard/contributing.html#get-started).
+[Contributing Guide](https://sintel-dev.github.io/GreenGuard/contributing.html#get-started).
 
 ## Docker usage
 
@@ -284,6 +284,6 @@ f1_score(test_targets, predictions)
 ## What's next?
 
 For more details about **GreenGuard** and all its possibilities and features, please check the
-[project documentation site](https://signals-dev.github.io/GreenGuard/)
+[project documentation site](https://sintel-dev.github.io/GreenGuard/)
 Also do not forget to have a look at the [tutorials](
-https://github.com/signals-dev/GreenGuard/tree/master/tutorials)!
+https://github.com/sintel-dev/GreenGuard/tree/master/tutorials)!
