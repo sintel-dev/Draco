@@ -17,7 +17,7 @@ except IOError:
 
 install_requires = [
     'baytune>=0.4.0,<0.5',
-    'mlprimitives>=0.3.0,<0.4',
+    'mlprimitives>=0.3.2,<0.4',
     'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21',
@@ -31,7 +31,6 @@ install_requires = [
     'dask>=2.6.0,<3',
     'distributed>=2.6.0,<3',
     'h5py<2.11.0,>=2.10.0',  # fix tensorflow requirement
-    'Keras>=2.4,<2.5',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
 ]
