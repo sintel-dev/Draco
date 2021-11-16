@@ -4,7 +4,7 @@
 </p>
 
 <p align="left">
-<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/Draco.png" alt="Draco" />
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt="Draco" />
 </p>
 
 <p align="left">
