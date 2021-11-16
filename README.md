@@ -13,7 +13,7 @@ AutoML for Renewable Energy Industries.
 
 
 [![PyPI Shield](https://img.shields.io/pypi/v/draco-ml.svg)](https://pypi.python.org/pypi/draco-ml)
-[![Travis CI Shield](https://travis-ci.org/sintel-dev/Draco.svg?branch=master)](https://travis-ci.org/sintel-dev/Draco)
+[![Tests](https://github.com/sintel-dev/Draco/workflows/Run%20Tests/badge.svg)](https://github.com/sintel-dev/Draco/actions?query=workflow%3A%22Run+Tests%22+branch%3Amaster)
 [![Downloads](https://pepy.tech/badge/draco-ml)](https://pepy.tech/project/draco-ml)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sintel-dev/Draco/master?filepath=tutorials)
 <!--
