@@ -7,7 +7,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-from greenguard.utils import remove_dots, restore_dots
+from draco.utils import remove_dots, restore_dots
 
 LOGGER = logging.getLogger(__name__)
 

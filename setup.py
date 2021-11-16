@@ -57,6 +57,7 @@ development_requires = [
     'nbsphinx>=0.5.0,<0.7',
     'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4,<0.5',
+    'docutils>=0.14,<0.18',
     'autodocsumm>=0.1.10',
 
     # style check
@@ -93,8 +94,8 @@ setup(
     description='AutoML for Renewable Energy Industries.',
     entry_points={
         'mlblocks': [
-            'pipelines=greenguard:MLBLOCKS_PIPELINES',
-            'primitives=greenguard:MLBLOCKS_PRIMITIVES'
+            'pipelines=draco:MLBLOCKS_PIPELINES',
+            'primitives=draco:MLBLOCKS_PRIMITIVES'
         ],
     },
     extras_require={
@@ -103,17 +104,17 @@ setup(
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='wind machine learning greenguard',
+    keywords='wind machine learning draco',
     license='MIT license',
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
-    name='greenguard',
-    packages=find_packages(include=['greenguard', 'greenguard.*']),
+    name='draco-ml',
+    packages=find_packages(include=['draco', 'draco.*']),
     python_requires='>=3.6,<3.9',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
-    url='https://github.com/D3-AI/GreenGuard',
+    url='https://github.com/sintel-dev/Draco',
     version='0.3.1.dev0',
     zip_safe=False,
 )

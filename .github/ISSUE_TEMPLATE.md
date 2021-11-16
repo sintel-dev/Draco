@@ -1,4 +1,4 @@
-* GreenGuard version:
+* Draco version:
 * Python version:
 * Operating System:
 

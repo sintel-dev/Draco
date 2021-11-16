@@ -20,7 +20,7 @@ from mlprimitives.adapters.keras import Sequential
 from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import KFold, StratifiedKFold
 
-from greenguard.metrics import METRICS
+from draco.metrics import METRICS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -152,11 +152,11 @@ def generate_preprocessing(templates_names, preprocessing):
 SELF_THRESHOLD = object()
 
 
-class GreenGuardPipeline(object):
-    """Main Machine Learning component in the GreenGuard project.
+class DracoPipeline(object):
+    """Main Machine Learning component in the Draco project.
 
-    The ``GreenGuardPipeline`` represents the abstraction of a Machine
-    Learning pipeline architecture specialized on the GreenGuard data
+    The ``DracoPipeline`` represents the abstraction of a Machine
+    Learning pipeline architecture specialized on the Draco data
     format.
 
     In order to use it, an MLBlocks pipeline template needs to be given,
@@ -169,7 +169,7 @@ class GreenGuardPipeline(object):
         template_name:
             Name of the template being used.
         fitted (bool):
-            Whether this GreenGuardPipeline has already been fitted or not.
+            Whether this DracoPipeline has already been fitted or not.
         steps (list):
             List of primitives that compose this template.
         preprocessing (list):
@@ -192,7 +192,7 @@ class GreenGuardPipeline(object):
             ``MLPipeline``. Also can be a list combining both.
         metric (str or function):
             Metric to use. If an ``str`` is given it must be one of the metrics
-            defined in the ``greenguard.metrics.METRICS`` dictionary.
+            defined in the ``draco.metrics.METRICS`` dictionary.
         cost (bool):
             Whether the metric is a cost function (the lower the better) or not.
             Defaults to ``False``.
@@ -622,8 +622,8 @@ class GreenGuardPipeline(object):
                 Path to the file where the pipeline is saved.
 
         Returns:
-            GreenGuardPipeline:
-                Loaded GreenGuardPipeline instance.
+            DracoPipeline:
+                Loaded DracoPipeline instance.
         """
         with open(path, 'rb') as pickle_file:
             return cloudpickle.load(pickle_file)

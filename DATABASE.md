@@ -1,6 +1,6 @@
 # Database Schema
 
-The **GreenGuard Database** contains the following collections and relationships
+The **Draco Database** contains the following collections and relationships
 
 * Farm
 * Trubine
