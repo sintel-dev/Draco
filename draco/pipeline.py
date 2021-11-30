@@ -550,6 +550,10 @@ class DracoPipeline(object):
             turbines (pandas.DataFrame):
                 ``turbines`` table.
         """
+        print("FIT")
+        print("readings", readings)
+        print("target_times", target_times)
+        print(kwargs.keys())
         if target_times is None:
             X = kwargs.pop('X')
             y = kwargs.pop('y')
@@ -589,6 +593,10 @@ class DracoPipeline(object):
             numpy.ndarray:
                 Vector of predictions.
         """
+        print("PREDICT")
+        print("readings", readings)
+        print("target_times", target_times)
+        print(kwargs.keys())
         if not self.fitted:
             raise NotFittedError()
 
@@ -627,3 +635,15 @@ class DracoPipeline(object):
         """
         with open(path, 'rb') as pickle_file:
             return cloudpickle.load(pickle_file)
+
+    def get_fit_args(self):
+        """Return the pipeline input args."""
+        return self._pipeline.get_fit_args()
+
+    def get_predict_args(self):
+        """Return the pipeline input args."""
+        return self._pipeline.get_predict_args()
+
+    def get_output_args(self):
+        """Return the pipeline output args."""
+        return self._pipeline.get_outputs()
