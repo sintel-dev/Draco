@@ -73,11 +73,6 @@ This will pull and install the latest stable release from [PyPi](https://pypi.or
 If you want to install from source or contribute to the project please read the
 [Contributing Guide](https://sintel-dev.github.io/Draco/contributing.html#get-started).
 
-## Docker usage
-
-**Draco** is prepared to be run inside a docker environment. Please check the
-[docker documentation](docker/README.md) for details about how to run **Draco** using docker.
-
 # Data Format
 
 The minimum input expected by the **Draco** system consists of the following two elements,

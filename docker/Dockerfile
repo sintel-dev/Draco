@@ -5,7 +5,7 @@ EXPOSE 8888
 
 RUN mkdir /app
 COPY setup.py /app
-COPY draco /app/draco
+COPY greenguard /app/greenguard
 COPY tutorials /app/tutorials
 RUN pip install -e /app jupyter
 
