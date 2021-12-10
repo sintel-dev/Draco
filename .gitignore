@@ -112,3 +112,5 @@ notebooks-private/
 scripts/
 dask-worker-space/
 tutorials/*.pkl
+
+*.DS_Store
