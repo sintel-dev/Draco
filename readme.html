@@ -9,12 +9,12 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GreenGuard &mdash; GreenGuard 0.3.1.dev0 documentation</title>
+  <title>Draco &mdash; Draco 0.0.1.dev0 documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="_static/GreenGuard.ico"/>
+    <link rel="shortcut icon" href="_static/Draco.ico"/>
   
   
   
@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Concepts" href="advanced_usage/concepts.html" />
-    <link rel="prev" title="GreenGuard" href="index.html" /> 
+    <link rel="prev" title="Draco" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -54,12 +54,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> GreenGuard
+            <a href="index.html" class="icon icon-home"> Draco
           
 
           
             
-            <img src="_static/GreenGuard-200.png" class="logo" alt="Logo"/>
+            <img src="_static/Draco-200.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -85,7 +85,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">GreenGuard</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Draco</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
 </ul>
@@ -93,7 +93,6 @@
 <li class="toctree-l1"><a class="reference internal" href="#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-and-install">Download and Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#docker-usage">Docker usage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#id1">Data Format</a><ul>
@@ -120,7 +119,7 @@
 <li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#template">Template</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#pipeline">Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#tuning">Tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#greenguardpipeline">GreenGuardPipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/concepts.html#dracopipeline">DracoPipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage/csv.html">CSV Format</a><ul>
@@ -129,15 +128,15 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage/docker.html">Docker Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#building-the-draco-docker-image">Building the Draco Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#distributing-the-draco-docker-image">Distributing the Draco Docker Image</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#distributing-as-a-file">Distributing as a file</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/docker.html#running-the-draco-jupyter-image">Running the draco-jupyter image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#running-draco-jupyter-with-the-code">Running draco-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced_usage/docker.html#running-draco-jupyter-without-the-draco-code">Running draco-jupyter without the draco code</a></li>
 </ul>
 </li>
 </ul>
@@ -206,7 +205,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">GreenGuard</a>
+          <a href="index.html">Draco</a>
         
       </nav>
 
@@ -237,14 +236,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>GreenGuard</li>
+      <li>Draco</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/readme.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/sintel-dev/Draco/blob/master/docs/readme.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -286,26 +285,26 @@
 <img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="DAI" />
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p><p align="left">
-<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt="GreenGuard" />
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt="Draco" />
 </p><p align="left">
 AutoML for Renewable Energy Industries.
-</p><a class="reference external image-reference" href="https://pypi.python.org/pypi/greenguard"><img alt="PyPI Shield" src="https://img.shields.io/pypi/v/greenguard.svg" /></a>
-<a class="reference external image-reference" href="https://travis-ci.org/signals-dev/GreenGuard"><img alt="Travis CI Shield" src="https://travis-ci.org/signals-dev/GreenGuard.svg?branch=master" /></a>
-<a class="reference external image-reference" href="https://pepy.tech/project/greenguard"><img alt="Downloads" src="https://pepy.tech/badge/greenguard" /></a>
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/signals-dev/GreenGuard/master?filepath=tutorials"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+</p><a class="reference external image-reference" href="https://pypi.python.org/pypi/draco-ml"><img alt="PyPI Shield" src="https://img.shields.io/pypi/v/draco-ml.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/sintel-dev/Draco/actions?query=workflow%3A%22Run+Tests%22+branch%3Amaster"><img alt="Tests" src="https://github.com/sintel-dev/Draco/workflows/Run%20Tests/badge.svg" /></a>
+<a class="reference external image-reference" href="https://pepy.tech/project/draco-ml"><img alt="Downloads" src="https://pepy.tech/badge/draco-ml" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/sintel-dev/Draco/master?filepath=tutorials"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
 <p><span class="raw-html-m2r"><!--
-[![Coverage Status](https://codecov.io/gh/signals-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/signals-dev/GreenGuard)
+[![Coverage Status](https://codecov.io/gh/sintel-dev/Draco/branch/master/graph/badge.svg)](https://codecov.io/gh/sintel-dev/Draco)
 --></span></p>
-<section id="greenguard">
-<h1>GreenGuard<a class="headerlink" href="#greenguard" title="Permalink to this headline">¶</a></h1>
+<section id="draco">
+<h1>Draco<a class="headerlink" href="#draco" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><p>License: <a class="reference external" href="https://github.com/signals-dev/GreenGuard/blob/master/LICENSE">MIT</a></p></li>
-<li><p>Documentation: <a class="reference external" href="https://signals-dev.github.io/GreenGuard">https://signals-dev.github.io/GreenGuard</a></p></li>
-<li><p>Homepage: <a class="reference external" href="https://github.com/signals-dev/GreenGuard">https://github.com/signals-dev/GreenGuard</a></p></li>
+<li><p>License: <a class="reference external" href="https://github.com/sintel-dev/Draco/blob/master/LICENSE">MIT</a></p></li>
+<li><p>Documentation: <a class="reference external" href="https://sintel-dev.github.io/Draco">https://sintel-dev.github.io/Draco</a></p></li>
+<li><p>Homepage: <a class="reference external" href="https://github.com/sintel-dev/Draco">https://github.com/sintel-dev/Draco</a></p></li>
 </ul>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>The GreenGuard project is a collection of end-to-end solutions for machine learning problems
+<p>The Draco project is a collection of end-to-end solutions for machine learning problems
 commonly found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
 automation of machine Learning at Data to AI Lab at MIT.</p>
@@ -325,7 +324,7 @@ vetted through testing across multiple publicly available datasets for the same 
 <h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="DATA_FORMAT.md">Data Format</a>.</p></li>
-<li><p><a class="reference external" href="DATA_FORMAT.md#folder-structure">GreenGuard folder structure</a>.</p></li>
+<li><p><a class="reference external" href="DATA_FORMAT.md#folder-structure">Draco folder structure</a>.</p></li>
 </ul>
 </section>
 </section>
@@ -333,30 +332,25 @@ vetted through testing across multiple publicly available datasets for the same 
 <h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p><strong>GreenGuard</strong> has been developed and runs on Python 3.6, 3.7 and 3.8.</p>
+<p><strong>Draco</strong> has been developed and runs on Python 3.6, 3.7 and 3.8.</p>
 <p>Also, although it is not strictly required, the usage of a <a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a> is highly recommended in order to avoid interfering
-with other software installed in the system where you are trying to run <strong>GreenGuard</strong>.</p>
+with other software installed in the system where you are trying to run <strong>Draco</strong>.</p>
 </section>
 <section id="download-and-install">
 <h2>Download and Install<a class="headerlink" href="#download-and-install" title="Permalink to this headline">¶</a></h2>
-<p><strong>GreenGuard</strong> can be installed locally using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> with
+<p><strong>Draco</strong> can be installed locally using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> with
 the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install greenguard
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install draco-ml
 </pre></div>
 </div>
 <p>This will pull and install the latest stable release from <a class="reference external" href="https://pypi.org/">PyPi</a>.</p>
 <p>If you want to install from source or contribute to the project please read the
-<a class="reference external" href="https://signals-dev.github.io/GreenGuard/contributing.html#get-started">Contributing Guide</a>.</p>
-</section>
-<section id="docker-usage">
-<h2>Docker usage<a class="headerlink" href="#docker-usage" title="Permalink to this headline">¶</a></h2>
-<p><strong>GreenGuard</strong> is prepared to be run inside a docker environment. Please check the
-<a class="reference external" href="docker/README.md">docker documentation</a> for details about how to run <strong>GreenGuard</strong> using docker.</p>
+<a class="reference external" href="https://sintel-dev.github.io/Draco/contributing.html#get-started">Contributing Guide</a>.</p>
 </section>
 </section>
 <section id="id1">
 <h1>Data Format<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>The minimum input expected by the <strong>GreenGuard</strong> system consists of the following two elements,
+<p>The minimum input expected by the <strong>Draco</strong> system consists of the following two elements,
 which need to be passed as <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> objects:</p>
 <section id="target-times">
 <h2>Target Times<a class="headerlink" href="#target-times" title="Permalink to this headline">¶</a></h2>
@@ -547,7 +541,7 @@ an arbitraty number of additional fields.</p>
 <section id="csv-format">
 <h2>CSV Format<a class="headerlink" href="#csv-format" title="Permalink to this headline">¶</a></h2>
 <p>A part from the in-memory data format explained above, which is limited by the memory
-allocation capabilities of the system where it is run, <strong>GreenGuard</strong> is also prepared to
+allocation capabilities of the system where it is run, <strong>Draco</strong> is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
 <a class="reference external" href="DATA_FORMAT.md#csv-format">project documentation site</a>.</p>
@@ -555,12 +549,12 @@ of data which it can work with. Further details about this format can be found i
 </section>
 <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
-<p>In this example we will load some demo data and classify it using a <strong>GreenGuard Pipeline</strong>.</p>
+<p>In this example we will load some demo data and classify it using a <strong>Draco Pipeline</strong>.</p>
 <section id="load-and-split-the-demo-data">
 <h2>1. Load and split the demo data<a class="headerlink" href="#load-and-split-the-demo-data" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to load the demo data.</p>
-<p>For this, we will import and call the <code class="docutils literal notranslate"><span class="pre">greenguard.demo.load_demo</span></code> function without any arguments:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.demo</span> <span class="kn">import</span> <span class="n">load_demo</span>
+<p>For this, we will import and call the <code class="docutils literal notranslate"><span class="pre">draco.demo.load_demo</span></code> function without any arguments:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">draco.demo</span> <span class="kn">import</span> <span class="n">load_demo</span>
 
 <span class="n">target_times</span><span class="p">,</span> <span class="n">readings</span> <span class="o">=</span> <span class="n">load_demo</span><span class="p">()</span>
 </pre></div>
@@ -610,15 +604,15 @@ testing target values from the <code class="docutils literal notranslate"><span 
 <section id="exploring-the-available-pipelines">
 <h2>2. Exploring the available Pipelines<a class="headerlink" href="#exploring-the-available-pipelines" title="Permalink to this headline">¶</a></h2>
 <p>Once we have the data ready, we need to find a suitable pipeline.</p>
-<p>The list of available GreenGuard Pipelines can be obtained using the <code class="docutils literal notranslate"><span class="pre">greenguard.get_pipelines</span></code>
+<p>The list of available Draco Pipelines can be obtained using the <code class="docutils literal notranslate"><span class="pre">draco.get_pipelines</span></code>
 function.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard</span> <span class="kn">import</span> <span class="n">get_pipelines</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">draco</span> <span class="kn">import</span> <span class="n">get_pipelines</span>
 
 <span class="n">pipelines</span> <span class="o">=</span> <span class="n">get_pipelines</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The returned <code class="docutils literal notranslate"><span class="pre">pipeline</span></code> variable will be <code class="docutils literal notranslate"><span class="pre">list</span></code> containing the names of all the pipelines
-available in the GreenGuard system:</p>
+available in the Draco system:</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>[&#39;classes.unstack_double_lstm_timeseries_classifier&#39;,
  &#39;classes.unstack_lstm_timeseries_classifier&#39;,
  &#39;classes.unstack_normalize_dfs_xgb_classifier&#39;,
@@ -636,11 +630,11 @@ available in the GreenGuard system:</p>
 <h2>3. Fitting the Pipeline<a class="headerlink" href="#fitting-the-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>Once we have loaded the data and selected the pipeline that we will use, we have to
 fit it.</p>
-<p>For this, we will create an instance of a <code class="docutils literal notranslate"><span class="pre">GreenGuardPipeline</span></code> object passing the name
+<p>For this, we will create an instance of a <code class="docutils literal notranslate"><span class="pre">DracoPipeline</span></code> object passing the name
 of the pipeline that we want to use:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">greenguard.pipeline</span> <span class="kn">import</span> <span class="n">GreenGuardPipeline</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">draco.pipeline</span> <span class="kn">import</span> <span class="n">DracoPipeline</span>
 
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">GreenGuardPipeline</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">DracoPipeline</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And then we can directly fit it to our data by calling its <code class="docutils literal notranslate"><span class="pre">fit</span></code> method and passing in the
@@ -670,9 +664,9 @@ using any suitable metric.</p>
 </section>
 <section id="what-s-next">
 <h2>What’s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>For more details about <strong>GreenGuard</strong> and all its possibilities and features, please check the
-<a class="reference external" href="https://signals-dev.github.io/GreenGuard/">project documentation site</a>
-Also do not forget to have a look at the <a class="reference external" href="https://github.com/signals-dev/GreenGuard/tree/master/tutorials">tutorials</a>!</p>
+<p>For more details about <strong>Draco</strong> and all its possibilities and features, please check the
+<a class="reference external" href="https://sintel-dev.github.io/Draco/">project documentation site</a>
+Also do not forget to have a look at the <a class="reference external" href="https://github.com/sintel-dev/Draco/tree/master/tutorials">tutorials</a>!</p>
 </section>
 </section>
 
@@ -687,7 +681,7 @@ Also do not forget to have a look at the <a class="reference external" href="htt
         <a href="advanced_usage/concepts.html" class="btn btn-neutral float-right" title="Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="GreenGuard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Draco" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

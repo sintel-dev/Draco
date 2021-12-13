@@ -10,7 +10,7 @@
    :caption: Tutorials
    :hidden:
 
-   tutorials/01_GreenGuard_Quickstart
+   tutorials/01_Draco_Quickstart
    tutorials/02_Extract_Readings
 
 .. toctree::
@@ -25,7 +25,7 @@
    :caption: Resources
    :hidden:
 
-   API Reference <api/greenguard>
+   API Reference <api/draco>
    contributing
    authors
    history

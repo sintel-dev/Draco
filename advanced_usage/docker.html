@@ -9,12 +9,12 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Docker Usage &mdash; GreenGuard 0.3.1.dev0 documentation</title>
+  <title>Docker Usage &mdash; Draco 0.0.1.dev0 documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/GreenGuard.ico"/>
+    <link rel="shortcut icon" href="../_static/Draco.ico"/>
   
   
   
@@ -54,12 +54,12 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> GreenGuard
+            <a href="../index.html" class="icon icon-home"> Draco
           
 
           
             
-            <img src="../_static/GreenGuard-200.png" class="logo" alt="Logo"/>
+            <img src="../_static/Draco-200.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -85,7 +85,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html">GreenGuard</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Draco</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#resources">Resources</a></li>
 </ul>
@@ -93,7 +93,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#install">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#download-and-install">Download and Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../readme.html#docker-usage">Docker usage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#id1">Data Format</a><ul>
@@ -120,7 +119,7 @@
 <li class="toctree-l2"><a class="reference internal" href="concepts.html#template">Template</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts.html#pipeline">Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts.html#tuning">Tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="concepts.html#greenguardpipeline">GreenGuardPipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#dracopipeline">DracoPipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="csv.html">CSV Format</a><ul>
@@ -129,15 +128,15 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Docker Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#building-the-greenguard-docker-image">Building the GreenGuard Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#distributing-the-greenguard-docker-image">Distributing the GreenGuard Docker Image</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#building-the-draco-docker-image">Building the Draco Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distributing-the-draco-docker-image">Distributing the Draco Docker Image</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#distributing-using-a-docker-registry">Distributing using a Docker registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#distributing-as-a-file">Distributing as a file</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#running-the-greenguard-jupyter-image">Running the greenguard-jupyter image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#running-greenguard-jupyter-with-the-code">Running greenguard-jupyter with the code</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#running-greenguard-jupyter-without-the-greenguard-code">Running greenguard-jupyter without the greenguard code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-draco-jupyter-image">Running the draco-jupyter image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-draco-jupyter-with-the-code">Running draco-jupyter with the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-draco-jupyter-without-the-draco-code">Running draco-jupyter without the draco code</a></li>
 </ul>
 </li>
 </ul>
@@ -206,7 +205,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">GreenGuard</a>
+          <a href="../index.html">Draco</a>
         
       </nav>
 
@@ -244,7 +243,7 @@
         
             
             
-              <a href="https://github.com/D3-AI/GreenGuard/blob/master/docs/advanced_usage/docker.md" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/sintel-dev/Draco/blob/master/docs/advanced_usage/docker.md" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -284,42 +283,42 @@
 </style>
 <section id="docker-usage">
 <h1>Docker Usage<a class="headerlink" href="#docker-usage" title="Permalink to this headline">¶</a></h1>
-<p><strong>GreenGuard</strong> comes configured and ready to be distributed and run as a docker image which starts
-a jupyter notebook already configured to use greenguard, with all the required dependencies already
+<p><strong>Draco</strong> comes configured and ready to be distributed and run as a docker image which starts
+a jupyter notebook already configured to use draco, with all the required dependencies already
 installed.</p>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>The only requirement in order to run the GreenGuard Docker image is to have Docker installed and
+<p>The only requirement in order to run the Draco Docker image is to have Docker installed and
 that the user has enough permissions to run it.</p>
 <p>Installation instructions for any possible system compatible can be found <a class="reference external" href="https://docs.docker.com/install/">here</a></p>
-<p>Additionally, the system that builds the GreenGuard Docker image will also need to have a working
+<p>Additionally, the system that builds the Draco Docker image will also need to have a working
 internet connection that allows downloading the base image and the additional python depenedencies.</p>
 </section>
-<section id="building-the-greenguard-docker-image">
-<h2>Building the GreenGuard Docker Image<a class="headerlink" href="#building-the-greenguard-docker-image" title="Permalink to this headline">¶</a></h2>
-<p>After having cloned the <strong>GreenGuard</strong> repository, all you have to do in order to build the GreenGuard Docker
+<section id="building-the-draco-docker-image">
+<h2>Building the Draco Docker Image<a class="headerlink" href="#building-the-draco-docker-image" title="Permalink to this headline">¶</a></h2>
+<p>After having cloned the <strong>Draco</strong> repository, all you have to do in order to build the Draco Docker
 Image is running this command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-build
 </pre></div>
 </div>
-<p>After a few minutes, the new image, called <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code>, will have been built into the system
+<p>After a few minutes, the new image, called <code class="docutils literal notranslate"><span class="pre">draco-jupyter</span></code>, will have been built into the system
 and will be ready to be used or distributed.</p>
 </section>
-<section id="distributing-the-greenguard-docker-image">
-<h2>Distributing the GreenGuard Docker Image<a class="headerlink" href="#distributing-the-greenguard-docker-image" title="Permalink to this headline">¶</a></h2>
-<p>Once the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image is built, it can be distributed in several ways.</p>
+<section id="distributing-the-draco-docker-image">
+<h2>Distributing the Draco Docker Image<a class="headerlink" href="#distributing-the-draco-docker-image" title="Permalink to this headline">¶</a></h2>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">draco-jupyter</span></code> image is built, it can be distributed in several ways.</p>
 <section id="distributing-using-a-docker-registry">
 <h3>Distributing using a Docker registry<a class="headerlink" href="#distributing-using-a-docker-registry" title="Permalink to this headline">¶</a></h3>
 <p>The simplest way to distribute the recently created image is <a class="reference external" href="https://docs.docker.com/registry/">using a registry</a>.</p>
 <p>In order to do so, we will need to have write access to a public or private registry (remember to
 <a class="reference external" href="https://docs.docker.com/engine/reference/commandline/login/">login</a>!) and execute these commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker tag greenguard-jupyter:latest your-registry-name:some-tag
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker tag draco-jupyter:latest your-registry-name:some-tag
 docker push your-registry-name:some-tag
 </pre></div>
 </div>
 <p>Afterwards, in the receiving machine:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker pull your-registry-name:some-tag
-docker tag your-registry-name:some-tag greenguard-jupyter:latest
+docker tag your-registry-name:some-tag draco-jupyter:latest
 </pre></div>
 </div>
 </section>
@@ -328,24 +327,24 @@ docker tag your-registry-name:some-tag greenguard-jupyter:latest
 <p>If the distribution of the image has to be done offline for any reason, it can be achieved
 using the following command.</p>
 <p>In the system that already has the image:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker save --output greenguard-jupyter.tar greenguard-jupyter
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker save --output draco-jupyter.tar draco-jupyter
 </pre></div>
 </div>
-<p>Then copy over the file <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter.tar</span></code> to the new system and there, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker load --input greenguard-jupyter.tar
+<p>Then copy over the file <code class="docutils literal notranslate"><span class="pre">draco-jupyter.tar</span></code> to the new system and there, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker load --input draco-jupyter.tar
 </pre></div>
 </div>
-<p>After these commands, the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image should be available and ready to be used in the
+<p>After these commands, the <code class="docutils literal notranslate"><span class="pre">draco-jupyter</span></code> image should be available and ready to be used in the
 new system.</p>
 </section>
 </section>
-<section id="running-the-greenguard-jupyter-image">
-<h2>Running the greenguard-jupyter image<a class="headerlink" href="#running-the-greenguard-jupyter-image" title="Permalink to this headline">¶</a></h2>
-<p>Once the <code class="docutils literal notranslate"><span class="pre">greenguard-jupyter</span></code> image has been built, pulled or loaded, it is ready to be run.</p>
+<section id="running-the-draco-jupyter-image">
+<h2>Running the draco-jupyter image<a class="headerlink" href="#running-the-draco-jupyter-image" title="Permalink to this headline">¶</a></h2>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">draco-jupyter</span></code> image has been built, pulled or loaded, it is ready to be run.</p>
 <p>This can be done in two ways:</p>
-<section id="running-greenguard-jupyter-with-the-code">
-<h3>Running greenguard-jupyter with the code<a class="headerlink" href="#running-greenguard-jupyter-with-the-code" title="Permalink to this headline">¶</a></h3>
-<p>If the GreenGuard source code is available in the system, running the image is as simple as running
+<section id="running-draco-jupyter-with-the-code">
+<h3>Running draco-jupyter with the code<a class="headerlink" href="#running-draco-jupyter-with-the-code" title="Permalink to this headline">¶</a></h3>
+<p>If the Draco source code is available in the system, running the image is as simple as running
 this command from within the root of the project:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make docker-jupyter-run
 </pre></div>
@@ -357,11 +356,11 @@ which means that any changes that you do in your local code will immediately be 
 within your notebooks, and that any notebook that you create within jupyter will also show
 up in your <code class="docutils literal notranslate"><span class="pre">notebooks</span></code> folder!</p>
 </section>
-<section id="running-greenguard-jupyter-without-the-greenguard-code">
-<h3>Running greenguard-jupyter without the greenguard code<a class="headerlink" href="#running-greenguard-jupyter-without-the-greenguard-code" title="Permalink to this headline">¶</a></h3>
-<p>If the GreenGuard source code is not available in the system and only the Docker Image is, you can
+<section id="running-draco-jupyter-without-the-draco-code">
+<h3>Running draco-jupyter without the draco code<a class="headerlink" href="#running-draco-jupyter-without-the-draco-code" title="Permalink to this headline">¶</a></h3>
+<p>If the Draco source code is not available in the system and only the Docker Image is, you can
 still run the image by using this command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti -p8888:8888 greenguard-jupyter
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -ti -p8888:8888 draco-jupyter
 </pre></div>
 </div>
 <p>In this case, the code changes and the notebooks that you create within jupyter will stay

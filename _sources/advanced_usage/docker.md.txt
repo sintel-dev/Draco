@@ -1,34 +1,34 @@
 # Docker Usage
 
-**GreenGuard** comes configured and ready to be distributed and run as a docker image which starts
-a jupyter notebook already configured to use greenguard, with all the required dependencies already
+**Draco** comes configured and ready to be distributed and run as a docker image which starts
+a jupyter notebook already configured to use draco, with all the required dependencies already
 installed.
 
 ## Requirements
 
-The only requirement in order to run the GreenGuard Docker image is to have Docker installed and
+The only requirement in order to run the Draco Docker image is to have Docker installed and
 that the user has enough permissions to run it.
 
 Installation instructions for any possible system compatible can be found [here](https://docs.docker.com/install/)
 
-Additionally, the system that builds the GreenGuard Docker image will also need to have a working
+Additionally, the system that builds the Draco Docker image will also need to have a working
 internet connection that allows downloading the base image and the additional python depenedencies.
 
-## Building the GreenGuard Docker Image
+## Building the Draco Docker Image
 
-After having cloned the **GreenGuard** repository, all you have to do in order to build the GreenGuard Docker
+After having cloned the **Draco** repository, all you have to do in order to build the Draco Docker
 Image is running this command:
 
 ```bash
 make docker-jupyter-build
 ```
 
-After a few minutes, the new image, called `greenguard-jupyter`, will have been built into the system
+After a few minutes, the new image, called `draco-jupyter`, will have been built into the system
 and will be ready to be used or distributed.
 
-## Distributing the GreenGuard Docker Image
+## Distributing the Draco Docker Image
 
-Once the `greenguard-jupyter` image is built, it can be distributed in several ways.
+Once the `draco-jupyter` image is built, it can be distributed in several ways.
 
 ### Distributing using a Docker registry
 
@@ -38,7 +38,7 @@ In order to do so, we will need to have write access to a public or private regi
 [login](https://docs.docker.com/engine/reference/commandline/login/)!) and execute these commands:
 
 ```bash
-docker tag greenguard-jupyter:latest your-registry-name:some-tag
+docker tag draco-jupyter:latest your-registry-name:some-tag
 docker push your-registry-name:some-tag
 ```
 
@@ -46,7 +46,7 @@ Afterwards, in the receiving machine:
 
 ```bash
 docker pull your-registry-name:some-tag
-docker tag your-registry-name:some-tag greenguard-jupyter:latest
+docker tag your-registry-name:some-tag draco-jupyter:latest
 ```
 
 ### Distributing as a file
@@ -57,28 +57,28 @@ using the following command.
 In the system that already has the image:
 
 ```bash
-docker save --output greenguard-jupyter.tar greenguard-jupyter
+docker save --output draco-jupyter.tar draco-jupyter
 ```
 
-Then copy over the file `greenguard-jupyter.tar` to the new system and there, run:
+Then copy over the file `draco-jupyter.tar` to the new system and there, run:
 
 ```bash
-docker load --input greenguard-jupyter.tar
+docker load --input draco-jupyter.tar
 ```
 
-After these commands, the `greenguard-jupyter` image should be available and ready to be used in the
+After these commands, the `draco-jupyter` image should be available and ready to be used in the
 new system.
 
 
-## Running the greenguard-jupyter image
+## Running the draco-jupyter image
 
-Once the `greenguard-jupyter` image has been built, pulled or loaded, it is ready to be run.
+Once the `draco-jupyter` image has been built, pulled or loaded, it is ready to be run.
 
 This can be done in two ways:
 
-### Running greenguard-jupyter with the code
+### Running draco-jupyter with the code
 
-If the GreenGuard source code is available in the system, running the image is as simple as running
+If the Draco source code is available in the system, running the image is as simple as running
 this command from within the root of the project:
 
 ```bash
@@ -93,13 +93,13 @@ which means that any changes that you do in your local code will immediately be 
 within your notebooks, and that any notebook that you create within jupyter will also show
 up in your `notebooks` folder!
 
-### Running greenguard-jupyter without the greenguard code
+### Running draco-jupyter without the draco code
 
-If the GreenGuard source code is not available in the system and only the Docker Image is, you can
+If the Draco source code is not available in the system and only the Docker Image is, you can
 still run the image by using this command:
 
 ```bash
-docker run -ti -p8888:8888 greenguard-jupyter
+docker run -ti -p8888:8888 draco-jupyter
 ```
 
 In this case, the code changes and the notebooks that you create within jupyter will stay
