@@ -1,8 +1,8 @@
-"""Tests for `greenguard.benchmark` module."""
+"""Tests for `draco.benchmark` module."""
 import numpy as np
 
-from greenguard.benchmark import evaluate_templates
-from greenguard.demo import load_demo
+from draco.benchmark import evaluate_templates
+from draco.demo import load_demo
 
 
 def test_predict():

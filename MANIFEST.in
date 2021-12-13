@@ -4,7 +4,7 @@ include HISTORY.md
 include LICENSE
 include README.md
 
-recursive-include greenguard *.json
+recursive-include draco *.json
 
 recursive-include tests *
 recursive-exclude * __pycache__

@@ -4,7 +4,7 @@ import os
 import dask
 import pandas as pd
 
-from greenguard.targets import drop_duplicates, select_valid_targets
+from draco.targets import drop_duplicates, select_valid_targets
 
 LOGGER = logging.getLogger(__name__)
 

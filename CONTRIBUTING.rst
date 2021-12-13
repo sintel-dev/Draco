@@ -38,8 +38,8 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-GreenGuard could always use more documentation, whether as part of the
-official GreenGuard docs, in docstrings, or even on the web in blog posts,
+Draco could always use more documentation, whether as part of the
+official Draco docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
@@ -57,18 +57,18 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `GreenGuard` for local development.
+Ready to contribute? Here's how to set up `Draco` for local development.
 
-1. Fork the `GreenGuard` repo on GitHub.
+1. Fork the `Draco` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/GreenGuard.git
+    $ git clone git@github.com:your_name_here/Draco.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed,
    this is how you set up your fork for local development::
 
-    $ mkvirtualenv GreenGuard
-    $ cd GreenGuard/
+    $ mkvirtualenv Draco
+    $ cd Draco/
     $ make install-develop
 
 4. Create a branch for local development::
@@ -133,9 +133,9 @@ All the Unit Tests should comply with the following requirements:
 
 1. Unit Tests should be based only in unittest and pytest modules.
 
-2. The tests that cover a module called ``greenguard/path/to/a_module.py``
+2. The tests that cover a module called ``draco/path/to/a_module.py``
    should be implemented in a separated module called
-   ``tests/greenguard/path/to/test_a_module.py``.
+   ``tests/draco/path/to/test_a_module.py``.
    Note that the module name has the ``test_`` prefix and is located in a path similar
    to the one of the tested module, just inside the ``tests`` folder.
 
@@ -165,7 +165,7 @@ Tips
 
 To run a subset of tests::
 
-    $ python -m pytest tests.test_greenguard
+    $ python -m pytest tests.test_draco
     $ python -m pytest -k 'foo'
 
 Release Workflow
@@ -175,11 +175,11 @@ The process of releasing a new version involves several steps combining both ``g
 ``bumpversion`` which, briefly:
 
 1. Merge what is in ``master`` branch into ``stable`` branch.
-2. Update the version in ``setup.cfg``, ``greenguard/__init__.py`` and
+2. Update the version in ``setup.cfg``, ``draco/__init__.py`` and
    ``HISTORY.md`` files.
 3. Create a new git tag pointing at the corresponding commit in ``stable`` branch.
 4. Merge the new commit from ``stable`` into ``master``.
-5. Update the version in ``setup.cfg`` and ``greenguard/__init__.py``
+5. Update the version in ``setup.cfg`` and ``draco/__init__.py``
    to open the next development iteration.
 
 .. note:: Before starting the process, make sure that ``HISTORY.md`` has been updated with a new
@@ -223,15 +223,15 @@ dependency specification, either in ``setup.py``::
 
     install_requires = [
         ...
-        'greenguard>=X.Y.Z.dev',
+        'draco>=X.Y.Z.dev',
         ...
     ]
 
 or in command line::
 
-    pip install 'greenguard>=X.Y.Z.dev'
+    pip install 'draco>=X.Y.Z.dev'
 
 
-.. _GitHub issues page: https://github.com/D3-AI/GreenGuard/issues
-.. _Travis Build Status page: https://travis-ci.org/D3-AI/GreenGuard/pull_requests
+.. _GitHub issues page: https://github.com/sintel-dev/Draco/issues
+.. _Travis Build Status page: https://travis-ci.org/sintel-dev/Draco/pull_requests
 .. _Google docstrings style: https://google.github.io/styleguide/pyguide.html?showone=Comments#Comments

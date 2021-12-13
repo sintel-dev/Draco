@@ -14,13 +14,12 @@ import tabulate
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
-from greenguard import get_pipelines
-from greenguard.demo import load_demo
-from greenguard.loaders import CSVLoader
-from greenguard.metrics import (METRICS, accuracy_score, f1_score,
-                                fpr_score, tpr_score, threshold_score)
-from greenguard.pipeline import GreenGuardPipeline, generate_init_params, generate_preprocessing
-from greenguard.results import load_results, write_results
+from draco import get_pipelines
+from draco.demo import load_demo
+from draco.loaders import CSVLoader
+from draco.metrics import METRICS, accuracy_score, f1_score, fpr_score, tpr_score, threshold_score
+from draco.pipeline import DracoPipeline, generate_init_params, generate_preprocessing
+from draco.results import load_results, write_results
 
 LOGGER = logging.getLogger(__name__)
 
@@ -134,7 +133,7 @@ def evaluate_template(
 
         metric (function or str):
             Metric to use. If an ``str`` is give it must be one of the metrics
-            defined in the ``greenguard.metrics.METRICS`` dictionary.
+            defined in the ``draco.metrics.METRICS`` dictionary.
         tuning_iterations (int):
             Number of iterations to be used.
         preprocessing (int, list or dict):
@@ -164,7 +163,7 @@ def evaluate_template(
 
     train, test = train_test_split(target_times, test_size=test_size, random_state=random_state)
 
-    pipeline = GreenGuardPipeline(
+    pipeline = DracoPipeline(
         template,
         metric=tuning_metric,
         cost=cost,
@@ -286,7 +285,7 @@ def evaluate_templates(
             List of tuples (int, str or Timedelta object).
         metric (function or str):
             Metric to use. If an ``str`` is give it must be one of the metrics
-            defined in the ``greenguard.metrics.METRICS`` dictionary.
+            defined in the ``draco.metrics.METRICS`` dictionary.
         tuning_iterations (int):
             Number of iterations to be used.
         init_params (dict):
@@ -625,7 +624,7 @@ def run_benchmark(templates, problems, window_size_resample_rule=None,
             Defaults to ``None``.
         metric (function or str):
             Metric to use. If an ``str`` is give it must be one of the metrics
-            defined in the ``greenguard.metrics.METRICS`` dictionary.
+            defined in the ``draco.metrics.METRICS`` dictionary.
         cost (bool):
             Whether the metric is a cost function (the lower the better) or not.
             Defaults to ``False``.
@@ -826,13 +825,13 @@ def _make_problems(args):
 
 
 def _get_parser():
-    parser = argparse.ArgumentParser(description='GreenGuard Benchmark Command Line Interface.')
+    parser = argparse.ArgumentParser(description='Draco Benchmark Command Line Interface.')
     parser.set_defaults(action=None)
     action = parser.add_subparsers(title='action')
     action.required = True
 
     # Run action
-    run = action.add_parser('run', help='Run the GreenGuard Benchmark')
+    run = action.add_parser('run', help='Run the Draco Benchmark')
     run.set_defaults(action=_run)
     run.set_defaults(user=None)
 
@@ -878,13 +877,13 @@ def _get_parser():
 
     # Summarize action
     summary = action.add_parser('summarize-results',
-                                help='Summarize the GreenGuard Benchmark results')
+                                help='Summarize the Draco Benchmark results')
     summary.set_defaults(action=_summarize_results)
     summary.add_argument('input', nargs='+', help='Input path with results.')
     summary.add_argument('output', help='Output file.')
 
     # Make problems action
-    problems = action.add_parser('make-problems', help='Create GreenGuard problems')
+    problems = action.add_parser('make-problems', help='Create Draco problems')
     problems.set_defaults(action=_make_problems)
     problems.add_argument('target-times-paths', nargs='+', help='List of target times paths.')
     problems.add_argument('readings-path', type=str, help='Path to the readings folder.')

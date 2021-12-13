@@ -106,7 +106,7 @@ ENV/
 # Vim
 .*.swp
 
-greenguard/demo/
+draco/demo/
 notebooks/
 notebooks-private/
 scripts/

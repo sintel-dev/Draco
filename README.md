@@ -4,7 +4,7 @@
 </p>
 
 <p align="left">
-<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt="GreenGuard" />
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2019/03/GreenGuard.png" alt="Draco" />
 </p>
 
 <p align="left">
@@ -12,23 +12,23 @@ AutoML for Renewable Energy Industries.
 </p>
 
 
-[![PyPI Shield](https://img.shields.io/pypi/v/greenguard.svg)](https://pypi.python.org/pypi/greenguard)
-[![Travis CI Shield](https://travis-ci.org/signals-dev/GreenGuard.svg?branch=master)](https://travis-ci.org/signals-dev/GreenGuard)
-[![Downloads](https://pepy.tech/badge/greenguard)](https://pepy.tech/project/greenguard)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/signals-dev/GreenGuard/master?filepath=tutorials)
+[![PyPI Shield](https://img.shields.io/pypi/v/draco-ml.svg)](https://pypi.python.org/pypi/draco-ml)
+[![Tests](https://github.com/sintel-dev/Draco/workflows/Run%20Tests/badge.svg)](https://github.com/sintel-dev/Draco/actions?query=workflow%3A%22Run+Tests%22+branch%3Amaster)
+[![Downloads](https://pepy.tech/badge/draco-ml)](https://pepy.tech/project/draco-ml)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sintel-dev/Draco/master?filepath=tutorials)
 <!--
-[![Coverage Status](https://codecov.io/gh/signals-dev/GreenGuard/branch/master/graph/badge.svg)](https://codecov.io/gh/signals-dev/GreenGuard)
+[![Coverage Status](https://codecov.io/gh/sintel-dev/Draco/branch/master/graph/badge.svg)](https://codecov.io/gh/sintel-dev/Draco)
 -->
 
-# GreenGuard
+# Draco
 
-- License: [MIT](https://github.com/signals-dev/GreenGuard/blob/master/LICENSE)
-- Documentation: https://signals-dev.github.io/GreenGuard
-- Homepage: https://github.com/signals-dev/GreenGuard
+- License: [MIT](https://github.com/sintel-dev/Draco/blob/master/LICENSE)
+- Documentation: https://sintel-dev.github.io/Draco
+- Homepage: https://github.com/sintel-dev/Draco
 
 ## Overview
 
-The GreenGuard project is a collection of end-to-end solutions for machine learning problems
+The Draco project is a collection of end-to-end solutions for machine learning problems
 commonly found in monitoring wind energy production systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
 automation of machine Learning at Data to AI Lab at MIT.
@@ -47,40 +47,35 @@ The salient aspects of this customized project are:
 ## Resources
 
 * [Data Format](DATA_FORMAT.md).
-* [GreenGuard folder structure](DATA_FORMAT.md#folder-structure).
+* [Draco folder structure](DATA_FORMAT.md#folder-structure).
 
 # Install
 
 ## Requirements
 
-**GreenGuard** has been developed and runs on Python 3.6, 3.7 and 3.8.
+**Draco** has been developed and runs on Python 3.6, 3.7 and 3.8.
 
 Also, although it is not strictly required, the usage of a [virtualenv](
 https://virtualenv.pypa.io/en/latest/) is highly recommended in order to avoid interfering
-with other software installed in the system where you are trying to run **GreenGuard**.
+with other software installed in the system where you are trying to run **Draco**.
 
 ## Download and Install
 
-**GreenGuard** can be installed locally using [pip](https://pip.pypa.io/en/stable/) with
+**Draco** can be installed locally using [pip](https://pip.pypa.io/en/stable/) with
 the following command:
 
 ```bash
-pip install greenguard
+pip install draco-ml
 ```
 
 This will pull and install the latest stable release from [PyPi](https://pypi.org/).
 
 If you want to install from source or contribute to the project please read the
-[Contributing Guide](https://signals-dev.github.io/GreenGuard/contributing.html#get-started).
-
-## Docker usage
-
-**GreenGuard** is prepared to be run inside a docker environment. Please check the
-[docker documentation](docker/README.md) for details about how to run **GreenGuard** using docker.
+[Contributing Guide](https://sintel-dev.github.io/Draco/contributing.html#get-started).
 
 # Data Format
 
-The minimum input expected by the **GreenGuard** system consists of the following two elements,
+The minimum input expected by the **Draco** system consists of the following two elements,
 which need to be passed as `pandas.DataFrame` objects:
 
 ## Target Times
@@ -138,23 +133,23 @@ an arbitraty number of additional fields.
 ## CSV Format
 
 A part from the in-memory data format explained above, which is limited by the memory
-allocation capabilities of the system where it is run, **GreenGuard** is also prepared to
+allocation capabilities of the system where it is run, **Draco** is also prepared to
 load and work with data stored as a collection of CSV files, drastically increasing the amount
 of data which it can work with. Further details about this format can be found in the
 [project documentation site](DATA_FORMAT.md#csv-format).
 
 # Quickstart
 
-In this example we will load some demo data and classify it using a **GreenGuard Pipeline**.
+In this example we will load some demo data and classify it using a **Draco Pipeline**.
 
 ## 1. Load and split the demo data
 
 The first step is to load the demo data.
 
-For this, we will import and call the `greenguard.demo.load_demo` function without any arguments:
+For this, we will import and call the `draco.demo.load_demo` function without any arguments:
 
 ```python3
-from greenguard.demo import load_demo
+from draco.demo import load_demo
 
 target_times, readings = load_demo()
 ```
@@ -212,17 +207,17 @@ test_targets = test.pop('target')
 
 Once we have the data ready, we need to find a suitable pipeline.
 
-The list of available GreenGuard Pipelines can be obtained using the `greenguard.get_pipelines`
+The list of available Draco Pipelines can be obtained using the `draco.get_pipelines`
 function.
 
 ```python3
-from greenguard import get_pipelines
+from draco import get_pipelines
 
 pipelines = get_pipelines()
 ```
 
 The returned `pipeline` variable will be `list` containing the names of all the pipelines
-available in the GreenGuard system:
+available in the Draco system:
 
 ```
 ['classes.unstack_double_lstm_timeseries_classifier',
@@ -244,13 +239,13 @@ pipeline_name = 'classes.normalize_dfs_xgb_classifier'
 Once we have loaded the data and selected the pipeline that we will use, we have to
 fit it.
 
-For this, we will create an instance of a `GreenGuardPipeline` object passing the name
+For this, we will create an instance of a `DracoPipeline` object passing the name
 of the pipeline that we want to use:
 
 ```python3
-from greenguard.pipeline import GreenGuardPipeline
+from draco.pipeline import DracoPipeline
 
-pipeline = GreenGuardPipeline(pipeline_name)
+pipeline = DracoPipeline(pipeline_name)
 ```
 
 And then we can directly fit it to our data by calling its `fit` method and passing in the
@@ -283,7 +278,7 @@ f1_score(test_targets, predictions)
 
 ## What's next?
 
-For more details about **GreenGuard** and all its possibilities and features, please check the
-[project documentation site](https://signals-dev.github.io/GreenGuard/)
+For more details about **Draco** and all its possibilities and features, please check the
+[project documentation site](https://sintel-dev.github.io/Draco/)
 Also do not forget to have a look at the [tutorials](
-https://github.com/signals-dev/GreenGuard/tree/master/tutorials)!
+https://github.com/sintel-dev/Draco/tree/master/tutorials)!

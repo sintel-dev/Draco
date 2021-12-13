@@ -28,10 +28,10 @@ def _load_or_download(filename, dates):
 
 
 def load_demo(load_readings=True):
-    """Load the demo included in the GreenGuard project.
+    """Load the demo included in the Draco project.
 
     The first time that this function is executed, the data will be downloaded
-    and cached inside the `greenguard/demo` folder.
+    and cached inside the `draco/demo` folder.
     Subsequent calls will load the cached data instead of downloading it again.
 
     Returns:
