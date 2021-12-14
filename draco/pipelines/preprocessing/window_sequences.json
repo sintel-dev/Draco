@@ -1,7 +1,5 @@
 {
     "primitives": [
-        "pandas.DataFrame.resample",
-        "pandas.DataFrame.unstack",
         "pandas.DataFrame.pop",
         "pandas.DataFrame.pop",
         "sklearn.impute.SimpleImputer",
@@ -10,23 +8,8 @@
         "pandas.DataFrame.set",
         "pandas.DataFrame.set",
         "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
-        "keras.Sequential.DoubleLSTMTimeSeriesClassifier"
     ],
     "init_params": {
-        "pandas.DataFrame.resample#1": {
-            "rule": "3600s",
-            "on": "timestamp",
-            "groupby": [
-                "turbine_id",
-                "signal_id"
-            ],
-            "aggregation": "mean",
-            "reset_index": false
-        },
-        "pandas.DataFrame.unstack#1": {
-            "level": "signal_id",
-            "reset_index": true
-        },
         "pandas.DataFrame.pop#1": {
             "item": "turbine_id"
         },
@@ -50,26 +33,12 @@
             "key": "timestamp"
         },
         "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
-            "window_size": 72,
+            "window_size": 24,
             "cutoff_time": "cutoff_time",
             "time_index": "timestamp"
-        },
-        "keras.Sequential.DoubleLSTMTimeSeriesClassifier": {
-            "epochs": 20,
-            "verbose": true,
-            "input_shape": [
-                72,
-                97
-            ]
         }
     },
     "input_names": {
-        "pandas.DataFrame.resample#1": {
-            "X": "readings"
-        },
-        "pandas.DataFrame.unstack#1": {
-            "X": "readings"
-        },
         "pandas.DataFrame.pop#1": {
             "X": "readings"
         },
@@ -98,12 +67,6 @@
         }
     },
     "output_names": {
-        "pandas.DataFrame.resample#1": {
-            "X": "readings"
-        },
-        "pandas.DataFrame.unstack#1": {
-            "X": "readings"
-        },
         "pandas.DataFrame.pop#1": {
             "item": "turbine_id"
         },

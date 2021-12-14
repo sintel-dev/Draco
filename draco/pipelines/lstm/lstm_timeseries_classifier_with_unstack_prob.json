@@ -1,0 +1,42 @@
+{
+    "primitives": [
+        "mlblocks.MLPipeline",
+        "mlblocks.MLPipeline",
+        "keras.Sequential.LSTMTimeSeriesClassifier",
+        "numpy.take"
+    ],
+    "init_params": {
+        "mlblocks.MLPipeline#1": {
+            "pipeline": "preprocessing.unstack",
+            "input_names": {
+                "pandas.DataFrame.resample#1": {
+                    "X": "df"
+                },
+                "pandas.DataFrame.unstack#1": {
+                    "X": "readings"
+                }
+            }
+        },
+        "mlblocks.MLPipeline#2": {
+            "pipeline": "preprocessing.window_sequences",
+        },
+        "keras.Sequential.LSTMTimeSeriesClassifier#1": {
+            "epochs": 35,
+            "verbose": false,
+            "classification": false,
+            "loss": "keras.losses.binary_crossentropy"
+        },
+        "numpy.take#1": {
+            "indices": 1,
+            "axis": 1
+        }
+    },
+    "input_names": {
+        "mlblocks.MLPipeline#1": {
+            "X": "readings"
+        },
+        "mlblocks.MLPipeline#2": {
+            "X": "readings"
+        }
+    }
+}

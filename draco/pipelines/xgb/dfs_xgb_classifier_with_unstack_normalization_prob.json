@@ -1,0 +1,49 @@
+{
+    "primitives": [
+        "mlblocks.MLPipeline",
+        "mlblocks.MLPipeline",
+        "featuretools.dfs",
+        "mlprimitives.custom.feature_extraction.CategoricalEncoder",
+        "xgboost.XGBClassifier:probabilities",
+        "numpy.take"
+    ],
+    "init_params": {
+        "mlblocks.MLPipeline#1": {
+            "pipeline": "preprocessing.unstack",
+            "input_names": {
+                "pandas.DataFrame.resample#1": {
+                    "X": "df"
+                },
+                "pandas.DataFrame.unstack#1": {
+                    "X": "readings"
+                }
+            }
+        },
+        "mlblocks.MLPipeline#2": {
+            "pipeline": "preprocessing.entity_normalization"
+        },
+        "featuretools.dfs#1": {
+            "target_entity": "turbines",
+            "index": "turbine_id",
+            "time_index": "cutoff_time",
+            "encode": false,
+            "max_depth": -1,
+            "copy": true,
+            "verbose": false,
+            "n_jobs": 1,
+            "training_window": "1d"
+        },
+        "numpy.take#1": {
+            "indices": 1,
+            "axis": 1
+        }
+    },
+    "input_names": {
+        "mlblocks.MLPipeline#1": {
+            "X": "readings"
+        },
+        "mlblocks.MLPipeline#2": {
+            "dataframe": "readings"
+        }
+    }
+}

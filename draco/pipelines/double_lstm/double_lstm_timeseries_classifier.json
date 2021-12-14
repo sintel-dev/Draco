@@ -1,0 +1,20 @@
+{
+    "primitives": [
+        "mlblocks.MLPipeline",
+        "keras.Sequential.DoubleLSTMTimeSeriesClassifier"
+    ],
+    "init_params": {
+        "mlblocks.MLPipeline#1": {
+            "pipeline": "preprocessing.window_sequences",
+        },
+        "keras.Sequential.DoubleLSTMTimeSeriesClassifier#1": {
+            "epochs": 35,
+            "verbose": false
+        }
+    },
+    "input_names": {
+        "mlblocks.MLPipeline#1": {
+            "X": "readings"
+        }
+    }
+}
