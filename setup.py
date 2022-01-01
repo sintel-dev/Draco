@@ -114,6 +114,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/sintel-dev/Draco',
-    version='0.1.0.dev1',
+    version='0.1.0',
     zip_safe=False,
 )
