@@ -17,7 +17,7 @@ except IOError:
 
 install_requires = [
     'baytune>=0.4.0,<0.5',
-    'mlprimitives>=0.3.0,<0.4',
+    'mlprimitives>=0.3.2,<0.4',
     'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21',
@@ -31,7 +31,6 @@ install_requires = [
     'dask>=2.6.0,<3',
     'distributed>=2.6.0,<3',
     'h5py<2.11.0,>=2.10.0',  # fix tensorflow requirement
-    'Keras>=2.4',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
 ]
@@ -58,6 +57,7 @@ development_requires = [
     'nbsphinx>=0.5.0,<0.7',
     'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4,<0.5',
+    'docutils>=0.14,<0.18',
     'autodocsumm>=0.1.10',
 
     # style check
@@ -87,15 +87,14 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
     description='AutoML for Renewable Energy Industries.',
     entry_points={
         'mlblocks': [
-            'pipelines=greenguard:MLBLOCKS_PIPELINES',
-            'primitives=greenguard:MLBLOCKS_PRIMITIVES'
+            'pipelines=draco:MLBLOCKS_PIPELINES',
+            'primitives=draco:MLBLOCKS_PRIMITIVES'
         ],
     },
     extras_require={
@@ -104,17 +103,17 @@ setup(
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='wind machine learning greenguard',
+    keywords='wind machine learning draco',
     license='MIT license',
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
-    name='greenguard',
-    packages=find_packages(include=['greenguard', 'greenguard.*']),
-    python_requires='>=3.6,<3.9',
+    name='draco-ml',
+    packages=find_packages(include=['draco', 'draco.*']),
+    python_requires='>=3.7,<3.9',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
-    url='https://github.com/D3-AI/GreenGuard',
-    version='0.3.0',
+    url='https://github.com/sintel-dev/Draco',
+    version='0.1.0.dev1',
     zip_safe=False,
 )

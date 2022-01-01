@@ -1,8 +1,8 @@
-# GreenGuard Data Format
+# Draco Data Format
 
 ## Input
 
-The minimum input expected by the **GreenGuard** system consists of the following two elements,
+The minimum input expected by the **Draco** system consists of the following two elements,
 which need to be passed as `pandas.DataFrame` objects:
 
 ### Target Times
@@ -60,7 +60,7 @@ an arbitraty number of additional fields.
 
 ## CSV Format
 
-As explained in a previous section, the input expected by the **GreenGuard** system consists of
+As explained in a previous section, the input expected by the **Draco** system consists of
 two tables which need to be passed as `pandas.DataFrame` objects:
 
 * The `target_times` table, which containing the specification of the problem that we are solving
@@ -69,11 +69,11 @@ two tables which need to be passed as `pandas.DataFrame` objects:
   `turbine_id`, `signal_id`, `timestamp` and `value` fields.
 
 However, in most scenarios the size of the available will far exceed the memory limitations
-of the system on which **GreenGuard** is being run, so loading all the data in a single
+of the system on which **Draco** is being run, so loading all the data in a single
 `pandas.DataFrame` will not be possible.
 
-In order to solve this situation, **GreenGuard** provides a [CSVLoader](
-https://d3-ai.github.io/GreenGuard/api/greenguard.loaders.csv.html#greenguard.loaders.csv.CSVLoader)
+In order to solve this situation, **Draco** provides a [CSVLoader](
+https://sintel-dev.github.io/Draco/api/draco.loaders.csv.html#draco.loaders.csv.CSVLoader)
 class which can be used to load data from what we call the **Raw Data Format**.
 
 ### Raw Data Format

@@ -89,10 +89,10 @@ install-minimum: ## install the minimum supported versions of the package depend
 
 # LINT TARGETS
 
-.PHONY: lint-greenguard
+.PHONY: lint-draco
 lint-btb: ## check style with flake8 and isort
-	flake8 greenguard
-	isort -c --recursive greenguard
+	flake8 draco
+	isort -c --recursive draco
 
 .PHONY: lint-tests
 lint-tests: ## check style with flake8 and isort
@@ -104,19 +104,19 @@ check-dependencies: ## test if there are any broken dependencies
 	pip check
 
 .PHONY: lint
-lint: check-dependencies lint-greenguard lint-tests ## Run all code style and static testing validations
+lint: check-dependencies lint-draco lint-tests ## Run all code style and static testing validations
 
 .PHONY: fix-lint
 fix-lint: ## fix lint issues using autoflake, autopep8, and isort
-	find greenguard -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
-	autopep8 --in-place --recursive --aggressive greenguard
-	isort --apply --atomic --recursive greenguard tests
+	find draco -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+	autopep8 --in-place --recursive --aggressive draco
+	isort --apply --atomic --recursive draco tests
 
 # TEST TARGETS
 
 .PHONY: test-unit
 test-unit: ## run tests quickly with the default Python
-	python -m pytest --cov=greenguard
+	python -m pytest --cov=draco
 
 .PHONY: test-readme
 test-readme: ## run the readme snippets
@@ -141,7 +141,7 @@ test-all: ## run tests on every Python version with tox
 
 .PHONY: coverage
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source greenguard -m pytest
+	coverage run --source draco -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
@@ -272,7 +272,7 @@ release-candidate-test: check-clean check-master publish-test
 
 .PHONY: docker-build
 docker-build:
-	docker build -f docker/Dockerfile -t greenguard .
+	docker build -f docker/Dockerfile -t draco .
 
 .PHONY: docker-login
 docker-login:
@@ -280,8 +280,8 @@ docker-login:
 
 .PHONY: docker-push
 docker-push: docker-login docker-build
-	@$(eval VERSION := $(shell python -c 'import greenguard; print(greenguard.__version__)'))
-	docker tag greenguard signalsdev/greenguard:$(VERSION)
-	docker push signalsdev/greenguard:$(VERSION)
-	docker tag greenguard signalsdev/greenguard
-	docker push signalsdev/greenguard
+	@$(eval VERSION := $(shell python -c 'import draco; print(draco.__version__)'))
+	docker tag draco signalsdev/draco:$(VERSION)
+	docker push signalsdev/draco:$(VERSION)
+	docker tag draco signalsdev/draco
+	docker push signalsdev/draco

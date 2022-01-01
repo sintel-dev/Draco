@@ -1,6 +1,6 @@
 import numpy as np
 
-from greenguard.metrics import fpr_score
+from draco.metrics import fpr_score
 
 
 def test_fpr_score_perfect_scenario():

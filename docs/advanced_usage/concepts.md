@@ -1,6 +1,6 @@
 # Concepts
 
-Here we briefly explain some of the concepts and terminology used within the GreenGuard
+Here we briefly explain some of the concepts and terminology used within the Draco
 project and documentation.
 
 ## Primitive
@@ -34,7 +34,7 @@ hyperparameters for a Template. Hence, Pipelines:
   hyperparameters of their template.
 
 A pipeline can be fitted and evaluated directly using [MLBlocks](
-https://hdi-project.github.io/MLBlocks), or using the **GreenGuardPipeline**.
+https://MLBazaar.github.io/MLBlocks), or using the **DracoPipeline**.
 
 ## Tuning
 
@@ -48,11 +48,11 @@ which hyperparameters are more likely to get the best results in the next iterat
 We call each one of these evaluations a **tuning iteration**.
 
 The process of selecting and tuning the templates is handled by a [BTBSession](
-https://hdi-project.github.io/BTB/tutorials/03_Session.html), which is responsible for
+https://MLBazaar.github.io/BTB/tutorials/03_Session.html), which is responsible for
 discarding the templates that do not work on the given data and for keeping
 track of the template and hyperparameters that obtain the best performance.
 
-## GreenGuardPipeline
+## DracoPipeline
 
 This class is the one in charge of loading the **MLBlocks Pipelines** configured in the
 system and use them to learn from the data and make predictions.
