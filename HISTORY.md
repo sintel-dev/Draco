@@ -1,5 +1,11 @@
 # History
 
+## 0.1.0 - 2021-01-01
+
+Rename ``GreenGuard`` to ``Draco``.
+
+* First release on ``draco-ml`` PyPI
+
 ## 0.3.0 - 2021-01-22
 
 This release increases the supported version of python to `3.8` and also includes changes
