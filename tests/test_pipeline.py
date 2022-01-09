@@ -5,10 +5,24 @@
 from unittest import TestCase
 from unittest.mock import patch
 
+import pytest
 import pandas as pd
 
-from draco.pipeline import DracoPipeline
+from draco.pipeline import DracoPipeline, get_pipelines
 
+def test_get_pipelines():
+    output = get_pipelines()
+    assert isinstance(output, list)
+
+def test_get_pipelines_type():
+    output = get_pipelines(pipeline_type='lstm')
+    assert isinstance(output, list)
+    for path in output:
+        assert 'lstm' in path
+
+def test_get_pipelines_type_error():
+    with pytest.raises(FileNotFoundError):
+        get_pipelines(pipeline_type='does-not-exist')
 
 class TestDracoPipeline(TestCase):
 
