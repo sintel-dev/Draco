@@ -7,7 +7,7 @@
         "pandas.DataFrame",
         "pandas.DataFrame.set",
         "pandas.DataFrame.set",
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
+        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences"
     ],
     "init_params": {
         "pandas.DataFrame.pop#1": {
@@ -82,5 +82,13 @@
         "pandas.DataFrame#1": {
             "X": "readings"
         }
+    },
+    "outputs": {
+        "default": [
+            {
+                "name": "X",
+                "variable": "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1.X"
+            }
+        ]
     }
 }
