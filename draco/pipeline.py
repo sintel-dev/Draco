@@ -635,15 +635,3 @@ class DracoPipeline(object):
         """
         with open(path, 'rb') as pickle_file:
             return cloudpickle.load(pickle_file)
-
-    def get_fit_args(self):
-        """Return the pipeline input args."""
-        return self._pipeline.get_fit_args()
-
-    def get_predict_args(self):
-        """Return the pipeline input args."""
-        return self._pipeline.get_predict_args()
-
-    def get_output_args(self):
-        """Return the pipeline output args."""
-        return self._pipeline.get_outputs()
