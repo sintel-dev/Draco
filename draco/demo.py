@@ -10,6 +10,17 @@ LOGGER = logging.getLogger(__name__)
 S3_URL = 'https://d3-ai-greenguard.s3.amazonaws.com/'
 DEMO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'demo')
 
+_FILES = {
+    'DEFAULT': [
+        ('target_times', 'cutoff_time'),
+        ('readings', 'timestamp')
+    ],
+    'RUL': [
+        ('rul_train_target_times', 'cutoff_time'),
+        ('rul_test_target_times', 'cutoff_time'),
+        ('rul_readings', 'timestamp')
+    ]
+}
 
 def _load_or_download(filename, dates):
     filename += '.csv.gz'
@@ -27,23 +38,35 @@ def _load_or_download(filename, dates):
     return data
 
 
-def load_demo(load_readings=True):
+def load_demo(name='default', load_readings=True):
     """Load the demo included in the Draco project.
 
     The first time that this function is executed, the data will be downloaded
     and cached inside the `draco/demo` folder.
     Subsequent calls will load the cached data instead of downloading it again.
+    
+    Args:
+        rul (str):
+            Name of the dataset to load. If "RUL", load NASA's CMAPSS dataset
+            https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan.
+            If "default" then load default demo.
+        load_readings (bool):
+            Whether to load the ``readings`` table or not.
 
     Returns:
         tuple[pandas.DataFrame]:
             target_times and readings tables
     """
-    target_times = _load_or_download('target_times', 'cutoff_time')
-    if load_readings:
-        readings = _load_or_download('readings', 'timestamp')
-        return target_times, readings
+    files = _FILES[name.upper()]
 
-    return target_times
+    if not load_readings:
+        files = files[:-1]
+
+    output = list()
+    for filename, dates in files:
+        output.append(_load_or_download(filename, dates))
+
+    return tuple(output)
 
 
 def generate_raw_readings(output_path='demo'):
