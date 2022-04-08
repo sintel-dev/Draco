@@ -56,7 +56,7 @@ development_requires = [
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'docutils>=0.14,<0.18',
     'autodocsumm>=0.1.10',
-    'Jinja2<3.1',
+    'Jinja2>=2,<3',
 
     # style check
     'flake8>=3.7.7,<4',
