@@ -56,6 +56,7 @@ development_requires = [
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'docutils>=0.14,<0.18',
     'autodocsumm>=0.1.10',
+    'markupsafe<2.1.0',
     'Jinja2>=2,<3',
 
     # style check
