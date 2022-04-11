@@ -67,3 +67,16 @@ class TestDracoPipeline(TestCase):
         instance.fitted = True
         target_times, readings = self._get_data()
         instance.predict(target_times, readings)
+
+    def test_save_load(self):
+        file = 'path.pkl'
+
+        # Run
+        instance = DracoPipeline('dummy', 'accuracy')
+        instance.save(file)
+        new_instance = DracoPipeline.load(file)
+
+        # Asserts
+        assert isinstance(new_instance, instance.__class__)
+        assert instance.template == new_instance.template
+        assert instance.fitted == new_instance.fitted

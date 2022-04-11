@@ -22,15 +22,12 @@ install_requires = [
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21',
     'tqdm<4.50.0,>=4.36.1',
-    'cloudpickle>=1.6,<2',
     'scipy>=1.0.1,<2',
-    'numpy<1.19.0,>=1.16.0',
+    'numpy>=1.16.0,<1.21.0',
     'pandas>=1,<2',
     'partd>=1.1.0,<2',
     'fsspec>=0.8.5,<0.9',
     'dask>=2.6.0,<3',
-    'distributed>=2.6.0,<3',
-    'h5py<2.11.0,>=2.10.0',  # fix tensorflow requirement
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
 ]
@@ -59,6 +56,7 @@ development_requires = [
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'docutils>=0.14,<0.18',
     'autodocsumm>=0.1.10',
+    'Jinja2>=2,<3',
 
     # style check
     'flake8>=3.7.7,<4',

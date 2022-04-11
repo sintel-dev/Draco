@@ -9,7 +9,6 @@ import tempfile
 from copy import deepcopy
 from hashlib import md5
 
-import cloudpickle
 import keras
 import numpy as np
 from btb import BTBSession
@@ -612,14 +611,14 @@ class DracoPipeline(object):
         return predictions
 
     def save(self, path):
-        """Serialize and save this pipeline using cloudpickle.
+        """Serialize and save this pipeline using pickle.
 
         Args:
             path (str):
                 Path to the file where the pipeline will be saved.
         """
         with open(path, 'wb') as pickle_file:
-            cloudpickle.dump(self, pickle_file)
+            pickle.dump(self, pickle_file)
 
     @classmethod
     def load(cls, path):
@@ -634,4 +633,9 @@ class DracoPipeline(object):
                 Loaded DracoPipeline instance.
         """
         with open(path, 'rb') as pickle_file:
-            return cloudpickle.load(pickle_file)
+            pipeline = pickle.load(pickle_file)
+
+        if not isinstance(pipeline, cls):
+            raise ValueError('Serialized object is not a DracoPipeline')
+
+        return pipeline
