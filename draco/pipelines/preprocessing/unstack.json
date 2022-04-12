@@ -1,0 +1,43 @@
+{
+    "primitives": [
+        "pandas.DataFrame.resample",
+        "pandas.DataFrame.unstack"
+    ],
+    "init_params": {
+        "pandas.DataFrame.resample#1": {
+            "rule": "600s",
+            "on": "timestamp",
+            "groupby": [
+                "turbine_id",
+                "signal_id"
+            ],
+            "aggregation": "mean",
+            "reset_index": false
+        },
+        "pandas.DataFrame.unstack#1": {
+            "level": "signal_id",
+            "reset_index": true
+        }
+    },
+    "input_names": {
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        }
+    },
+    "output_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        }
+    },
+    "outputs": {
+        "default": [
+            {
+                "name": "readings",
+                "variable": "pandas.DataFrame.unstack#1.readings"
+            }
+        ]
+    }
+}

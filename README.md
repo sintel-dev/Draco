@@ -220,18 +220,18 @@ The returned `pipeline` variable will be `list` containing the names of all the 
 available in the Draco system:
 
 ```
-['classes.unstack_double_lstm_timeseries_classifier',
- 'classes.unstack_lstm_timeseries_classifier',
- 'classes.unstack_normalize_dfs_xgb_classifier',
- 'classes.unstack_dfs_xgb_classifier',
- 'classes.normalize_dfs_xgb_classifier']
+['dfs_xgb',
+ 'dfs_xgb_with_unstack',
+ 'dfs_xgb_with_normalization',
+ 'dfs_xgb_with_unstack_normalization',
+ 'dfs_xgb_prob_with_unstack_normalization']
 ```
 
 For the rest of this tutorial, we will select and use the pipeline
-`classes.normalize_dfs_xgb_classifier` as our template.
+`dfs_xgb_with_unstack_normalization` as our template.
 
 ```python3
-pipeline_name = 'classes.normalize_dfs_xgb_classifier'
+pipeline_name = 'dfs_xgb_with_unstack_normalization'
 ```
 
 ## 3. Fitting the Pipeline

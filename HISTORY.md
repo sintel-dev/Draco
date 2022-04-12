@@ -1,8 +1,19 @@
 # History
 
-## 0.1.0 - 2021-01-01
+
+## 0.2.0 - 2022-04-12
+
+This release features a reorganization and renaming of ``Draco`` pipelines. In addtion,
+we update some of the dependencies for general housekeeping.
+
+* Update Draco dependencies - [Issue #66](https://github.com/signals-dev/Draco/issues/66) by @sarahmish
+* Reorganize pipelines - [Issue #63](https://github.com/signals-dev/Draco/issues/63) by @sarahmish
+
+
+## 0.1.0 - 2022-01-01
 
 * First release on ``draco-ml`` PyPI
+
 
 ## Previous GreenGuard development
 

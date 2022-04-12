@@ -22,15 +22,13 @@ install_requires = [
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21',
     'tqdm<4.50.0,>=4.36.1',
-    'cloudpickle>=1.6,<2',
     'scipy>=1.0.1,<2',
-    'numpy<1.19.0,>=1.16.0',
+    'numpy>=1.16.0,<1.21.0',
     'pandas>=1,<2',
+    'tensorflow>=2,<2.3',
     'partd>=1.1.0,<2',
     'fsspec>=0.8.5,<0.9',
     'dask>=2.6.0,<3',
-    'distributed>=2.6.0,<3',
-    'h5py<2.11.0,>=2.10.0',  # fix tensorflow requirement
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
 ]
@@ -59,6 +57,8 @@ development_requires = [
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'docutils>=0.14,<0.18',
     'autodocsumm>=0.1.10',
+    'markupsafe<2.1.0',
+    'Jinja2>=2,<3',
 
     # style check
     'flake8>=3.7.7,<4',
@@ -87,6 +87,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
@@ -109,11 +110,11 @@ setup(
     long_description_content_type='text/markdown',
     name='draco-ml',
     packages=find_packages(include=['draco', 'draco.*']),
-    python_requires='>=3.7,<3.9',
+    python_requires='>=3.6,<3.9',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/sintel-dev/Draco',
-    version='0.1.0',
+    version='0.2.0.dev0',
     zip_safe=False,
 )

@@ -9,7 +9,6 @@ import tempfile
 from copy import deepcopy
 from hashlib import md5
 
-import cloudpickle
 import keras
 import numpy as np
 from btb import BTBSession
@@ -54,7 +53,7 @@ Sequential.__getstate__ = __getstate__
 Sequential.__setstate__ = __setstate__
 
 
-def get_pipelines(pattern='', path=False, pipeline_type='classes'):
+def get_pipelines(pattern='', path=False, pipeline_type=None):
     """Get the list of available pipelines.
 
     Optionally filter the names using a patter or obtain
@@ -66,9 +65,8 @@ def get_pipelines(pattern='', path=False, pipeline_type='classes'):
         path (bool):
             Whether to return a dictionary containing the pipeline
             paths instead of only a list with the names.
-        pipeline_type (str):
-            The pipeline category to filter by (`classes`, `probability` and `unstacked`).
-            Defaults to `classes`.
+        pipeline_type (str or list[str]):
+            The pipeline category to filter. Defaults to `None`.
 
     Return:
         list or dict:
@@ -76,15 +74,24 @@ def get_pipelines(pattern='', path=False, pipeline_type='classes'):
             If `path=True`, return a dict containing the pipeline
             names as keys and their absolute paths as values.
     """
+    if isinstance(pipeline_type, str):
+        pipeline_type = [pipeline_type]
+    elif pipeline_type is None:
+        pipeline_type = os.listdir(PIPELINES_DIR)
+    
     pipelines = dict()
-    pipelines_dir = os.path.join(PIPELINES_DIR, pipeline_type)
+    pipelines_dir = [
+        os.path.join(PIPELINES_DIR, ptype)
+        for ptype in pipeline_type
+        if ptype != 'preprocessing'
+    ]
 
-    for filename in os.listdir(pipelines_dir):
-        if filename.endswith('.json') and pattern in filename:
-            name = os.path.basename(filename)[:-len('.json')]
-            name = f'{pipeline_type}.{name}'
-            pipeline_path = os.path.join(pipelines_dir, filename)
-            pipelines[name] = pipeline_path
+    for pdir in pipelines_dir:
+        for filename in os.listdir(pdir):
+            if filename.endswith('.json') and pattern in filename:
+                name = os.path.basename(filename)[:-len('.json')]
+                pipeline_path = os.path.join(pdir, filename)
+                pipelines[name] = pipeline_path
 
     if not path:
         pipelines = list(pipelines)
@@ -604,14 +611,14 @@ class DracoPipeline(object):
         return predictions
 
     def save(self, path):
-        """Serialize and save this pipeline using cloudpickle.
+        """Serialize and save this pipeline using pickle.
 
         Args:
             path (str):
                 Path to the file where the pipeline will be saved.
         """
         with open(path, 'wb') as pickle_file:
-            cloudpickle.dump(self, pickle_file)
+            pickle.dump(self, pickle_file)
 
     @classmethod
     def load(cls, path):
@@ -626,4 +633,9 @@ class DracoPipeline(object):
                 Loaded DracoPipeline instance.
         """
         with open(path, 'rb') as pickle_file:
-            return cloudpickle.load(pickle_file)
+            pipeline = pickle.load(pickle_file)
+
+        if not isinstance(pipeline, cls):
+            raise ValueError('Serialized object is not a DracoPipeline')
+
+        return pipeline
