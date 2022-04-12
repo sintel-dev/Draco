@@ -25,6 +25,7 @@ install_requires = [
     'scipy>=1.0.1,<2',
     'numpy>=1.16.0,<1.21.0',
     'pandas>=1,<2',
+    'tensorflow>=2,<2.3',
     'partd>=1.1.0,<2',
     'fsspec>=0.8.5,<0.9',
     'dask>=2.6.0,<3',
@@ -114,6 +115,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/sintel-dev/Draco',
-    version='0.1.1.dev0',
+    version='0.1.1.dev2',
     zip_safe=False,
 )

@@ -256,7 +256,7 @@ check-release: check-candidate check-clean check-master check-history ## Check i
 	@echo "A new release can be made"
 
 .PHONY: release
-release: check-release bumpversion-release docker-push publish bumpversion-patch
+release: check-release bumpversion-release publish bumpversion-patch
 
 .PHONY: release-test
 release-test: check-release bumpversion-release-test publish-test bumpversion-revert
@@ -266,6 +266,12 @@ release-candidate: check-master publish bumpversion-candidate
 
 .PHONY: release-candidate-test
 release-candidate-test: check-clean check-master publish-test
+
+.PHONY: release-minor
+release-minor: check-release bumpversion-minor release
+
+.PHONY: release-major
+release-major: check-release bumpversion-major release
 
 
 # DOCKER TARGETS
