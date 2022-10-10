@@ -91,7 +91,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description='AutoML for Renewable Energy Industries.',
+    description='AutoML for Time Series.',
     entry_points={
         'mlblocks': [
             'pipelines=draco:MLBLOCKS_PIPELINES',

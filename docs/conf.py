@@ -63,7 +63,7 @@ slug = 'draco'
 title = project + ' Documentation',
 copyright = '2018, MIT Data To AI Lab'
 author = 'MIT Data To AI Lab'
-description = 'AutoML for Renewable Energy Industries'
+description = 'AutoML for Time Series'
 user = 'sintel-dev'
 
 # The version info for the project you're documenting, acts as replacement

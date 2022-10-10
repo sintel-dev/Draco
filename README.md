@@ -8,7 +8,7 @@
 </p>
 
 <p align="left">
-AutoML for Renewable Energy Industries.
+AutoML for Time Series.
 </p>
 
 
@@ -29,7 +29,7 @@ AutoML for Renewable Energy Industries.
 ## Overview
 
 The Draco project is a collection of end-to-end solutions for machine learning problems
-commonly found in monitoring wind energy production systems. Most tasks utilize sensor data
+commonly found in time series monitoring systems. Most tasks utilize sensor data
 emanating from monitoring systems. We utilize the foundational innovations developed for
 automation of machine Learning at Data to AI Lab at MIT.
 
