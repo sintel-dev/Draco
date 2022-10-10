@@ -31,6 +31,7 @@ install_requires = [
     'dask>=2.6.0,<3',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
+    'protobuf<4',
 ]
 
 setup_requires = [
