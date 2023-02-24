@@ -33,6 +33,7 @@ install_requires = [
     'xlsxwriter>=1.3.6<1.4',
     # fix conflicts
     'protobuf<4',
+    'importlib-metadata<2,>=0.12',
 ]
 
 setup_requires = [
@@ -78,7 +79,6 @@ development_requires = [
     # Advanced testing
     'coverage>=4.5.1,<6',
     'tox>=2.9.1,<4',
-    'importlib-metadata<2,>=0.12',
 ]
 
 setup(
