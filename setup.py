@@ -32,8 +32,7 @@ install_requires = [
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
     # fix conflicts
-    'protobuf<4', 
-    'importlib-metadata<5', # breaks python < 3.8
+    'protobuf<4',
 ]
 
 setup_requires = [
@@ -70,6 +69,7 @@ development_requires = [
     # fix style issues
     'autoflake>=1.1,<2',
     'autopep8>=1.4.3,<2',
+    'importlib-metadata<5',
 
     # distribute on PyPI
     'twine>=1.10.0,<4',
