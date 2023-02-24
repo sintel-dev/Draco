@@ -31,6 +31,9 @@ install_requires = [
     'dask>=2.6.0,<3',
     'tabulate>=0.8.3,<0.9',
     'xlsxwriter>=1.3.6<1.4',
+    # fix conflicts
+    'protobuf<4',
+    'importlib-metadata<2,>=0.12',
 ]
 
 setup_requires = [
@@ -67,6 +70,7 @@ development_requires = [
     # fix style issues
     'autoflake>=1.1,<2',
     'autopep8>=1.4.3,<2',
+    'importlib-metadata<5',
 
     # distribute on PyPI
     'twine>=1.10.0,<4',
@@ -75,7 +79,6 @@ development_requires = [
     # Advanced testing
     'coverage>=4.5.1,<6',
     'tox>=2.9.1,<4',
-    'importlib-metadata<2,>=0.12',
 ]
 
 setup(
@@ -91,7 +94,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description='AutoML for Renewable Energy Industries.',
+    description='AutoML for Time Series.',
     entry_points={
         'mlblocks': [
             'pipelines=draco:MLBLOCKS_PIPELINES',
