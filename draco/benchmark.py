@@ -77,7 +77,7 @@ def _build_init_params(template, window_size, rule, template_params):
             'pandas.DataFrame.resample#1': {
                 'rule': rule,
             },
-            'mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1': {
+            'mlstars.custom.timeseries_preprocessing.cutoff_window_sequences#1': {
                 'window_size': window_size,
             }
         }
