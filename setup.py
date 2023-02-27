@@ -20,7 +20,7 @@ install_requires = [
     'ml-stars==0.1.0.dev1',
     'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
-    'scikit-learn>=0.21',
+    'scikit-learn>=0.21,<1.2',
     'tqdm<4.50.0,>=4.36.1',
     'scipy>=1.0.1,<2',
     'numpy>=1.16.0,<1.21.0',
