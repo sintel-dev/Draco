@@ -220,18 +220,17 @@ The returned `pipeline` variable will be `list` containing the names of all the 
 available in the Draco system:
 
 ```
-['dfs_xgb',
- 'dfs_xgb_with_unstack',
- 'dfs_xgb_with_normalization',
- 'dfs_xgb_with_unstack_normalization',
- 'dfs_xgb_prob_with_unstack_normalization']
+['lstm',
+ 'lstm_with_unstack',
+ 'double_lstm',
+ 'double_lstm_with_unstack']
 ```
 
 For the rest of this tutorial, we will select and use the pipeline
-`dfs_xgb_with_unstack_normalization` as our template.
+`lstm_with_unstack` as our template.
 
 ```python3
-pipeline_name = 'dfs_xgb_with_unstack_normalization'
+pipeline_name = 'lstm_with_unstack'
 ```
 
 ## 3. Fitting the Pipeline
