@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from mlblocks import MLPipeline
 
 from draco.pipeline import DracoPipeline, get_pipelines
 
@@ -26,6 +27,13 @@ def test_get_pipelines_type():
 def test_get_pipelines_type_error():
     with pytest.raises(FileNotFoundError):
         get_pipelines(pipeline_type='does-not-exist')
+
+
+def test_loading_pipelines():
+    draco_pipelines = get_pipelines()
+    for pipeline in draco_pipelines:
+        mlpipeline = MLPipeline(pipeline)
+        assert isinstance(mlpipeline, MLPipeline)
 
 
 class TestDracoPipeline(TestCase):
