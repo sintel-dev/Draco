@@ -17,7 +17,7 @@ except IOError:
 
 install_requires = [
     'baytune>=0.4.0,<0.5',
-    'mlprimitives>=0.3.2,<0.4',
+    'ml-stars==0.1.0.dev1',
     'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21,<1.2',
@@ -34,7 +34,6 @@ install_requires = [
     # fix conflicts
     'protobuf<4',
     'importlib-metadata<5',
-    #'importlib-metadata<2,>=0.12',
 ]
 
 setup_requires = [
