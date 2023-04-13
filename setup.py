@@ -20,10 +20,10 @@ install_requires = [
     'mlprimitives>=0.3.2,<0.4',
     'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
-    'scikit-learn>=0.21',
+    'scikit-learn>=0.21,<1.2',
     'tqdm<4.50.0,>=4.36.1',
     'scipy>=1.0.1,<2',
-    'numpy>=1.16.0,<1.21.0',
+    'numpy>=1.16.0,<1.19',
     'pandas>=1,<2',
     'tensorflow>=2,<2.3',
     'partd>=1.1.0,<2',
@@ -33,7 +33,8 @@ install_requires = [
     'xlsxwriter>=1.3.6<1.4',
     # fix conflicts
     'protobuf<4',
-    'importlib-metadata<2,>=0.12',
+    'importlib-metadata<5',
+    #'importlib-metadata<2,>=0.12',
 ]
 
 setup_requires = [

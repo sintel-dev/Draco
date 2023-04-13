@@ -1,6 +1,7 @@
 {
     "primitives": [
-        "mlblocks.MLPipeline",
+        "pandas.DataFrame.resample",
+        "pandas.DataFrame.unstack",
         "pandas.DataFrame.pop",
         "pandas.DataFrame.pop",
         "sklearn.impute.SimpleImputer",
@@ -13,16 +14,19 @@
         "numpy.take"
     ],
     "init_params": {
-        "mlblocks.MLPipeline#1": {
-            "pipeline": "unstack",
-            "input_names": {
-                "pandas.DataFrame.resample#1": {
-                    "X": "df"
-                },
-                "pandas.DataFrame.unstack#1": {
-                    "X": "readings"
-                }
-            }
+        "pandas.DataFrame.resample#1": {
+            "rule": "3600s",
+            "on": "timestamp",
+            "groupby": [
+                "turbine_id",
+                "signal_id"
+            ],
+            "aggregation": "mean",
+            "reset_index": false
+        },
+        "pandas.DataFrame.unstack#1": {
+            "level": "signal_id",
+            "reset_index": true
         },
         "pandas.DataFrame.pop#1": {
             "item": "turbine_id"
@@ -63,7 +67,10 @@
         }
     },
     "input_names": {
-        "mlblocks.MLPipeline#1": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
             "X": "readings"
         },
         "pandas.DataFrame.pop#1": {
@@ -94,6 +101,12 @@
         }
     },
     "output_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        },
         "pandas.DataFrame.pop#1": {
             "item": "turbine_id"
         },
