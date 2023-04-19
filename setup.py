@@ -17,7 +17,7 @@ except IOError:
 
 install_requires = [
     'baytune>=0.4.0,<0.5',
-    'ml-stars==0.1.0.dev1',
+    'ml-stars>=0.1.0',
     'mlblocks>=0.4.0,<0.5',
     'pymongo>=3.7.2,<4',
     'scikit-learn>=0.21,<1.2',
@@ -30,7 +30,7 @@ install_requires = [
     'fsspec>=0.8.5,<0.9',
     'dask>=2.6.0,<3',
     'tabulate>=0.8.3,<0.9',
-    'xlsxwriter>=1.3.6<1.4',
+    'xlsxwriter>=1.3.6,<1.4',
     # fix conflicts
     'protobuf<4',
     'importlib-metadata<5',
