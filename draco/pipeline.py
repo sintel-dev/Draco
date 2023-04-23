@@ -15,7 +15,7 @@ from btb import BTBSession
 from btb.tuning import Tunable
 from mlblocks import MLPipeline
 from mlblocks.discovery import load_pipeline
-from mlprimitives.adapters.keras import Sequential
+from mlstars.adapters.keras import Sequential
 from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import KFold, StratifiedKFold
 

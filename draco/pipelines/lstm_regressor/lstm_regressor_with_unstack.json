@@ -9,7 +9,7 @@
         "pandas.DataFrame",
         "pandas.DataFrame.set",
         "pandas.DataFrame.set",
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
+        "mlstars.custom.timeseries_preprocessing.cutoff_window_sequences",
         "keras.Sequential.LSTMTimeSeriesRegressor"
     ],
     "init_params": {
@@ -49,7 +49,7 @@
         "pandas.DataFrame.set#2": {
             "key": "timestamp"
         },
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
+        "mlstars.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
             "window_size": 24,
             "cutoff_time": "cutoff_time",
             "time_index": "timestamp"
@@ -89,7 +89,7 @@
             "X": "readings",
             "value": "timestamp"
         },
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
+        "mlstars.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
             "timeseries": "readings"
         }
     },
