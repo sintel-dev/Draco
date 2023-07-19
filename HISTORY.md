@@ -1,5 +1,13 @@
 # History
 
+## 0.3.0 - 2022-07-20
+
+This release switches from ``MLPrimitives`` to ``ml-stars``.
+Moreover, we remove all pipelines using deep feature synthesis.
+
+* Remove ``dfs`` based pipelines - [Issue #73](https://github.com/sintel-dev/Draco/issues/73) by @sarahmish
+* Move from ``MLPrimitives`` to ``ml-stars`` - [Issue #72](https://github.com/sintel-dev/Draco/issues/72) by @sarahmish
+
 
 ## 0.2.0 - 2022-04-12
 
