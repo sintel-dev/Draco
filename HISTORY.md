@@ -1,6 +1,6 @@
 # History
 
-## 0.3.0 - 2022-07-20
+## 0.3.0 - 2022-07-31
 
 This release switches from ``MLPrimitives`` to ``ml-stars``.
 Moreover, we remove all pipelines using deep feature synthesis.
