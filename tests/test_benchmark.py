@@ -8,7 +8,7 @@ from draco.demo import load_demo
 def test_predict():
     # setup
     templates = [
-        'dfs_xgb_prob_with_unstack_normalization'
+        'lstm_with_unstack'
     ]
 
     window_size_rule = [

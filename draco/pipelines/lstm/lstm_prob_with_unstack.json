@@ -1,6 +1,7 @@
 {
     "primitives": [
-        "mlblocks.MLPipeline",
+        "pandas.DataFrame.resample",
+        "pandas.DataFrame.unstack",
         "pandas.DataFrame.pop",
         "pandas.DataFrame.pop",
         "sklearn.impute.SimpleImputer",
@@ -8,21 +9,24 @@
         "pandas.DataFrame",
         "pandas.DataFrame.set",
         "pandas.DataFrame.set",
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences",
+        "mlstars.custom.timeseries_preprocessing.cutoff_window_sequences",
         "keras.Sequential.LSTMTimeSeriesClassifier",
         "numpy.take"
     ],
     "init_params": {
-        "mlblocks.MLPipeline#1": {
-            "pipeline": "unstack",
-            "input_names": {
-                "pandas.DataFrame.resample#1": {
-                    "X": "df"
-                },
-                "pandas.DataFrame.unstack#1": {
-                    "X": "readings"
-                }
-            }
+        "pandas.DataFrame.resample#1": {
+            "rule": "3600s",
+            "on": "timestamp",
+            "groupby": [
+                "turbine_id",
+                "signal_id"
+            ],
+            "aggregation": "mean",
+            "reset_index": false
+        },
+        "pandas.DataFrame.unstack#1": {
+            "level": "signal_id",
+            "reset_index": true
         },
         "pandas.DataFrame.pop#1": {
             "item": "turbine_id"
@@ -46,7 +50,7 @@
         "pandas.DataFrame.set#2": {
             "key": "timestamp"
         },
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
+        "mlstars.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
             "window_size": 24,
             "cutoff_time": "cutoff_time",
             "time_index": "timestamp"
@@ -63,7 +67,10 @@
         }
     },
     "input_names": {
-        "mlblocks.MLPipeline#1": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
             "X": "readings"
         },
         "pandas.DataFrame.pop#1": {
@@ -89,11 +96,17 @@
             "X": "readings",
             "value": "timestamp"
         },
-        "mlprimitives.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
+        "mlstars.custom.timeseries_preprocessing.cutoff_window_sequences#1": {
             "timeseries": "readings"
         }
     },
     "output_names": {
+        "pandas.DataFrame.resample#1": {
+            "X": "readings"
+        },
+        "pandas.DataFrame.unstack#1": {
+            "X": "readings"
+        },
         "pandas.DataFrame.pop#1": {
             "item": "turbine_id"
         },

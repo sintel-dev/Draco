@@ -7,7 +7,7 @@ import pandas as pd
 
 LOGGER = logging.getLogger(__name__)
 
-S3_URL = 'https://d3-ai-greenguard.s3.amazonaws.com/'
+S3_URL = 'https://sintel-draco.s3.amazonaws.com/'
 DEMO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'demo')
 
 _FILES = {
@@ -46,7 +46,7 @@ def load_demo(name='default', load_readings=True):
     Subsequent calls will load the cached data instead of downloading it again.
     
     Args:
-        rul (str):
+        name (str):
             Name of the dataset to load. If "RUL", load NASA's CMAPSS dataset
             https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan.
             If "default" then load default demo.
